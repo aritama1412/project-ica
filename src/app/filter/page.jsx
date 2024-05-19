@@ -29,7 +29,7 @@ const FilterBar = () => {
   return (
     <div className="flex flex-col items-center h-full w-[320px] max-w-[320px] mt-[60px]">
       <FilterCard data={colors} filterText="Warna" />
-      <FilterCard data={flowers} filterText="Acara" />
+      <FilterCard data={flowers} filterText="Bunga" />
     </div>
   );
 };
