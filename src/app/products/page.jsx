@@ -93,7 +93,7 @@ const flowers = [
 
 const Products = () => {
   return (
-    <div className="w-full grid grid-cols-3 gap-2 place-items-center z-[-1]">
+    <div className="w-full grid grid-cols-3 gap-2 place-items-center cursor-pointer">
       <ProductCard data={flowers} />
     </div>
   );

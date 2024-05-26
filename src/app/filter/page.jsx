@@ -18,11 +18,9 @@ const colors = [
 ];
 
 const flowers = [
-  { id: 1, name: "Mawar" },
-  { id: 2, name: "Melati" },
-  { id: 3, name: "Anggrek" },
-  { id: 4, name: "Kamboja" },
-  { id: 5, name: "Lavender" },
+  { id: 1, name: "Tanaman Hias" },
+  { id: 2, name: "Tanaman Toga" },
+  { id: 3, name: "Tanaman Buah-buahan" },
 ];
 
 const vases = [
@@ -41,9 +39,9 @@ const FilterBar = () => {
   return (
     <div className="flex flex-col items-center h-full w-[320px] max-w-[320px] mt-[60px]">
       {/* <FilterCard data={colors} filterText="Warna" /> */}
+      <FilterCard data={flowers} filterText="Tanaman" />
       <FilterCard data={vases} filterText="Pot" />
       <FilterCard data={services} filterText="Jasa" />
-      <FilterCard data={flowers} filterText="Bunga" />
     </div>
   );
 };

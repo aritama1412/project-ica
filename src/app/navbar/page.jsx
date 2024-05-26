@@ -2,11 +2,11 @@
 import { useState } from "react";
 
 const Dropdown = ({ items }) => (
-  <ul className="bg-white absolute shadow-md rounded z-10 ml-[-16px]">
+  <ul className="bg-white absolute shadow-md rounded ml-[-16px]">
     {items.map((item, index) => (
       <li
         key={index}
-        className="px-4 py-2 cursor-pointer z-[99] w-[200px] font-normal text-sm hover:bg-gray-100"
+        className="px-4 py-2 cursor-pointer w-[200px] font-normal text-sm hover:bg-gray-100"
       >
         {item}
       </li>
@@ -30,7 +30,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center sticky border-b-2">
+    <div className="flex flex-col justify-center items-center sticky border-b-2 z-[1]">
       <div className="flex flex-row gap-10 w-full justify-start items-center pt-5 pb-3">
         <ul className="flex flex-row gap-10 w-full justify-start items-center font-bold relative pl-4">
           {Object.keys(menuData).map((key, index) => (
