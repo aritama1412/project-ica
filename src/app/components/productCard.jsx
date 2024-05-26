@@ -8,7 +8,7 @@ export const ProductCard = ({ data }) => {
     <>
       {data.map((flower) => (
         <div
-          className="flex flex-col max-w-[300px] max-h-[462px]  mb-10 mt-3 cursor-pointer"
+          className="flex flex-col max-w-[300px] max-h-[480px]  mb-10 pb-5 mt-3 cursor-pointer"
           key={flower.id}
         >
           <div className="flex flex-row items-center justify-between w-full px-3 py-3">
@@ -39,17 +39,23 @@ export const ProductCard = ({ data }) => {
           </div>
           <div className="flex grow flex-col max-h-[75px]">
             <h1 className="font-bold text-xl pt-1 mt-1">{flower.name}</h1>
-            <p className="line-clamp-2 break-words min-h-[3.2rem]">
+            <hr className="mb-2" />
+            <p className="line-clamp-2 break-words min-h-[3.2rem] mb-2">
               {flower.description}
             </p>
-            <h2 className="font-semibold">
-              {flower.price.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              })}
-            </h2>
+            <hr className=" mt-2" />
+            <div className="flex flex-row justify-between items-center px-1">
+              <span>Stok: {flower.stocks}</span>
+              <h2 className="font-semibold">
+                {flower.price.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
+              </h2>
+            </div>
+            <hr />
           </div>
         </div>
       ))}
