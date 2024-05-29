@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 
-function Filter({ data, filterText }) {
+function FilterCard({ data, filterText }) {
   const [isActive, setIsActive] = useState(false);
   const [isVisible, setIsVisible] = useState(true); // State to manage visibility
 
@@ -49,4 +49,4 @@ function Filter({ data, filterText }) {
   );
 }
 
-export default Filter;
+export default FilterCard;

@@ -1,5 +1,5 @@
 import React from "react";
-import FilterCard from "../components/filterCard.jsx";
+import FilterCard from "./filterCard";
 
 const colors = [
   { id: 1, name: "Red", code: "#FF0000" },
@@ -18,24 +18,24 @@ const colors = [
 ];
 
 const flowers = [
-  { id: 1, name: "Tanaman Hias" },
-  { id: 2, name: "Tanaman Toga" },
-  { id: 3, name: "Tanaman Buah-buahan" },
+  { id: 1, name: "Tanaman Hias", category: "flowers" },
+  { id: 2, name: "Tanaman Toga", category: "flowers" },
+  { id: 3, name: "Tanaman Buah-buahan", category: "flowers" },
 ];
 
 const vases = [
-  { id: 1, name: "Pot Plastik" },
-  { id: 2, name: "Pot Gantung" },
-  { id: 3, name: "Pot Semen" },
+  { id: 1, name: "Pot Plastik", category: "vases" },
+  { id: 2, name: "Pot Gantung", category: "vases" },
+  { id: 3, name: "Pot Semen", category: "vases" },
 ];
 
 const services = [
-  { id: 1, name: "Jasa Perawatan Taman" },
-  { id: 2, name: "Pembuatan taman dan kolam" },
-  { id: 3, name: "Menerima dekorasi taman pengantin" },
+  { id: 1, name: "Jasa Perawatan Taman", category: "services" },
+  { id: 2, name: "Pembuatan taman dan kolam", category: "services" },
+  { id: 3, name: "Menerima dekorasi taman pengantin", category: "services" },
 ];
 
-const FilterBar = () => {
+const FilterSection = () => {
   return (
     <div className="flex flex-col items-center h-full w-[320px] max-w-[320px] mt-[60px]">
       {/* <FilterCard data={colors} filterText="Warna" /> */}
@@ -46,4 +46,4 @@ const FilterBar = () => {
   );
 };
 
-export default FilterBar;
+export default FilterSection;
