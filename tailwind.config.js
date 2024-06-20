@@ -12,6 +12,19 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      screens: {
+        scmin: { max: "1160px" },
+        scmed: { max: "845px" },
+        // scmobile: { max: "430px" },
+        scmobile: { max: "555px" },
+      },
+      fontSize: {
+        mobilexs: "10px",
+        mobilesm: "12px",
+        mobilemd: "14px",
+        mobilelg: "16px",
+        mobilexl: "18px",
+      },
     },
   },
   plugins: [],

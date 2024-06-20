@@ -101,7 +101,8 @@ const data = [
 
 const ProductSection = () => {
   return (
-    <div className="w-full grid grid-cols-3 gap-2 place-items-center cursor-pointer">
+    // bg-green-400
+    <div className="w-full grid scmobile:grid-cols-2 scmed:grid-cols-2 grid-cols-3 gap-1 place-items-center cursor-pointer">
       <ProductCard data={data} />
     </div>
   );

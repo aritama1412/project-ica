@@ -35,7 +35,7 @@ const Navbar = () => {
 
   return (
     <div className="flex flex-col justify-center items-center sticky border-b-2 z-[1]">
-      <div className="flex flex-row gap-10 w-full justify-start items-center pt-5 pb-3">
+      <div className="flex flex-row gap-10 w-full justify-start items-center pt-5 pb-3 scmobile:pt-0 scmobile:pb-0">
         <Link href="/" className="cursor-pointer">
           <Image
             className="object-cover w-[100px] max-w-[100px] h-[100px] max-h-[100px]"
@@ -46,7 +46,7 @@ const Navbar = () => {
             alt="flowers"
           />
         </Link>
-        <ul className="flex flex-row gap-10 w-full justify-start items-center font-bold relative pl-4">
+        <ul className="flex flex-row gap-10 scmobile:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4">
           {Object.keys(menuData).map((key, index) => (
             <li
               key={index}
@@ -59,7 +59,7 @@ const Navbar = () => {
               onMouseLeave={() => setHoveredItem(null)}
             >
               {key}
-              <span class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
+              <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
 
               {hoveredItem === key && <Dropdown items={menuData[key]} />}
             </li>
