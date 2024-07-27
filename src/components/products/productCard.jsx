@@ -38,6 +38,7 @@ export const ProductCard = ({ data }) => {
                 src={flower.img}
                 width={300}
                 height={378}
+                style={{ width: "300px", height: "378px" }}
                 loading="eager"
                 alt="flowers"
               />

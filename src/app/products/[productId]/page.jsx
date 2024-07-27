@@ -1,4 +1,4 @@
-import Navbar from "@/app/components/navbar/navbar";
+import Navbar from "@/components/navbar/navbar";
 import Image from "next/image";
 import React from "react";
 
