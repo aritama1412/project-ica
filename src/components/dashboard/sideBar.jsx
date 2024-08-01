@@ -48,7 +48,7 @@ export default function SideBar({ setActiveMenu }) {
     <>
       <aside
         id="logo-sidebar"
-        className="w-64 transition-transform -translate-x-full  bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+        className="w-64 transition-transform -translate-x-full md:translate-x-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 hidden md:block"
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 pt-2 overflow-y-auto bg-white dark:bg-gray-800">

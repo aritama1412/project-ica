@@ -15,7 +15,7 @@ const Dashboard = () => {
       <div className="flex flex-row h-full">
         <SideBar setActiveMenu={setActiveMenu} />
 
-        <Content activeMenu={activeMenu} />
+        <Content activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
       </div>
     </div>
   );
