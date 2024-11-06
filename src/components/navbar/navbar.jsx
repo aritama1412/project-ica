@@ -4,6 +4,9 @@ import logo from "../../../public/images/logos/logo1.jpg";
 
 import { useState } from "react";
 import Link from "next/link";
+import useCounter from "../../../stores/store";
+import useCart from "../../../stores/cartStore";
+import { BiCart } from "react-icons/bi";
 
 const Dropdown = ({ items }) => (
   <ul className="bg-white absolute shadow-md rounded ml-[-16px]">
@@ -20,6 +23,8 @@ const Dropdown = ({ items }) => (
 
 const Navbar = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
+  const counter = useCounter();
+  const cart = useCart();
 
   const menuData = {
     Tanaman: ["Tanaman Hias", "Tanaman Toga", "Tanaman Buah-buahan"],
@@ -46,7 +51,7 @@ const Navbar = () => {
             alt="flowers"
           />
         </Link>
-        <ul className="flex flex-row gap-10 scmobile:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4">
+        <ul className="flex flex-row   gap-10 scmobile:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4">
           {Object.keys(menuData).map((key, index) => (
             <li
               key={index}
@@ -65,6 +70,16 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
+        <div className="flex flex-row gap-3">
+          <Link
+            href="/checkout"
+            className="flex flex-row items-center justify-center gap-2 bg-gray-800 rounded-md text-white min-w-[100px] px-3 py-1"
+          >
+            <span>{cart && cart.count}</span>
+            <BiCart />
+            <span>Checkout</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

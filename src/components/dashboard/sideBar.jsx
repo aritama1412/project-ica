@@ -18,14 +18,19 @@ const menus = {
     link: "/supplier",
     icon: <BiSolidTruck />,
   },
-  customer: {
-    name: "Customer",
-    link: "/customer",
-    icon: <BiSolidUserCheck />,
-  },
+  // customer: {
+  //   name: "Customer",
+  //   link: "/customer",
+  //   icon: <BiSolidUserCheck />,
+  // },
   transaction: {
-    name: "Transaksi",
+    name: "Transaksi Penjualan",
     link: "/transaction",
+    icon: <BiSolidCartAdd />,
+  },
+  purchase: {
+    name: "Transaksi Pembelian",
+    link: "/purchase",
     icon: <BiSolidCartAdd />,
   },
   logout: {

@@ -1,6 +1,10 @@
+"use client";
 import Navbar from "@/components/navbar/navbar";
 import Image from "next/image";
 import React from "react";
+import useCounter from "@/../stores/store";
+import useCart from "@/../stores/cartStore";
+import { useState } from "react";
 
 const colors = [
   { id: 1, name: "Red", code: "#FF0000" },
@@ -128,9 +132,23 @@ const services = [
   { id: 3, name: "Menerima dekorasi taman pengantin" },
 ];
 
-const page = (data) => {
+const Page = (data) => {
   const selected = flowers.find((item) => item.id == data.params.productId);
+  const counter = useCounter();
+  const cart = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const addToCart = () => {
+    const item = {
+      id: selected.id,
+      name: selected.name,
+      img: selected.img,
+      price: selected.price,
+      quantity: quantity,
+    };
 
+    console.log("Adding item:", item);
+    cart.add(item, quantity); // Pass both item and quantity to add
+  };
   return (
     <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-[1800px] min-h-screen">
       <Navbar />
@@ -159,13 +177,30 @@ const page = (data) => {
           </h2>
           <h3 className="font-semibold mt-10">Informasi</h3>
           <p>{selected.description}</p>
-          <button className="transition duration-300 motion-reduce:transition-none leading-normal  active:bg-gray-900 active:text-gray-100 ease-in-out bg-gray-800 px-10 py-3 w-[150px] text-gray-200 rounded-xl border-2 border-gray-50 hover:bg-gray-50 hover:text-gray-800 hover:border-gray-800 ">
-            Beli
-          </button>
+          <div className="flex flex-row gap-3">
+            <input
+              type="number"
+              min={0}
+              className="rounded-md px-3 text-center border border-gray-500 w-[150px]"
+              placeholder="Jumlah"
+              defaultValue={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+            <button
+              onClick={() => addToCart()}
+              className="transition duration-300 motion-reduce:transition-none
+            leading-normal active:bg-gray-900 active:text-gray-100 ease-in-out
+            bg-gray-800 px-10 py-3 w-[150px] text-gray-200 rounded-xl border-2
+            border-gray-50 hover:bg-gray-50 hover:text-gray-800
+            hover:border-gray-800 "
+            >
+              Beli
+            </button>
+          </div>
         </div>
       </div>
     </main>
   );
 };
 
-export default page;
+export default Page;
