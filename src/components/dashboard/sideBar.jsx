@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   BiSolidShoppingBag,
@@ -10,12 +11,12 @@ import {
 const menus = {
   stockProduct: {
     name: "Stok Produk",
-    link: "/stock",
+    link: "/admin/product",
     icon: <BiSolidShoppingBag />,
   },
   supplier: {
     name: "Supplier",
-    link: "/supplier",
+    link: "/admin/supplier",
     icon: <BiSolidTruck />,
   },
   // customer: {
@@ -25,17 +26,17 @@ const menus = {
   // },
   transaction: {
     name: "Transaksi Penjualan",
-    link: "/transaction",
+    link: "/admin/transaction",
     icon: <BiSolidCartAdd />,
   },
   purchase: {
     name: "Transaksi Pembelian",
-    link: "/purchase",
+    link: "/admin/purchase",
     icon: <BiSolidCartAdd />,
   },
   logout: {
     name: "Logout",
-    link: "/logout",
+    link: "#",
     icon: <BiLogIn />,
   },
 };
@@ -53,22 +54,23 @@ export default function SideBar({ setActiveMenu }) {
     <>
       <aside
         id="logo-sidebar"
-        className="w-64 transition-transform -translate-x-full md:translate-x-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 hidden md:block"
+        className="w-64 min-w-64 transition-transform -translate-x-full md:translate-x-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 hidden md:block"
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 pt-2 overflow-y-auto bg-white dark:bg-gray-800">
           <ul className="space-y-2 font-medium">
             {Object.keys(menus).map((key) => (
               <li key={key}>
-                <div
-                  onClick={() => handleActiveMenu(key)}
+                <Link
+                  href={menus[key].link}
+                  // onClick={() => handleActiveMenu(key)}
                   className="flex items-center p-2 cursor-pointer text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                 >
                   <span className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                     {menus[key].icon}
                   </span>
                   <span className="ms-3">{menus[key].name}</span>
-                </div>
+                </Link>
               </li>
             ))}
 

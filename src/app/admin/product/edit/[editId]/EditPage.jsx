@@ -22,7 +22,7 @@ const dropData = [
 const EditPage = () => {
   return (
     <div className="flex flex-col p-4 w-full">
-      <h1 className="text-3xl font-bold">Tambahkan Produk Baru</h1>
+      <h1 className="text-3xl font-bold">Edit Produk</h1>
       <div className="flex flex-row border border-gray-300 px-6 py-4 mt-4 rounded-sm">
         <div className="flex flex-col w-full">
           <div className="flex flex-row justify-start items-center gap-4">

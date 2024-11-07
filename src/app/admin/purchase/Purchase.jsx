@@ -20,6 +20,7 @@ import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import { columns, transactions } from "./data";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const statusColorMap = {
   active: "success",
@@ -48,82 +49,98 @@ const formatDate = (timestamp) => {
 
 export default function Purchase({ setActiveMenu }) {
   const [selectedColor, setSelectedColor] = React.useState("warning");
+  const router = useRouter();
+
   const handleActiveMenu = (key) => {
     setActiveMenu(key);
   };
-  const renderCell = React.useCallback((transactions, columnKey) => {
-    const cellValue = transactions[columnKey];
 
-    switch (columnKey) {
-      case "Id":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{transactions.id}</p>
-          </div>
-        );
-      case "Nama":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{transactions.name}</p>
-          </div>
-        );
-      case "quantity":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">
-              {transactions.quantity}
-            </p>
-          </div>
-        );
-      case "transactionDate":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">
-              {formatDate(transactions.transactionDate)}
-            </p>
-          </div>
-        );
-      case "note":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{transactions.note}</p>
-          </div>
-        );
-      case "status":
-        return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[transactions.status]}
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Details">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EyeIcon />
-              </span>
-            </Tooltip>
-            {/* <Tooltip content="Edit user">
+  const renderCell = React.useCallback(
+    (transactions, columnKey) => {
+      const cellValue = transactions[columnKey];
+      const handleDetail = (id) => {
+        router.push(`/admin/purchase/detail/${id}`);
+      };
+
+      switch (columnKey) {
+        case "Id":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{transactions.id}</p>
+            </div>
+          );
+        case "Nama":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {transactions.name}
+              </p>
+            </div>
+          );
+        case "quantity":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {transactions.quantity}
+              </p>
+            </div>
+          );
+        case "transactionDate":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {formatDate(transactions.transactionDate)}
+              </p>
+            </div>
+          );
+        case "note":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {transactions.note}
+              </p>
+            </div>
+          );
+        case "status":
+          return (
+            <Chip
+              className="capitalize"
+              color={statusColorMap[transactions.status]}
+              size="sm"
+              variant="flat"
+            >
+              {cellValue}
+            </Chip>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              <Tooltip content="Details">
+                <span
+                  onClick={() => handleDetail(transactions.id)}
+                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                >
+                  <EyeIcon />
+                </span>
+              </Tooltip>
+              {/* <Tooltip content="Edit">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EditIcon />
               </span>
             </Tooltip> */}
-            <Tooltip color="danger" content="Delete">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+              <Tooltip color="danger" content="Delete">
+                <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                  <DeleteIcon />
+                </span>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [router]
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTransactions, setFilteredTransactions] =
@@ -141,7 +158,12 @@ export default function Purchase({ setActiveMenu }) {
       <h1 className="text-3xl">Transaksi Pembelian</h1>
       <div className="mt-10">
         <div className="flex items-center justify-between mt-2 mb-4">
-          <span>&nbsp;</span>
+          <Link
+            href="/admin/purchase/create"
+            className="border-2 border-gray-500 px-4 py-1 rounded-lg bg-gray-200"
+          >
+            Tambah Pembelian
+          </Link>
           <input
             type="text"
             placeholder="  Search..."

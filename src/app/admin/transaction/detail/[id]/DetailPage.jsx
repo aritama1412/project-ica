@@ -48,7 +48,7 @@ const cart = [
 const EditPage = () => {
   return (
     <div className="flex flex-col p-4 w-full">
-      <h1 className="text-3xl font-bold">Tambahkan Produk Baru</h1>
+      <h1 className="text-3xl font-bold">Detail Penjualan</h1>
       <div className="flex flex-row border border-gray-300 px-6 py-4 mt-4 rounded-sm">
         <div className="flex flex-row w-full gap-8">
           <div className="flex flex-col gap-3 w-1/2 bg-slate-100 p-4">

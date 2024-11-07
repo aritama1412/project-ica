@@ -3,9 +3,17 @@ import Image from "next/image";
 import logo from "../../../../../public/images/logos/logo1.jpg";
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleLogin = () => {
+    setIsLoading(true);
+    // redirect to /admin/product using router
+    router.push("/admin/dashboard");
+  };
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -63,7 +71,7 @@ const LoginPage = () => {
               <Button
                 color="primary"
                 variant="solid"
-                onClick={() => setIsLoading(true)}
+                onClick={() => handleLogin()}
                 // settingLoading={}
                 isLoading={isLoading}
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"

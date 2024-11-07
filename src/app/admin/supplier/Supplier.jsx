@@ -20,6 +20,7 @@ import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import { columns, suppliers } from "./data";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const statusColorMap = {
   active: "success",
@@ -48,50 +49,65 @@ const formatDate = (timestamp) => {
 
 export default function Supplier({ setActiveMenu }) {
   const [selectedColor, setSelectedColor] = React.useState("warning");
+  const router = useRouter();
+
   const handleActiveMenu = (key) => {
     setActiveMenu(key);
   };
-  const renderCell = React.useCallback((suppliers, columnKey) => {
-    const cellValue = suppliers[columnKey];
 
-    switch (columnKey) {
-      case "name":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{suppliers.name}</p>
-          </div>
-        );
-      case "category":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{suppliers.category}</p>
-          </div>
-        );
+  const renderCell = React.useCallback(
+    (suppliers, columnKey) => {
+      const cellValue = suppliers[columnKey];
 
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            {/* <Tooltip content="Details">
+      const handleEdit = (id) => {
+        router.push(`/admin/supplier/edit/${id}`);
+      };
+
+      switch (columnKey) {
+        case "name":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{suppliers.name}</p>
+            </div>
+          );
+        case "category":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {suppliers.category}
+              </p>
+            </div>
+          );
+
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              {/* <Tooltip content="Details">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EyeIcon />
               </span>
             </Tooltip> */}
-            <Tooltip content="Edit supplier">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete supplier">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+              <Tooltip content="Edit">
+                <span
+                  onClick={() => handleEdit(suppliers.id)}
+                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                >
+                  <EditIcon />
+                </span>
+              </Tooltip>
+              <Tooltip color="danger" content="Delete">
+                <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                  <DeleteIcon />
+                </span>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [router]
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTransactions, setFilteredTransactions] = useState(suppliers);

@@ -14,8 +14,8 @@ const Dashboard = () => {
       <Header logo={logo} />
       <div className="flex flex-row h-full">
         <SideBar setActiveMenu={setActiveMenu} />
-
-        <Content activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+        <h1 className="p-5 font-bold text-3xl">Hello Admin</h1>
+        {/* <Content activeMenu={activeMenu} setActiveMenu={setActiveMenu} /> */}
       </div>
     </div>
   );

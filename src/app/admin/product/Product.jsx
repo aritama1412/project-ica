@@ -20,6 +20,7 @@ import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import { columns, transactions } from "./data";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const statusColorMap = {
   active: "success",
@@ -47,87 +48,100 @@ const formatDate = (timestamp) => {
 };
 
 export default function Product({ setActiveMenu }) {
+  const router = useRouter();
   const [selectedColor, setSelectedColor] = React.useState("warning");
   const handleActiveMenu = (key) => {
     setActiveMenu(key);
   };
-  const renderCell = React.useCallback((transactions, columnKey) => {
-    const cellValue = transactions[columnKey];
 
-    switch (columnKey) {
-      case "product":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">
-              {transactions.productsName}
-            </p>
-          </div>
-        );
-      case "category":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">
-              {transactions.category}
-            </p>
-          </div>
-        );
-      case "quantity":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">
-              {transactions.quantity}
-            </p>
-          </div>
-        );
-      case "transactionDate":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">
-              {formatDate(transactions.transactionDate)}
-            </p>
-          </div>
-        );
-      case "note":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{transactions.note}</p>
-          </div>
-        );
-      case "status":
-        return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[transactions.status]}
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            {/* <Tooltip content="Details">
+  const renderCell = React.useCallback(
+    (transactions, columnKey) => {
+      const cellValue = transactions[columnKey];
+      const handleEdit = (id) => {
+        router.push(`/admin/product/edit/${id}`);
+      };
+
+      switch (columnKey) {
+        case "product":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {transactions.productsName}
+              </p>
+            </div>
+          );
+        case "category":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {transactions.category}
+              </p>
+            </div>
+          );
+        case "quantity":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {transactions.quantity}
+              </p>
+            </div>
+          );
+        case "transactionDate":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {formatDate(transactions.transactionDate)}
+              </p>
+            </div>
+          );
+        case "note":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {transactions.note}
+              </p>
+            </div>
+          );
+        case "status":
+          return (
+            <Chip
+              className="capitalize"
+              color={statusColorMap[transactions.status]}
+              size="sm"
+              variant="flat"
+            >
+              {cellValue}
+            </Chip>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              {/* <Tooltip content="Details">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EyeIcon />
               </span>
             </Tooltip> */}
-            <Tooltip content="Edit user">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+              <Tooltip content="Edit">
+                <span
+                  onClick={() => handleEdit(transactions.id)}
+                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                >
+                  <EditIcon />
+                </span>
+              </Tooltip>
+              <Tooltip color="danger" content="Delete">
+                <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                  <DeleteIcon />
+                </span>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [router]
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTransactions, setFilteredTransactions] =
@@ -146,7 +160,7 @@ export default function Product({ setActiveMenu }) {
       <div className="mt-10">
         <div className="flex items-center justify-between mt-2 mb-4">
           <Link
-            href="/admin/stock/create"
+            href="/admin/product/create"
             className="border-2 border-gray-500 px-4 py-1 rounded-lg bg-gray-200"
           >
             Tambah Barang

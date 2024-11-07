@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export const Header = ({ logo }) => {
@@ -31,18 +32,18 @@ export const Header = ({ logo }) => {
                   ></path>
                 </svg>
               </button>
-              <a href="https://flowbite.com" className="flex ms-2 md:me-24">
+              <Link href="/admin/dashboard" className="flex ms-2 md:me-24">
                 <Image
                   width={32}
                   height={32}
                   src={logo}
                   className="h-8 me-3"
-                  alt="FlowBite Logo"
+                  alt="Logo"
                 />
                 <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                  Flowbite
+                  Toko Bunga
                 </span>
-              </a>
+              </Link>
             </div>
             <div className="flex items-center">
               <div className="flex items-center ms-3">
