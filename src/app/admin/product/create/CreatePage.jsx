@@ -50,8 +50,6 @@ const CreatePage = () => {
                 ))}
               </Select>
             </div>
-          </div>
-          <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
               <span>Harga</span>
               <input
@@ -60,6 +58,9 @@ const CreatePage = () => {
                 placeholder="..."
               />
             </div>
+          </div>
+
+          <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
               <span>Deskripsi</span>
               <textarea
@@ -68,9 +69,6 @@ const CreatePage = () => {
                 placeholder="..."
               />
             </div>
-          </div>
-
-          <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
               <span>Jumlah Stok</span>
               <input
@@ -115,6 +113,15 @@ const CreatePage = () => {
                 placeholder="..."
               />
             </div>
+          </div>
+
+          <div className="flex items-start mt-10">
+            <button
+              type="submit"
+              className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
+            >
+              Simpan
+            </button>
           </div>
         </div>
       </div>

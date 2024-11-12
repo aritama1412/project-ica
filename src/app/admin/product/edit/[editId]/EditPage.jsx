@@ -50,6 +50,14 @@ const EditPage = () => {
                 ))}
               </Select>
             </div>
+            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
+              <span>Harga</span>
+              <input
+                type="text"
+                className="border border-gray-300 px-1 max-w-[250px]"
+                placeholder="..."
+              />
+            </div>
           </div>
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
@@ -68,9 +76,6 @@ const EditPage = () => {
                 placeholder="..."
               />
             </div>
-          </div>
-
-          <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
               <span>Tanggal Masuk</span>
               <DatePicker
@@ -79,6 +84,9 @@ const EditPage = () => {
                 className="max-w-[250px] bg-white px-2 border border-gray-300 rounded-sm"
               />
             </div>
+          </div>
+
+          <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
               <span>Munculkan di Katalog</span>
               <Select
@@ -96,9 +104,6 @@ const EditPage = () => {
                 </SelectItem>
               </Select>
             </div>
-          </div>
-
-          <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3">
               <span>Upload Gambar</span>
               <input
@@ -107,6 +112,14 @@ const EditPage = () => {
                 placeholder="..."
               />
             </div>
+          </div>
+          <div className="flex items-start mt-10">
+            <button
+              type="submit"
+              className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
+            >
+              Simpan
+            </button>
           </div>
         </div>
       </div>

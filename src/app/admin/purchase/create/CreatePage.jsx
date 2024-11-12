@@ -95,6 +95,14 @@ const CreatePage = () => {
               />
             </div>
           </div>
+          <div className="flex items-start mt-10">
+            <button
+              type="submit"
+              className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
+            >
+              Simpan
+            </button>
+          </div>
         </div>
         <div className="w-full md:w-1/2 bg-slate-100 p-4">
           <div className="grid grid-cols-10 font-semibold text-center gap-2 mb-4">

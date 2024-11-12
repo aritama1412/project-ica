@@ -17,7 +17,7 @@ const transactions = [
     quantity: 3,
     note: "",
     status: "success",
-    transactionDate: Date.now(),
+    transactionDate: "2024-11-12 23:00:12",
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ const transactions = [
     quantity: 4,
     note: "",
     status: "success",
-    transactionDate: Date.now(),
+    transactionDate: "2024-11-12 23:00:12",
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ const transactions = [
     quantity: 12,
     note: "",
     status: "pending",
-    transactionDate: Date.now(),
+    transactionDate: "2024-11-12 23:00:12",
   },
   {
     id: 4,
@@ -44,7 +44,7 @@ const transactions = [
     quantity: 5,
     note: "",
     status: "pending",
-    transactionDate: Date.now(),
+    transactionDate: "2024-11-12 23:00:12",
   },
   {
     id: 5,
@@ -53,7 +53,7 @@ const transactions = [
     quantity: 30,
     note: "FRESH",
     status: "success",
-    transactionDate: Date.now(),
+    transactionDate: "2024-11-12 23:00:12",
   },
 ];
 

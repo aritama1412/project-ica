@@ -8,15 +8,17 @@ import {
   BiSolidCartAdd,
   BiLogIn,
 } from "react-icons/bi";
+import useSidebarAdmin from "@/../stores/sidebarAdminStore";
+
 const menus = {
   stockProduct: {
     name: "Stok Produk",
-    link: "/admin/product",
+    link: "product",
     icon: <BiSolidShoppingBag />,
   },
   supplier: {
     name: "Supplier",
-    link: "/admin/supplier",
+    link: "supplier",
     icon: <BiSolidTruck />,
   },
   // customer: {
@@ -26,12 +28,12 @@ const menus = {
   // },
   transaction: {
     name: "Transaksi Penjualan",
-    link: "/admin/transaction",
+    link: "transaction",
     icon: <BiSolidCartAdd />,
   },
   purchase: {
     name: "Transaksi Pembelian",
-    link: "/admin/purchase",
+    link: "purchase",
     icon: <BiSolidCartAdd />,
   },
   logout: {
@@ -41,14 +43,17 @@ const menus = {
   },
 };
 
-export default function SideBar({ setActiveMenu }) {
+export default function SideBar() {
+  const activeMenu = useSidebarAdmin((state) => state.menu); // Access current `menu` state
+  const setActiveMenu = useSidebarAdmin((state) => state.setMenu); // Access `setMenu` method
+
   const handleActiveMenu = (key) => {
-    setActiveMenu(key);
+    setActiveMenu(key); // Update the menu value in the store
   };
 
-  // useEffect(() => {
-  //   console.log("activeMenu", activeMenu);
-  // }, [activeMenu]);
+  useEffect(() => {
+    console.log("activeMenu", activeMenu);
+  }, [activeMenu]);
 
   return (
     <>
@@ -62,9 +67,11 @@ export default function SideBar({ setActiveMenu }) {
             {Object.keys(menus).map((key) => (
               <li key={key}>
                 <Link
-                  href={menus[key].link}
-                  // onClick={() => handleActiveMenu(key)}
-                  className="flex items-center p-2 cursor-pointer text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  href={`/admin/` + menus[key].link}
+                  onClick={() => handleActiveMenu(menus[key].link)}
+                  className={`flex items-center p-2 cursor-pointer ${
+                    activeMenu === menus[key].link ? "bg-gray-200" : ""
+                  } text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group`}
                 >
                   <span className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                     {menus[key].icon}
