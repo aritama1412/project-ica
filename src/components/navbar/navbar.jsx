@@ -7,6 +7,7 @@ import Link from "next/link";
 import useCounter from "../../../stores/store";
 import useCart from "../../../stores/cartStore";
 import { BiCart } from "react-icons/bi";
+import { useRouter } from "next/navigation";
 
 const Dropdown = ({ items }) => (
   <ul className="bg-white absolute shadow-md rounded ml-[-16px]">
@@ -25,6 +26,7 @@ const Navbar = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const counter = useCounter();
   const cart = useCart();
+  const router = useRouter();
 
   const menuData = {
     Tanaman: ["Tanaman Hias", "Tanaman Toga", "Tanaman Buah-buahan"],
@@ -36,6 +38,10 @@ const Navbar = () => {
       "Pembuatan taman dan kolam",
       "Menerima dekorasi taman pengantin",
     ],
+  };
+
+  const handleCekPesanan = () => {
+    router.push("/search-order");
   };
 
   return (
@@ -69,6 +75,15 @@ const Navbar = () => {
               {hoveredItem === key && <Dropdown items={menuData[key]} />}
             </li>
           ))}
+          <li
+            className={`cursor-pointer relative group transition-all duration-300 ease-in-out`}
+            onMouseEnter={() => setHoveredItem(null)}
+            onMouseLeave={() => setHoveredItem(null)}
+            onClick={() => handleCekPesanan()}
+          >
+            Cek Pesanan
+            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
+          </li>
         </ul>
         <div className="flex flex-row gap-3">
           <Link
