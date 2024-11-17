@@ -45,11 +45,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center sticky border-b-2 z-[1]">
-      <div className="flex flex-row gap-10 w-full justify-start items-center pt-5 pb-3 scmobile:pt-0 scmobile:pb-0">
+    <div className="flex flex-col justify-center items-center sticky border-b-2 z-[10] ">
+      <div className="flex flex-row gap-10 w-full justify-start scmed:justify-between items-center pt-5 pb-3 px-8 scmobile:pt-0 scmobile:pb-0 bg-[#EDE8DC] ">
         <Link href="/" className="cursor-pointer">
           <Image
-            className="object-cover w-[100px] max-w-[100px] h-[100px] max-h-[100px]"
+            className="object-cover w-[100px] max-w-[100px] h-[100px] max-h-[100px] rounded-full"
             src={logo}
             width={100}
             height={100}
@@ -57,7 +57,7 @@ const Navbar = () => {
             alt="flowers"
           />
         </Link>
-        <ul className="flex flex-row   gap-10 scmobile:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4">
+        <ul className="flex flex-row gap-10 scmobile:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4 text-[#664343]">
           {Object.keys(menuData).map((key, index) => (
             <li
               key={index}
@@ -88,11 +88,11 @@ const Navbar = () => {
         <div className="flex flex-row gap-3">
           <Link
             href="/checkout"
-            className="flex flex-row items-center justify-center gap-2 bg-gray-800 rounded-md text-white min-w-[100px] px-3 py-1"
+            className="flex flex-row items-center justify-center gap-2 bg-[#40A578] border-2 border-[#006769] rounded-md text-[#FFFAE6] min-w-[100px] scmed:min-w-[50px] scmobile:min-w-[50px] px-3 scmed:px-1 scmobile:px-1 py-1"
           >
             <span>{cart && cart.count}</span>
             <BiCart />
-            <span>Checkout</span>
+            <span className="hidden sm:block scmed:hidden">Checkout</span>
           </Link>
         </div>
       </div>

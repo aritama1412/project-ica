@@ -37,7 +37,7 @@ const services = [
 
 const FilterSection = () => {
   return (
-    <div className="scmin:hidden flex flex-col items-center h-full w-[320px] max-w-[320px] mt-[60px]">
+    <div className="scmin:hidden flex flex-col items-center h-full w-[320px] max-w-[320px] mt-[20px]">
       {/* <FilterCard data={colors} filterText="Warna" /> */}
       <FilterCard data={flowers} filterText="Tanaman" />
       <FilterCard data={vases} filterText="Pot" />

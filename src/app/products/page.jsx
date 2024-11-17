@@ -5,7 +5,7 @@ import ProductSection from "../../components/products/productSection";
 
 const page = () => {
   return (
-    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-[1800px] min-h-screen ">
+    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen">
       <Navbar />
       <div className="flex flex-row gap-5">
         <FilterSection />

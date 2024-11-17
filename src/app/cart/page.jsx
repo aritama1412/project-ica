@@ -11,7 +11,7 @@ const Cart = () => {
   }, [cart]);
 
   return (
-    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-[1800px] min-h-screen ">
+    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen">
       <Navbar />
       <div className="flex flex-col gap-5">
         <div className="mt-5">

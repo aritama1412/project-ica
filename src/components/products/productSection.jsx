@@ -102,7 +102,8 @@ const data = [
 const ProductSection = () => {
   return (
     // bg-green-400
-    <div className="w-full grid scmobile:grid-cols-2 scmed:grid-cols-2 grid-cols-3 gap-1 place-items-center cursor-pointer">
+    <div className="w-full grid scmobile:grid-cols-2 scmed:grid-cols-2 grid-cols-5 gap-2 place-items-center mt-[20px]">
+      {/* <div className="w-full flex flex-wrap gap-5 place-items-center cursor-pointer"> */}
       <ProductCard data={data} />
     </div>
   );

@@ -149,19 +149,27 @@ const Page = (data) => {
     console.log("Adding item:", item);
     cart.add(item, quantity); // Pass both item and quantity to add
   };
+
+  const handleQuantity = (type) => {
+    console.log("quantity before: ", quantity);
+    if (type === "+") {
+      setQuantity(quantity + 1);
+    }
+    console.log("quantity after: ", quantity);
+  };
   return (
-    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-[1800px] min-h-screen">
+    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen">
       <Navbar />
-      <div className="mt-10 ml-3 flex flex-row gap-9">
+      <div className="mt-10 ml-3 gap-9 flex flex-row scmobile:flex-col scmobile:mt-0 scmobile:ml-0 scmobile:gap-2">
         <Image
-          className="object-cover w-[300px] max-w-[300px] h-[378px] max-h-[378px] rounded-lg"
+          className="object-cover w-[300px] max-w-[300px] scmobile:w-full scmobile:min-w-full h-[378px] max-h-[378px] rounded-lg scmobile:rounded-none"
           src={selected.img}
           width={300}
           height={378}
           loading="eager"
           alt="flowers"
         />
-        <div className="flex flex-col gap-5 w-full">
+        <div className="flex flex-col gap-5 w-full scmobile:px-4">
           <h1 className="line-clamp-2 text-2xl font-semibold">
             {selected.name}
             <hr />
@@ -175,9 +183,9 @@ const Page = (data) => {
             })}
             <hr />
           </h2>
-          <h3 className="font-semibold mt-10">Informasi</h3>
+          <h3 className="font-semibold mt-10 scmobile:mt-0">Informasi</h3>
           <p>{selected.description}</p>
-          <div className="flex flex-row gap-3">
+          <div className="flex flex-row gap-3 scmobile:hidden">
             <input
               type="number"
               min={0}
@@ -189,13 +197,66 @@ const Page = (data) => {
             <button
               onClick={() => addToCart()}
               className="transition duration-300 motion-reduce:transition-none
-            leading-normal active:bg-gray-900 active:text-gray-100 ease-in-out
-            bg-gray-800 px-10 py-3 w-[150px] text-gray-200 rounded-xl border-2
-            border-gray-50 hover:bg-gray-50 hover:text-gray-800
-            hover:border-gray-800 "
+                  leading-normal active:bg-[#16423C] active:text-[#C4DAD2] ease-in-out
+                  bg-[#16423C] px-10 py-3 w-[150px] text-gray-200 rounded-xl border-2
+                  border-[#C4DAD2] hover:bg-[#C4DAD2] hover:text-[#16423C]
+                  hover:border-[#16423C]"
             >
               Beli
             </button>
+          </div>
+
+          <div className="hidden scmobile:fixed scmobile:bottom-0 scmobile:left-0 scmobile:block scmobile:px-4 py-2 w-full inset-x-0 bg-white shadow-[0px_-10px_40px_10px_rgba(0,_0,_0,_0.1)] border-gray-300">
+            <div className="flex flex-row items-center justify-between bottom-0">
+              <div className="flex flex-row gap-3">
+                <button
+                  onClick={() => quantity > 1 && setQuantity(quantity - 1)}
+                  className="w-[32px] h-[32px] px-1 border border-gray-500 rounded-md"
+                >
+                  <svg
+                    enableBackground="new 0 0 10 10"
+                    viewBox="0 0 10 10"
+                    x="0"
+                    y="0"
+                    className="shopee-svg-icon"
+                  >
+                    <polygon points="4.5 4.5 3.5 4.5 0 4.5 0 5.5 3.5 5.5 4.5 5.5 10 5.5 10 4.5"></polygon>
+                  </svg>
+                </button>
+                <input
+                  type="number"
+                  min={0}
+                  className="rounded-md px-3 text-center border border-gray-500 w-[75px]"
+                  placeholder="Jumlah"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-[32px] h-[32px] px-1 border border-gray-500 rounded-md"
+                >
+                  <svg
+                    enableBackground="new 0 0 10 10"
+                    viewBox="0 0 10 10"
+                    x="0"
+                    y="0"
+                    className="shopee-svg-icon icon-plus-sign"
+                  >
+                    <polygon points="10 4.5 5.5 4.5 5.5 0 4.5 0 4.5 4.5 0 4.5 0 5.5 4.5 5.5 4.5 10 5.5 10 5.5 5.5 10 5.5"></polygon>
+                  </svg>
+                </button>
+              </div>
+              <button
+                onClick={() => addToCart()}
+                className="transition duration-300 motion-reduce:transition-none
+                  leading-normal active:bg-gray-900 active:text-gray-100 ease-in-out
+                  bg-[#16423C] px-10 py-3 w-[150px] text-gray-200 rounded-xl border-2
+                  border-gray-50 hover:bg-[#6A9C89] hover:text-gray-800
+                  hover:border-gray-800 "
+              >
+                Beli
+              </button>
+            </div>
           </div>
         </div>
       </div>
