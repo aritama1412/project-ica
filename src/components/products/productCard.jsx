@@ -25,7 +25,7 @@ export const ProductCard = ({ data }) => {
                 alt="flowers"
               />
               {flower.isBestseller && (
-                <span className="text-xs absolute top-0 right-0 px-1 text-white bg-[#e2b132]">
+                <span className="text-xs absolute top-0 right-0 pr-1 pl-2 pb-[1px] font-semibold rounded-bl-lg text-[#603F26] bg-[#F9E400]">
                   Paling Populer
                 </span>
               )}

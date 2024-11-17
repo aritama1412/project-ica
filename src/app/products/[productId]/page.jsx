@@ -199,7 +199,7 @@ const Page = (data) => {
               className="transition duration-300 motion-reduce:transition-none
                   leading-normal active:bg-[#16423C] active:text-[#C4DAD2] ease-in-out
                   bg-[#16423C] px-10 py-3 w-[150px] text-gray-200 rounded-xl border-2
-                  border-[#C4DAD2] hover:bg-[#C4DAD2] hover:text-[#16423C]
+                  border-[#C4DAD2] hover:bg-[#fff] hover:text-[#16423C]
                   hover:border-[#16423C]"
             >
               Beli
