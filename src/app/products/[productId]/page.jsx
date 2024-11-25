@@ -190,7 +190,6 @@ const Page = (data) => {
       quantity: quantity,
     };
 
-    console.log("Adding item:", item);
     cart.add(item, quantity); // Pass both item and quantity to add
   };
 
@@ -276,7 +275,7 @@ const Page = (data) => {
               //   margin: "auto",
               //   width: "100%",
               // }}
-              className="object-cover w-[300px] max-w-[300px] scmobile:w-full scmobile:min-w-full h-[378px] max-h-[378px] rounded-lg scmobile:rounded-none"
+              className="object-contain w-full scmobile:w-full scmobile:min-w-full h-[378px] max-h-[378px] rounded-lg scmobile:rounded-none"
               width={300}
               height={378}
               loading="eager"

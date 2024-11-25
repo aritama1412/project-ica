@@ -18,11 +18,25 @@ function FilterCard({ data, filterText }) {
 
   return (
     <>
-      <div className="flex flex-col items-center w-[320px] max-w-[320px] border mb-3 py-2 scmobile:mb-1 rounded-2xl shadow-lg">
+      <div className="flex flex-col items-center w-[320px] sc3row:w-[280px] max-w-[320px] border mb-3 py-2 scmobile:mb-1 rounded-2xl shadow-lg">
         <div
           onClick={() => openFilterHandler(filterText)}
-          className="flex flex-row justify-between items-center px-5 scmobile:px-3 w-full "
+          className="hidden scmobile:flex flex-row justify-between items-center px-5 scmobile:px-3 w-full "
         >
+          <span className="scmobile:text-center flex font-bold w-full whitespace-nowrap cursor-pointer">
+            {filterText}
+          </span>
+          <label className="cursor-pointer flex items-center">
+            <input
+              type="checkbox"
+              checked={!isVisible}
+              onChange={toggleVisibility}
+              className="hidden"
+            />
+            <SlArrowDown className="scmobile:hidden" />
+          </label>
+        </div>
+        <div className="scmobile:hidden flex flex-row justify-between items-center px-5 scmobile:px-3 w-full ">
           <span className="scmobile:text-center flex font-bold w-full whitespace-nowrap cursor-pointer">
             {filterText}
           </span>

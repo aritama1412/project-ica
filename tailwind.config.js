@@ -18,16 +18,22 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       screens: {
-        scmin: { max: "1160px" },
+        scminX: { min: "1281px" },
+        scmin: { max: "1280px" },
+        sc4row: { max: "1230px" },
+        sc3row: { max: "1045px" },
+        sc2row: { max: "870px" },
         scmed: { max: "845px" },
         // scmobile: { max: "430px" },
         scmobile: { max: "555px" },
+        scmobileX: { min: "555px" },
         // (min-width: 550px)
         // (min-width: 950px)
         // (min-width: 1128px)
         // (min-width: 1640px)
         // (min-width: 1880px)
         hideNavBar: { max: "700px" },
+        hideSideBar: { max: "659px" },
       },
       fontSize: {
         mobilexs: "10px",
