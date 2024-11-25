@@ -22,6 +22,7 @@ module.exports = {
         scmed: { max: "845px" },
         // scmobile: { max: "430px" },
         scmobile: { max: "555px" },
+        hideNavBar: { max: "700px" },
       },
       fontSize: {
         mobilexs: "10px",

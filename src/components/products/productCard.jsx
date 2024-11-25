@@ -17,7 +17,7 @@ export const ProductCard = ({ data }) => {
             <div className="relative flex justify-center rounded-lg w-full min-w-[175px]">
               <Image
                 className="object-cover"
-                src={flower.img}
+                src={flower.imgs[0]}
                 width={175}
                 height={175}
                 style={{ width: "175px", height: "175px" }}

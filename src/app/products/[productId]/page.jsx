@@ -1,11 +1,14 @@
 "use client";
 import Navbar from "@/components/navbar/navbar";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import useCounter from "@/../stores/store";
 import useCart from "@/../stores/cartStore";
 import { useState } from "react";
-
+// import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import useOpenFilterStore from "@/../stores/openFilterStore";
 const colors = [
   { id: 1, name: "Red", code: "#FF0000" },
   { id: 2, name: "Green", code: "#00FF00" },
@@ -25,8 +28,12 @@ const colors = [
 const flowers = [
   {
     id: 1,
-    name: "Mawar Putih",
-    img: "/images/flowers/rose.jpg",
+    name: "Mawar Merah",
+    imgs: [
+      "/images/flowers/rose.jpg",
+      "/images/flowers/rose 2.jpg",
+      "/images/flowers/rose 3.jpg",
+    ],
     description: "Bunga mawar wangi.",
     price: 15000,
     rating: 4.7,
@@ -36,8 +43,12 @@ const flowers = [
   },
   {
     id: 2,
-    name: "Mawar Merah",
-    img: "/images/flowers/rose 3.jpg",
+    name: "Mawar Putih",
+    imgs: [
+      "/images/flowers/white-rose.jpg",
+      "/images/flowers/white-rose-2.jpg",
+      "/images/flowers/white-rose-3.jpg",
+    ],
     description:
       "Dengan kelopak yang berwarna merah terang, mawar merah adalah simbol dari gairah dan keberanian.",
     price: 20000,
@@ -49,7 +60,11 @@ const flowers = [
   {
     id: 3,
     name: "Anggrek Kalimantan",
-    img: "/images/flowers/anggrek 1.jpg",
+    imgs: [
+      "/images/flowers/anggrek 1.jpg",
+      "/images/flowers/anggrek 2.jpg",
+      "/images/flowers/anggrek 3.jpg",
+    ],
     description:
       "Anggrek ungu melambangkan kemewahan dan keanggunan, sering dipandang sebagai simbol kekayaan.",
     price: 25000,
@@ -61,7 +76,11 @@ const flowers = [
   {
     id: 4,
     name: "Anggrek Putih",
-    img: "/images/flowers/anggrek 2.jpg",
+    imgs: [
+      "/images/flowers/anggrek 4.jpg",
+      "/images/flowers/anggrek-5.jpg",
+      "/images/flowers/anggrek-6.jpg",
+    ],
     description:
       "Anggrek adalah bunga eksotis yang sering ditanam di dalam pot dan memiliki berbagai warna.",
     price: 30000,
@@ -73,7 +92,11 @@ const flowers = [
   {
     id: 5,
     name: "Anggrek Kecil",
-    img: "/images/flowers/anggrek 3.jpg",
+    imgs: [
+      "/images/flowers/anggrek-7.jpg",
+      "/images/flowers/anggrek-6.jpg",
+      "/images/flowers/anggrek-5.jpg",
+    ],
     description:
       "Anggrek ungu adalah simbol dari kekuatan dan kebijaksanaan, menjadikannya pilihan yang elegan untuk dekorasi.",
     price: 18000,
@@ -85,7 +108,12 @@ const flowers = [
   {
     id: 6,
     name: "Bunga Matahari Besar",
-    img: "/images/flowers/sunflower 1.jpg",
+    imgs: [
+      "/images/flowers/sunflower 1.jpg",
+      "/images/flowers/sunflower-5.jpg",
+      "/images/flowers/sunflower-6.jpg",
+      "/images/flowers/sunflower-7.jpg",
+    ],
     description:
       "Bunga matahari melambangkan keceriaan dan kebahagiaan, sering dihubungkan dengan sinar matahari dan musim panas.",
     price: 25000,
@@ -97,7 +125,12 @@ const flowers = [
   {
     id: 7,
     name: "Bunga Matahari Kecil",
-    img: "/images/flowers/sunflower 2.jpg",
+    imgs: [
+      "/images/flowers/sunflower 2.jpg",
+      "/images/flowers/sunflower-5.jpg",
+      "/images/flowers/sunflower-6.jpg",
+      "/images/flowers/sunflower-7.jpg",
+    ],
     description:
       "Bunga matahari dikenal karena kemampuannya mengikuti arah matahari, melambangkan kesetiaan dan ketekunan.",
     price: 60000,
@@ -109,7 +142,11 @@ const flowers = [
   {
     id: 8,
     name: "Bunga Matahari Sedang",
-    img: "/images/flowers/sunflower 3.jpg",
+    imgs: [
+      "/images/flowers/sunflower-7.jpg",
+      "/images/flowers/sunflower-6.jpg",
+      "/images/flowers/sunflower-5.jpg",
+    ],
     description:
       "Bunga matahari memberikan kesan ceria dan penuh semangat, sering digunakan dalam rangkaian bunga untuk menyampaikan harapan baik.",
     price: 18000,
@@ -137,6 +174,13 @@ const Page = (data) => {
   const counter = useCounter();
   const cart = useCart();
   const [quantity, setQuantity] = useState(1);
+  const openFilter = useOpenFilterStore();
+
+  useEffect(() => {
+    openFilter.setFilter(null);
+    // eslint-disable-next-line
+  }, []);
+
   const addToCart = () => {
     const item = {
       id: selected.id,
@@ -158,21 +202,91 @@ const Page = (data) => {
     console.log("quantity after: ", quantity);
   };
   return (
-    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen">
+    <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen scmobile:pb-[100px]">
       <Navbar />
       <div className="mt-10 ml-3 gap-9 flex flex-row scmobile:flex-col scmobile:mt-0 scmobile:ml-0 scmobile:gap-2">
-        <Image
+        {/* <Image
           className="object-cover w-[300px] max-w-[300px] scmobile:w-full scmobile:min-w-full h-[378px] max-h-[378px] rounded-lg scmobile:rounded-none"
           src={selected.img}
           width={300}
           height={378}
           loading="eager"
+          width={100}
+          height={100}
           alt="flowers"
-        />
+        /> */}
+        <Carousel
+          additionalTransfrom={0}
+          arrows
+          autoPlaySpeed={3000}
+          centerMode={false}
+          className=""
+          containerClass="container"
+          dotListClass=""
+          draggable
+          focusOnSelect={false}
+          infinite
+          itemClass=""
+          keyBoardControl
+          minimumTouchDrag={80}
+          pauseOnHover
+          renderArrowsWhenDisabled={false}
+          renderButtonGroupOutside={false}
+          renderDotsOutside={false}
+          responsive={{
+            desktop: {
+              breakpoint: {
+                max: 3000,
+                min: 1024,
+              },
+              items: 1,
+            },
+            mobile: {
+              breakpoint: {
+                max: 464,
+                min: 0,
+              },
+              items: 1,
+            },
+            tablet: {
+              breakpoint: {
+                max: 1024,
+                min: 464,
+              },
+              items: 1,
+            },
+          }}
+          rewind={false}
+          rewindWithAnimation={false}
+          rtl={false}
+          shouldResetAutoplay
+          showDots
+          sliderClass=""
+          slidesToSlide={1}
+          swipeable
+        >
+          {selected.imgs.map((item, index) => (
+            <Image
+              key={index}
+              src={item}
+              // src="https://images.unsplash.com/photo-1549989476-69a92fa57c36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+              // style={{
+              //   display: "block",
+              //   height: "100%",
+              //   margin: "auto",
+              //   width: "100%",
+              // }}
+              className="object-cover w-[300px] max-w-[300px] scmobile:w-full scmobile:min-w-full h-[378px] max-h-[378px] rounded-lg scmobile:rounded-none"
+              width={300}
+              height={378}
+              loading="eager"
+              alt="flowers"
+            />
+          ))}
+        </Carousel>
         <div className="flex flex-col gap-5 w-full scmobile:px-4">
           <h1 className="line-clamp-2 text-2xl font-semibold">
             {selected.name}
-            <hr />
           </h1>
           <h2 className="text-3xl font-bold">
             {selected.price.toLocaleString("id-ID", {
@@ -181,9 +295,10 @@ const Page = (data) => {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })}
-            <hr />
           </h2>
-          <h3 className="font-semibold mt-10 scmobile:mt-0">Informasi</h3>
+          <h3 className="font-semibold scmobile:mt-0 border-t border-t-gray-300 pt-4">
+            Informasi
+          </h3>
           <p>{selected.description}</p>
           <div className="flex flex-row gap-3 scmobile:hidden">
             <input

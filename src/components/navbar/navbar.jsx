@@ -57,7 +57,7 @@ const Navbar = () => {
             alt="flowers"
           />
         </Link>
-        <ul className="flex flex-row gap-10 scmobile:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4 text-[#664343]">
+        <ul className="flex flex-row gap-10 hideNavBar:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4 text-[#664343]">
           {Object.keys(menuData).map((key, index) => (
             <li
               key={index}
@@ -88,11 +88,14 @@ const Navbar = () => {
         <div className="flex flex-row gap-3">
           <Link
             href="/checkout"
-            className="flex flex-row items-center justify-center gap-2 bg-[#40A578] border-2 border-[#006769] rounded-md text-[#FFFAE6] min-w-[100px] scmed:min-w-[50px] scmobile:min-w-[50px] px-3 scmed:px-1 scmobile:px-1 py-1"
+            className="bg-[#006769] border-2 border-[#40A578] rounded-full text-[#FFFAE6] px-2 py-2"
           >
-            <span>{cart && cart.count}</span>
-            <BiCart />
-            <span className="hidden sm:block scmed:hidden">Checkout</span>
+            <BiCart className="w-8 h-8" />
+            {cart && cart.count > 0 && (
+              <span className="absolute top-9 right-6 p-3 scmobile:top-4 scmobile:right-6 flex items-center justify-center border-2 border-[#006769] w-4 h-4 text-xs text-white bg-red-500 rounded-full">
+                {cart && cart.count}
+              </span>
+            )}
           </Link>
         </div>
       </div>

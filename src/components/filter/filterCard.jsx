@@ -1,21 +1,31 @@
 "use client";
 import { useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
+import useOpenFilterStore from "@/../stores/openFilterStore";
 
 function FilterCard({ data, filterText }) {
   const [isActive, setIsActive] = useState(false);
   const [isVisible, setIsVisible] = useState(true); // State to manage visibility
+  const openFilter = useOpenFilterStore();
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible); // Toggle the visibility state
   };
 
+  const openFilterHandler = (filterText) => {
+    openFilter.setFilter(data);
+  };
+
   return (
     <>
-      <div className="flex flex-col items-center max-h-full w-[320px] max-w-[320px] border mb-3 rounded-2xl pt-2 shadow-lg">
-        <div className="flex flex-row justify-between items-center px-5 py-1 w-full">
-          <span className="font-bold">{filterText}</span>
-
+      <div className="flex flex-col items-center w-[320px] max-w-[320px] border mb-3 py-2 scmobile:mb-1 rounded-2xl shadow-lg">
+        <div
+          onClick={() => openFilterHandler(filterText)}
+          className="flex flex-row justify-between items-center px-5 scmobile:px-3 w-full "
+        >
+          <span className="scmobile:text-center flex font-bold w-full whitespace-nowrap cursor-pointer">
+            {filterText}
+          </span>
           <label className="cursor-pointer flex items-center">
             <input
               type="checkbox"
@@ -23,15 +33,15 @@ function FilterCard({ data, filterText }) {
               onChange={toggleVisibility}
               className="hidden"
             />
-            <SlArrowDown />
+            <SlArrowDown className="scmobile:hidden" />
           </label>
         </div>
-        <div className="flex flex-wrap overflow-y-hidden p-2 gap-1">
+        <div className="scmobile:hidden flex flex-wrap overflow-y-hidden gap-1">
           {data.map((item) => (
             <div
               key={item.id}
-              className={`flex flex-wrap cursor-pointer items-center overflow-y-hidden p-2 gap-1 border ${
-                isVisible ? "" : "hidden"
+              className={`flex flex-wrap cursor-pointer items-center overflow-y-hidden ml-3 mt-2 p-2 gap-1 border ${
+                isVisible ? "hidden" : ""
               }`}
             >
               <span
