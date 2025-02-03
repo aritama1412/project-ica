@@ -19,37 +19,60 @@ import {
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
+// import { columns, transactions } from "./data";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
+const statusColorMap = {
+  active: "success",
+  paused: "danger",
+  vacation: "warning",
+};
+
+const columns = [
+  { name: "Produk", uid: "product" },
+  { name: "Katogori", uid: "category" },
+  { name: "Jumlah", uid: "quantity" },
+  { name: "Tanggal", uid: "transactionDate" },
+  { name: "Deskripsi", uid: "note" },
+  { name: "Status", uid: "status" },
+  { name: "ACTIONS", uid: "actions" },
+];
+
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${day}-${month}-${year} ${hours}:${minutes}`;
+};
+
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function Supplier({ setActiveMenu }) {
+export default function Product({ setActiveMenu }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = React.useState(1);
 
   const { data, isLoading } = useSWR(
-    `http://localhost:4000/suppliers/get-all-suppliers`,
+    `http://localhost:4000/products/get-all-products`,
     fetcher,
     {
       keepPreviousData: true,
     }
   );
 
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   // Filtered Data Based on Search Query
   const filteredData = React.useMemo(() => {
     if (!data?.data) return [];
     if (!searchQuery) return data.data;
-
-    return data.data.filter(
-      (item) =>
-        item.supplier_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.status_info?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.phone.includes(searchQuery)
+    return data.data.filter((item) =>
+      item.product_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [data?.data, searchQuery]);
 
@@ -68,28 +91,21 @@ export default function Supplier({ setActiveMenu }) {
     return filteredData.slice(startIndex, endIndex);
   }, [filteredData, page, rowsPerPage]);
 
-  const handleView = (id) => {
-    router.push(`/admin/supplier/view/${id}`);
-  };
-  const handleEdit = (id) => {
-    router.push(`/admin/supplier/edit/${id}`);
-  };
-
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
-      <h1 className="text-3xl">Supplier</h1>
+      <h1 className="text-3xl">Produk</h1>
       <div className="mt-10">
         <div className="flex items-center justify-between mt-2 mb-4">
           <Link
-            href="/admin/supplier/create"
+            href="/admin/product/create"
             className="border-2 border-gray-500 px-4 py-1 rounded-lg bg-gray-200"
           >
-            Tambah Supplier
+            Tambah Barang
           </Link>
           <input
             type="text"
             placeholder="  Search..."
-            className=" border border-gray-400 rounded-lg"
+            className="border border-gray-400 rounded-lg"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -97,6 +113,7 @@ export default function Supplier({ setActiveMenu }) {
             }}
           />
         </div>
+
         <Table
           aria-label="Example table with client async pagination"
           bottomContent={
@@ -116,9 +133,12 @@ export default function Supplier({ setActiveMenu }) {
           }
         >
           <TableHeader>
-            <TableColumn key="supplier_name">Name</TableColumn>
-            <TableColumn key="phone">phone</TableColumn>
-            <TableColumn key="status_info">Status</TableColumn>
+            <TableColumn key="product_name">Produk</TableColumn>
+            <TableColumn key="category">Katogori</TableColumn>
+            <TableColumn key="stock">Stok</TableColumn>
+            <TableColumn key="description">Deskripsi</TableColumn>
+            <TableColumn key="rating">Rating</TableColumn>
+            <TableColumn key="name">Status</TableColumn>
             <TableColumn key="action">ACTIONS</TableColumn>
           </TableHeader>
           <TableBody
@@ -127,42 +147,9 @@ export default function Supplier({ setActiveMenu }) {
             loadingState={loadingState}
           >
             {(item) => (
-              <TableRow key={item?.id_supplier}>
+              <TableRow key={item?.id_product}>
                 {(columnKey) => (
-                  <TableCell>
-                    {columnKey === "action" ? (
-                      <div className="flex flex-row gap-3">
-                        <Tooltip content="Details">
-                          <span
-                            onClick={() => handleView(item?.id_supplier)}
-                            className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                          >
-                            <EyeIcon />
-                          </span>
-                        </Tooltip>
-                        <Tooltip content="Edit">
-                          <span
-                            onClick={() => handleEdit(item?.id_supplier)}
-                            className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                          >
-                            <EditIcon />
-                          </span>
-                        </Tooltip>
-                        {/* <Tooltip color="danger" content="Delete">
-                          <span
-                            onClick={() => handleDetail(item?.id_supplier)}
-                            className="text-lg text-danger cursor-pointer active:opacity-50"
-                          >
-                            <DeleteIcon />
-                          </span>
-                        </Tooltip> */}
-                      </div>
-                    ) : columnKey === "id_category" ? (
-                      item?.Category?.name || "N/A"
-                    ) : (
-                      getKeyValue(item, columnKey)
-                    )}
-                  </TableCell>
+                  <TableCell>{getKeyValue(item, columnKey)}</TableCell>
                 )}
               </TableRow>
             )}

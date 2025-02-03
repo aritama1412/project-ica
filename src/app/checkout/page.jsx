@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import FilterSection from "../../components/filter/filterSection";
 import ProductSection from "../../components/products/productSection";
@@ -22,9 +22,76 @@ const dropData = [
 
 const Page = () => {
   const cart = useCart();
+  const [savedCart, setSavedCart] = useState([]);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [pickupPoint, setPickupPoint] = useState("");
+  const [pickupDate, setPickupDate] = useState("");
+
   useEffect(() => {
-    console.log("cart", cart);
+    // console.log("cart", cart);
+    setSavedCart(cart.cart);
+    // generate log
   }, [cart]);
+
+  console.log("savedCart", savedCart);
+
+  const createTransaction = async () => {
+    // if (!cart || !cart.length) {
+    //   console.error("Cart is empty!");
+    //   return;
+    // }
+    const today = new Date();
+
+    const formattedDate = `${pickupDate.year}-${String(
+      pickupDate.month
+    ).padStart(2, "0")}-${String(pickupDate.day).padStart(2, "0")}`;
+
+    console.log("name", name);
+    console.log("phone", phone);
+    console.log("address", address);
+    console.log("pickupPoint", pickupPoint);
+    console.log("formattedDate", formattedDate);
+
+    const payload = {
+      customer_name: name,
+      customer_phone: phone,
+      customer_address: address,
+      grand_total: savedCart.reduce(
+        (total, item) => total + item.price * parseInt(item.quantity, 10),
+        0
+      ),
+      status: "0",
+      date_sale: today,
+      date_pick_up: formattedDate,
+      pick_up_type: pickupPoint,
+      created_by: 1,
+      details: savedCart.map((item) => ({
+        id_product: item.id,
+        price: item.price,
+        quantity: parseInt(item.quantity, 10),
+      })),
+    };
+
+    try {
+      const response = await fetch("http://localhost:4000/sales/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      if (response.ok) {
+        const result = await response.json();
+        alert("Transaction created successfully:", result);
+      } else {
+        console.error("Failed to create transaction:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
 
   return (
     <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen">
@@ -50,44 +117,45 @@ const Page = () => {
               </span>
               <span className="col-span-2 scmobile:col-span-1 text-right"></span>
             </div>
-            {cart.cart.map((item, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-12 text-sm text-center gap-2 mb-2 scmobile:border-t scmobile:border-gray-300 scmobile:pt-2"
-              >
-                <span className="col-span-4 scmobile:col-span-3 text-left">
-                  {item.name}
-                </span>
-                <span className="col-span-2 scmobile:col-span-3 text-right">
-                  {helper(item.price)}
-                </span>
-                <span className="col-span-1 text-right">{item.quantity}</span>
+            {savedCart &&
+              savedCart.map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-12 text-sm text-center gap-2 mb-2 scmobile:border-t scmobile:border-gray-300 scmobile:pt-2"
+                >
+                  <span className="col-span-4 scmobile:col-span-3 text-left">
+                    {item.name}
+                  </span>
+                  <span className="col-span-2 scmobile:col-span-3 text-right">
+                    {helper(item.price)}
+                  </span>
+                  <span className="col-span-1 text-right">{item.quantity}</span>
 
-                <span className="col-span-3 scmobile:col-span-4 text-right">
-                  {helper(item.price * item.quantity)}
-                </span>
-                <span className="col-span-2 scmobile:col-span-1 flex scmobile:flex-col justify-end items-end gap-1 ">
-                  <button
-                    onClick={() => cart.increaseQuantity(index)} // Increase quantity by index
-                    className="flex justify-center p-[1px] border border-black bg-gray-300 items-center rounded-full cursor-pointer"
-                  >
-                    ➕
-                  </button>
-                  <button
-                    onClick={() => cart.decreaseQuantity(index)} // Decrease quantity by index
-                    className="flex justify-center p-[1px] border border-black bg-gray-300 items-center rounded-full cursor-pointer"
-                  >
-                    ➖
-                  </button>
-                  <button
-                    onClick={() => cart.remove(index)}
-                    className="flex justify-center p-[1px] border border-black bg-gray-300 items-center rounded-full cursor-pointer"
-                  >
-                    ❌
-                  </button>
-                </span>
-              </div>
-            ))}
+                  <span className="col-span-3 scmobile:col-span-4 text-right">
+                    {helper(item.price * item.quantity)}
+                  </span>
+                  <span className="col-span-2 scmobile:col-span-1 flex scmobile:flex-col justify-end items-end gap-1 ">
+                    <button
+                      onClick={() => cart.increaseQuantity(index)} // Increase quantity by index
+                      className="flex justify-center p-[1px] border border-black bg-gray-300 items-center rounded-full cursor-pointer"
+                    >
+                      ➕
+                    </button>
+                    <button
+                      onClick={() => cart.decreaseQuantity(index)} // Decrease quantity by index
+                      className="flex justify-center p-[1px] border border-black bg-gray-300 items-center rounded-full cursor-pointer"
+                    >
+                      ➖
+                    </button>
+                    <button
+                      onClick={() => cart.remove(index)}
+                      className="flex justify-center p-[1px] border border-black bg-gray-300 items-center rounded-full cursor-pointer"
+                    >
+                      ❌
+                    </button>
+                  </span>
+                </div>
+              ))}
             <div className="border-t-2 pt-2 border-t-black">
               <div className="grid grid-cols-12 font-semibold text-center gap-2 mb-4">
                 <span className="col-span-4 text-left">Grand Total</span>
@@ -112,6 +180,8 @@ const Page = () => {
               <input
                 type="text"
                 placeholder="..."
+                // value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
               />
             </div>
@@ -122,6 +192,8 @@ const Page = () => {
               <input
                 type="text"
                 placeholder="..."
+                // value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
               />
             </div>
@@ -132,6 +204,8 @@ const Page = () => {
               <input
                 type="text"
                 placeholder="..."
+                // value={address}
+                onChange={(e) => setAddress(e.target.value)}
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
               />
             </div>
@@ -145,6 +219,8 @@ const Page = () => {
                 label=""
                 aria-label="Pickup Point"
                 placeholder="Silahkan pilih ..."
+                onChange={(e) => setPickupPoint(e.target.value)}
+                // onChange={(date) => setPickupDate(date)}
                 className="max-w-[300px] scmobile:max-w-full border border-gray-300 !bg-white rounded-lg"
               >
                 {dropData.map((data, index) => (
@@ -162,11 +238,15 @@ const Page = () => {
                 variant={"underlined"}
                 aria-label="date"
                 minValue={today(getLocalTimeZone())}
+                onChange={(date) => setPickupDate(date)}
                 className="max-w-[300px] scmobile:max-w-full bg-white px-2 border border-gray-300 rounded-sm"
               />
             </div>
             <div className="flex flex-row items-center justify-end mt-10">
-              <button className="bg-blue-500 px-5 py-2 rounded-lg text-white">
+              <button
+                onClick={() => createTransaction()}
+                className="bg-blue-500 px-5 py-2 rounded-lg text-white"
+              >
                 Bayar
               </button>
             </div>

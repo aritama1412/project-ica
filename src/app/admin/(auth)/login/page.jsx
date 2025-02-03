@@ -7,12 +7,37 @@ import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   const handleLogin = () => {
     setIsLoading(true);
-    // redirect to /admin/product using router
-    router.push("/admin/dashboard");
+    fetch("http://localhost:4000/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: userName,
+        password: password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setIsLoading(false);
+        if (data.status === "success") {
+          // store session
+          console.log("data", data.data);
+          localStorage.setItem("token", data.data.token);
+
+          router.push("/admin/dashboard");
+        } else {
+          console.log("userName", userName);
+          console.log("password", password);
+          alert(data.message);
+        }
+      });
   };
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -47,6 +72,7 @@ const LoginPage = () => {
                   type="text"
                   name="username"
                   id="username"
+                  onChange={(e) => setUserName(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="username"
                   required=""
@@ -63,6 +89,7 @@ const LoginPage = () => {
                   type="password"
                   name="password"
                   id="password"
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required=""

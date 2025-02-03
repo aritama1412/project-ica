@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import FilterSection from "../../components/filter/filterSection";
 import { Input } from "@nextui-org/react";
@@ -17,6 +17,32 @@ import {
 
 const Page = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [invoice, setInvoice] = useState("");
+  const [transactions, setTransactions] = useState([]);
+  const [details, setDetails] = useState([]);
+
+  const search = () => {
+    console.log(invoice);
+
+    const getTransactions = async () => {
+      const res = await fetch(
+        `http://localhost:4000/sales/check?invoice=${invoice}`,
+        {
+          cache: "no-store",
+        }
+      );
+      const result = await res.json();
+      setTransactions(result.data);
+    };
+
+    getTransactions();
+  };
+
+  const openDetail = (details) => {
+    onOpen();
+    setDetails(details);
+    console.log(details);
+  };
 
   return (
     <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen ">
@@ -30,12 +56,14 @@ const Page = () => {
             <Input
               type="text"
               label="Nomor telelpon / nomor resi"
+              onChange={(e) => setInvoice(e.target.value)}
               className="border-2 border-gray-200 hover:border-2 hover:border-[#fbba1c] rounded-lg focus-within:border-2 focus-within:border-[#fbba1c]"
             />
           </div>
 
           <button
             type="button"
+            onClick={() => search()}
             className="flex flex-row gap-[6px] items-center justify-center bg-[#fbba1c] px-5 py-1 rounded-md hover:shadow-md"
           >
             Cari
@@ -52,19 +80,53 @@ const Page = () => {
             <span className="col-span-1 text-right">#</span>
           </div>
 
-          <div className="grid grid-cols-6 text-center items-center gap-2 mb-2 px-4">
-            <span className="col-span-1 text-left">13-11-2024 12:00</span>
-            <span className="col-span-1 text-right">INV-ICA-RX001</span>
-            <span className="col-span-1 text-right">082707332928</span>
-            <span className="col-span-1 text-right">25000</span>
-            <span className="col-span-1 text-right">Selesai</span>
-            <span className="col-span-1 text-right">
-              <BiSearchAlt2
-                onClick={onOpen}
-                className="float-right hover:bg-[#fbba1c] w-[40px] rounded-md"
-              />
-            </span>
-          </div>
+          {transactions && transactions.length > 0 ? (
+            transactions.map((item, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-6 text-center items-center gap-2 mb-2 px-4"
+              >
+                <span className="col-span-1 text-left">
+                  {new Date(item.date_sale)
+                    .toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    })
+                    .replace(/\//g, "-")
+                    .replace(",", "")}
+                </span>
+                <span className="col-span-1 text-right">{item.bill}</span>
+                <span className="col-span-1 text-right">
+                  {item.customer_phone}
+                </span>
+                <span className="col-span-1 text-right">
+                  {item.grand_total}
+                </span>
+                <span className="col-span-1 text-right">{item.status}</span>
+                <span className="col-span-1 text-right">
+                  <BiSearchAlt2
+                    onClick={() => {
+                      openDetail(item);
+                    }}
+                    className="float-right hover:bg-[#fbba1c] w-[40px] rounded-md"
+                  />
+                </span>
+              </div>
+            ))
+          ) : (
+            <div className="grid grid-cols-6 text-center items-center gap-2 mb-2 px-4">
+              <span className="col-span-1 text-left">-</span>
+              <span className="col-span-1 text-right">-</span>
+              <span className="col-span-1 text-right">-</span>
+              <span className="col-span-1 text-right">-</span>
+              <span className="col-span-1 text-right">-</span>
+              <span className="col-span-1 text-right">-</span>
+            </div>
+          )}
         </div>
 
         <Modal size={"5xl"} isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -82,25 +144,55 @@ const Page = () => {
                       <span className="col-span-1/4 text-right">Qty</span>
                       <span className="col-span-1 text-right">Total</span>
                     </div>
-
-                    <div className="grid grid-cols-6 text-center gap-2 mb-2">
-                      <span className="col-span-3 text-left">
-                        Bunga Matahari
-                      </span>
-                      <span className="col-span-1 text-right">35.000</span>
-                      <span className="col-span-1/4 text-right">10</span>
-                      <span className="col-span-1 text-right">350000</span>
-                    </div>
-                    <div className="border-t-2 pt-2 border-t-black">
-                      <div className="grid grid-cols-6 font-semibold text-center gap-2 mb-4">
-                        <span className="col-span-3 text-left">
-                          Grand Total
+                    {details.SaleDetails && details.SaleDetails.length > 0 ? (
+                      <>
+                        {details.SaleDetails.map((item, index) => (
+                          <div
+                            key={index}
+                            className="grid grid-cols-6 text-center gap-2 mb-2"
+                          >
+                            <span className="col-span-3 text-left">
+                              {item.Product.product_name || "Unknown"}
+                            </span>
+                            <span className="col-span-1 text-right">
+                              {item.price}
+                            </span>
+                            <span className="col-span-1/4 text-right">
+                              {item.quantity}
+                            </span>
+                            <span className="col-span-1 text-right">
+                              {item.sub_total}
+                            </span>
+                          </div>
+                        ))}
+                        <div className="border-t-2 pt-2 border-t-black">
+                          <div className="grid grid-cols-6 font-semibold text-center gap-2 mb-4">
+                            <span className="col-span-3 text-left">
+                              Grand Total
+                            </span>
+                            <span className="col-span-1/4 text-right"></span>
+                            <span className="col-span-1 text-right">
+                              {details.SaleDetails.reduce(
+                                (total, item) => total + item.quantity,
+                                0
+                              )}
+                            </span>
+                            <span className="col-span-1 text-right">
+                              {details.SaleDetails.reduce(
+                                (total, item) => total + item.sub_total,
+                                0
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="grid grid-cols-6 text-center gap-2 mb-2">
+                        <span className="col-span-6 text-center">
+                          No Sale Details Available
                         </span>
-                        <span className="col-span-1/4 text-right"></span>
-                        <span className="col-span-1 text-right">12</span>
-                        <span className="col-span-1 text-right">12</span>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </ModalBody>
                 <ModalFooter>

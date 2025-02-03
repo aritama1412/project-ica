@@ -58,7 +58,7 @@ const Navbar = () => {
           />
         </Link>
         <ul className="flex flex-row gap-10 hideNavBar:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4 text-[#664343]">
-          {Object.keys(menuData).map((key, index) => (
+          {/* {Object.keys(menuData).map((key, index) => (
             <li
               key={index}
               className={`cursor-pointer relative ${
@@ -74,7 +74,7 @@ const Navbar = () => {
 
               {hoveredItem === key && <Dropdown items={menuData[key]} />}
             </li>
-          ))}
+          ))} */}
           <li
             className={`cursor-pointer relative group transition-all duration-300 ease-in-out`}
             onMouseEnter={() => setHoveredItem(null)}

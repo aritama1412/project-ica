@@ -3,7 +3,7 @@ import logo from "../../../../../../public/images/logos/logo1.jpg";
 import React, { useState } from "react";
 import { Header } from "@/components/dashboard/header";
 import SideBar from "@/components/dashboard/sideBar";
-import DetailPage from "./DetailPage";
+import ViewPage from "./ViewPage";
 
 const Page = () => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -14,7 +14,7 @@ const Page = () => {
       <div className="flex flex-row h-full min-w-full w-full">
         <SideBar setActiveMenu={setActiveMenu} />
 
-        <DetailPage />
+        <ViewPage />
       </div>
     </div>
   );

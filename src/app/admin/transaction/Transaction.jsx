@@ -6,6 +6,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Pagination,
+  Spinner,
   User,
   Chip,
   Tooltip,
@@ -14,144 +16,132 @@ import {
   Radio,
   Button,
 } from "@nextui-org/react";
-
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
-import { columns, transactions } from "./data";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
+import moment from "moment";
 
-const statusColorMap = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
-
-const colors = [
-  "default",
-  "primary",
-  "secondary",
-  "success",
-  "warning",
-  "danger",
-];
-
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${day}-${month}-${year} ${hours}:${minutes}`;
-};
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Transaction({ setActiveMenu }) {
-  const [selectedColor, setSelectedColor] = React.useState("warning");
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = React.useState(1);
 
-  const handleActiveMenu = (key) => {
-    setActiveMenu(key);
-  };
-
-  const renderCell = React.useCallback(
-    (transactions, columnKey) => {
-      const cellValue = transactions[columnKey];
-      const handleDetail = (id) => {
-        router.push(`/admin/transaction/detail/${id}`);
-      };
-
-      switch (columnKey) {
-        case "Id":
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{transactions.id}</p>
-            </div>
-          );
-        case "Nama":
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {transactions.name}
-              </p>
-            </div>
-          );
-        case "quantity":
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {transactions.quantity}
-              </p>
-            </div>
-          );
-        case "transactionDate":
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {formatDate(transactions.transactionDate)}
-              </p>
-            </div>
-          );
-        case "note":
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {transactions.note}
-              </p>
-            </div>
-          );
-        case "status":
-          return (
-            <Chip
-              className="capitalize"
-              color={statusColorMap[transactions.status]}
-              size="sm"
-              variant="flat"
-            >
-              {cellValue}
-            </Chip>
-          );
-        case "actions":
-          return (
-            <div className="relative flex items-center gap-2">
-              <Tooltip content="Details">
-                <span
-                  onClick={() => handleDetail(transactions.id)}
-                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                >
-                  <EyeIcon />
-                </span>
-              </Tooltip>
-              {/* <Tooltip content="Edit">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
-            </Tooltip> */}
-              <Tooltip color="danger" content="Delete">
-                <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                  <DeleteIcon />
-                </span>
-              </Tooltip>
-            </div>
-          );
-        default:
-          return cellValue;
-      }
-    },
-    [router]
+  const { data, isLoading } = useSWR(
+    `http://localhost:4000/sales/get-all-sales`,
+    fetcher,
+    {
+      keepPreviousData: true,
+    }
   );
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredTransactions, setFilteredTransactions] =
-    useState(transactions);
+  const rowsPerPage = 10;
 
-  useEffect(() => {
-    const result = transactions.filter((transaction) =>
-      transaction.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredTransactions(result);
-  }, [searchQuery]);
+  // Filtered Data Based on Search Query
+  // Filtered Data Based on Search Query
+  const filteredData = React.useMemo(() => {
+    if (!data?.data) return [];
+    if (!searchQuery) return data.data;
+
+    // Map status codes to their corresponding text values
+    const statusMap = {
+      0: "pending",
+      1: "lunas",
+      2: "batal",
+    };
+
+    return data.data.filter((item) => {
+      const statusText = statusMap[item.status] || ""; // Convert status to text
+      return (
+        item.bill.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(moment(item.date_sale).format("DD-MM-YYYY HH:mm")).includes(
+          searchQuery
+        ) ||
+        item.customer_address
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        String(item.grand_total).includes(searchQuery) ||
+        String(item.customer_phone).includes(searchQuery) ||
+        statusText.toLowerCase().includes(searchQuery.toLowerCase()) // Match status text
+      );
+    });
+  }, [data?.data, searchQuery]);
+
+  const totalItems = filteredData.length;
+
+  const pages = React.useMemo(() => {
+    return totalItems > 0 ? Math.ceil(totalItems / rowsPerPage) : 0;
+  }, [totalItems, rowsPerPage]);
+
+  const loadingState = isLoading || totalItems === 0 ? "loading" : "idle";
+
+  // Paginated Data
+  const paginatedData = React.useMemo(() => {
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return filteredData.slice(startIndex, endIndex);
+  }, [filteredData, page, rowsPerPage]);
+
+  const handleView = (id) => {
+    router.push(`/admin/transaction/view/${id}`);
+  };
+  const handleEdit = (id) => {
+    router.push(`/admin/transaction/edit/${id}`);
+  };
+
+  const renderTableCell = (columnKey, item) => {
+    if (columnKey === "action") {
+      return (
+        <div className="flex flex-row gap-3">
+          <Tooltip content="Details">
+            <span
+              onClick={() => handleView(item?.id_sale)}
+              className="text-lg text-default-400 cursor-pointer active:opacity-50"
+            >
+              <EyeIcon />
+            </span>
+          </Tooltip>
+          <Tooltip content="Edit">
+            <span
+              onClick={() => handleEdit(item?.id_sale)}
+              className="text-lg text-default-400 cursor-pointer active:opacity-50"
+            >
+              <EditIcon />
+            </span>
+          </Tooltip>
+        </div>
+      );
+    }
+
+    if (columnKey === "date_sale") {
+      return moment(item[columnKey]).format("DD-MM-YYYY HH:mm");
+    }
+
+    if (columnKey === "status") {
+      if (item[columnKey] === "0") {
+        return "Pending";
+      } else if (item[columnKey] === "1") {
+        return "Lunas";
+      } else {
+        return "Batal";
+      }
+    }
+
+    if (columnKey === "grand_total") {
+      return item[columnKey].toLocaleString("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+      });
+    }
+
+    return item[columnKey];
+  };
 
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
@@ -161,33 +151,48 @@ export default function Transaction({ setActiveMenu }) {
           <span>&nbsp;</span>
           <input
             type="text"
-            placeholder="  Search..."
+            placeholder="Search..."
             className=" border border-gray-400 rounded-lg"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <Table
-          aria-label="Example table with custom cells"
-          color={selectedColor}
-          selectionMode="single"
-          defaultSelectedKeys={["2"]}
+          aria-label="Example table with client async pagination"
+          bottomContent={
+            pages > 0 ? (
+              <div className="flex w-full justify-center">
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color="primary"
+                  page={page}
+                  total={pages}
+                  onChange={(page) => setPage(page)}
+                />
+              </div>
+            ) : null
+          }
         >
-          <TableHeader columns={columns}>
-            {(column) => (
-              <TableColumn
-                key={column.uid}
-                align={column.uid === "actions" ? "center" : "start"}
-              >
-                {column.name}
-              </TableColumn>
-            )}
+          <TableHeader>
+            <TableColumn key="bill">No Bill</TableColumn>
+            <TableColumn key="customer_name">Nama</TableColumn>
+            <TableColumn key="customer_phone">HP</TableColumn>
+            <TableColumn key="status">Status</TableColumn>
+            <TableColumn key="date_sale">Tanggal</TableColumn>
+            <TableColumn key="grand_total">Total</TableColumn>
+            <TableColumn key="action">ACTIONS</TableColumn>
           </TableHeader>
-          <TableBody items={filteredTransactions}>
+          <TableBody
+            items={paginatedData}
+            loadingContent={<Spinner />}
+            loadingState={loadingState}
+          >
             {(item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item?.id_sale}>
                 {(columnKey) => (
-                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  <TableCell>{renderTableCell(columnKey, item)}</TableCell>
                 )}
               </TableRow>
             )}
