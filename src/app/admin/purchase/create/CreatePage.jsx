@@ -17,6 +17,7 @@ import moment from "moment";
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const CreatePage = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -76,8 +77,9 @@ const CreatePage = () => {
   };
 
   useEffect(() => {
+    console.log("total price changed");
     setTotalPrice(price * quantity);
-  }, [price, quantity]); // Dependency array ensures this runs when `price` or `quantity` changes
+  }, [price, quantity, selectedProduct]); // Dependency array ensures this runs when `price` or `quantity` changes
 
   // let formatter = useDateFormatter({ dateStyle: "full" });
   const handleSaveProduct = () => {
@@ -141,6 +143,9 @@ const CreatePage = () => {
       .then((data) => {
         console.log("Purchase created successfully:", data);
         // Optionally, clear the form or handle success
+        // redirect to http://localhost:3000/admin/purchase
+        alert("Purchase created successfully!");
+        router.push("/admin/purchase");
       })
       .catch((error) => {
         console.error("Error creating purchase:", error);
@@ -239,7 +244,7 @@ const CreatePage = () => {
                 type="number"
                 className="border bg-gray-200 border-gray-300 px-1 max-w-[250px] cursor-not-allowed"
                 placeholder="..."
-                defaultValue={totalPrice}
+                value={totalPrice}
               />
             </div>
           </div>
