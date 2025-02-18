@@ -9,25 +9,6 @@ import { useDateFormatter } from "@react-aria/i18n";
 import helper from "@/../helper/helper";
 import moment from "moment";
 
-const dropData = [
-  {
-    name: "Tanaman Hias",
-    value: "Tanaman Hias",
-  },
-  {
-    name: "Tanaman Buah",
-    value: "Tanaman Buah",
-  },
-  {
-    name: "Pupuk Kimia",
-    value: "Pupuk Kimia",
-  },
-  {
-    name: "Pot Gantung",
-    value: "Pot Gantung",
-  },
-];
-
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const ViewPage = () => {
