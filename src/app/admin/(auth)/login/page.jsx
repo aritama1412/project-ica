@@ -1,9 +1,11 @@
 "use client";
+
 import Image from "next/image";
 import logo from "../../../../../public/images/logos/logo1.jpg";
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie"; // Import js-cookie for managing cookies
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +15,7 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     setIsLoading(true);
+
     fetch("http://localhost:4000/auth/login", {
       method: "POST",
       headers: {
@@ -26,19 +29,28 @@ const LoginPage = () => {
       .then((res) => res.json())
       .then((data) => {
         setIsLoading(false);
-        if (data.status === "success") {
-          // store session
-          console.log("data", data.data);
-          localStorage.setItem("token", data.data.token);
 
+        if (data.status === "success") {
+          // Store token in cookies
+          Cookies.set("authToken", data.data.token, {
+            expires: 365, // 1 day
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+          });
+
+          // Redirect to admin dashboard
           router.push("/admin/dashboard");
         } else {
-          console.log("userName", userName);
-          console.log("password", password);
           alert(data.message);
         }
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        alert("An error occurred. Please try again.");
+        console.error("Error:", error);
       });
   };
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -63,43 +75,40 @@ const LoginPage = () => {
             <div className="space-y-4 md:space-y-6">
               <div>
                 <label
-                  alt="username"
+                  htmlFor="username"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Username
                 </label>
                 <input
                   type="text"
-                  name="username"
                   id="username"
                   onChange={(e) => setUserName(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="username"
-                  required=""
+                  placeholder="Username"
+                  required
                 />
               </div>
               <div>
                 <label
-                  alt="password"
+                  htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Password
                 </label>
                 <input
                   type="password"
-                  name="password"
                   id="password"
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
+                  required
                 />
               </div>
               <Button
                 color="primary"
                 variant="solid"
-                onClick={() => handleLogin()}
-                // settingLoading={}
+                onClick={handleLogin}
                 isLoading={isLoading}
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >

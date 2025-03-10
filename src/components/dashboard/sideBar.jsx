@@ -1,14 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   BiSolidShoppingBag,
   BiSolidTruck,
-  BiSolidUserCheck,
   BiSolidCartAdd,
   BiLogIn,
 } from "react-icons/bi";
 import useSidebarAdmin from "@/../stores/sidebarAdminStore";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie"; // Install js-cookie if not already installed
 
 const menus = {
   stockProduct: {
@@ -21,11 +22,6 @@ const menus = {
     link: "supplier",
     icon: <BiSolidTruck />,
   },
-  // customer: {
-  //   name: "Customer",
-  //   link: "/customer",
-  //   icon: <BiSolidUserCheck />,
-  // },
   transaction: {
     name: "Transaksi Penjualan",
     link: "transaction",
@@ -46,9 +42,18 @@ const menus = {
 export default function SideBar() {
   const activeMenu = useSidebarAdmin((state) => state.menu); // Access current `menu` state
   const setActiveMenu = useSidebarAdmin((state) => state.setMenu); // Access `setMenu` method
+  const router = useRouter();
 
   const handleActiveMenu = (key) => {
     setActiveMenu(key); // Update the menu value in the store
+  };
+
+  const handleLogout = () => {
+    // Delete the authentication token
+    Cookies.remove("authToken");
+
+    // Redirect to the login page
+    router.push("/admin/login");
   };
 
   useEffect(() => {
@@ -66,43 +71,32 @@ export default function SideBar() {
           <ul className="space-y-2 font-medium">
             {Object.keys(menus).map((key) => (
               <li key={key}>
-                <Link
-                  href={`/admin/` + menus[key].link}
-                  onClick={() => handleActiveMenu(menus[key].link)}
-                  className={`flex items-center p-2 cursor-pointer ${
-                    activeMenu === menus[key].link ? "bg-gray-200" : ""
-                  } text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group`}
-                >
-                  <span className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                    {menus[key].icon}
-                  </span>
-                  <span className="ms-3">{menus[key].name}</span>
-                </Link>
+                {key === "logout" ? (
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center p-2 cursor-pointer text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group w-full"
+                  >
+                    <span className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+                      {menus[key].icon}
+                    </span>
+                    <span className="ms-3">{menus[key].name}</span>
+                  </button>
+                ) : (
+                  <Link
+                    href={`/admin/` + menus[key].link}
+                    onClick={() => handleActiveMenu(menus[key].link)}
+                    className={`flex items-center p-2 cursor-pointer ${
+                      activeMenu === menus[key].link ? "bg-gray-200" : ""
+                    } text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 group`}
+                  >
+                    <span className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+                      {menus[key].icon}
+                    </span>
+                    <span className="ms-3">{menus[key].name}</span>
+                  </Link>
+                )}
               </li>
             ))}
-
-            {/* <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-                  />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-              </a>
-            </li> */}
           </ul>
         </div>
       </aside>
