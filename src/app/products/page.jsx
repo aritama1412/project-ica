@@ -7,7 +7,7 @@ const page = () => {
   return (
     <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen">
       <Navbar />
-      <div className="flex flex-row gap-5">
+      <div className="flex flex-row gap-5 pb-[30px]">
         <FilterSection />
         <ProductSection />
       </div>

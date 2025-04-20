@@ -2,14 +2,88 @@
 import ProductSection from "../components/products/productSection.jsx";
 import FilterSection from "../components/filter/filterSection.jsx";
 import Navbar from "../components/navbar/navbar.jsx";
+import Image from "next/image.js";
+import NavbarHome from "@/components/navbar/navbarHome.jsx";
+import Link from "next/link.js";
 
 export default function Home() {
   return (
-    <main className="flex flex-col w-full min-w-screen max-w-[1280px] mx-auto h-full min-h-screen ">
-      <Navbar />
-      <div className="flex flex-row scmobile:flex-col gap-5 scmobile:gap-0 pb-8">
-        <FilterSection />
-        <ProductSection /> {/* Pass products as prop */}
+    <main className="flex flex-col justify-center w-full min-w-screen max-w-screen mx-auto h-full min-h-screen bg-red-500">
+      <NavbarHome />
+      <div className="relative w-full h-screen">
+        <Image
+          src="/images/home/01.jpg"
+          alt="logo"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <h1 className="text-white text-4xl md:text-6xl font-bold">
+            Toko bunga andalanmu
+          </h1>
+        </div>
+      </div>
+      <div className="flex flex-col justify-center items-center min-h-[1200px] w-full bg-white mx-auto">
+        <div className="flex flex-row h-[400px] w-full max-w-[1280px] ">
+          <div className="flex justify-center items-center w-1/2">
+            <Image
+              src="/images/home/07.jpg"
+              alt="logo"
+              height={300}
+              width={300}
+              className="object-cover rounded-lg min-h-[300px] min-w-[300px]"
+            />
+          </div>
+          <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
+            <h1 className="text-4xl md:text-6xl font-bold">Fresh</h1>
+            <p className="text-sm md:text-lg font-bold">Bunga dari kami selalu segar dan <br /> merupakan kualitas terbaik.</p>
+          </div>
+        </div>
+        <div className="flex flex-row h-[400px] w-full max-w-[1280px] ">
+          <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
+            <h1 className="text-4xl md:text-6xl font-bold">Lengkap</h1>
+            <p className="text-sm md:text-lg font-bold">Kami menyediakan berbagai kebutuhan berkebun anda <br /> seperti pot, pupuk dan sebagainya.</p>
+          </div>
+          <div className="flex justify-center items-center w-1/2">
+            <Image
+              src="/images/home/05.jpg"
+              alt="logo"
+              height={300}
+              width={300}
+              className="object-cover rounded-lg min-h-[300px] min-w-[300px]"
+            />
+          </div>
+        </div>
+        <div className="flex flex-row h-[400px] w-full max-w-[1280px] ">
+          <div className="flex justify-center items-center w-1/2">
+            <Image
+              src="/images/home/06.jpg"
+              alt="logo"
+              height={300}
+              width={300}
+              className="object-cover rounded-lg min-h-[300px] min-w-[300px]"
+            />
+          </div>
+          <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
+            <h1 className="text-4xl md:text-6xl font-bold">Mudah</h1>
+            <p className="text-sm md:text-lg font-bold">Beli bunga keinginanmu tanpa harus melakukan registrasi.</p>
+          </div>
+        </div>
+      </div>
+      <div className="relative w-full h-[300px]">
+        <Image
+          src="/images/home/08.jpg"
+          alt="logo"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="flex flex-col gap-3 justify-center items-center text-2xl">
+            <Link href="/products" className="bg-black rounded-md hover:bg-amber-700 transition-all duration-300 ease-in-out border-1 border-white px-4 py-2 text-white font-bold min-w-[50px]">
+              Beli sekarang 🌼
+            </Link>
+          </div>
+        </div>
       </div>
     </main>
   );
