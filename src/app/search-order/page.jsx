@@ -5,6 +5,8 @@ import FilterSection from "../../components/filter/filterSection";
 import { Input } from "@nextui-org/react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { BiArrowToBottom } from "react-icons/bi";
+import helper from "@/../helper/helper";
+
 import {
   Modal,
   ModalContent,
@@ -104,7 +106,7 @@ const Page = () => {
                   {item.customer_phone}
                 </span>
                 <span className="col-span-1 text-right">
-                  {item.grand_total}
+                  {helper(item.grand_total)}
                 </span>
                 <span className="col-span-1 text-right">{item.status}</span>
                 <span className="col-span-1 text-right">
@@ -155,13 +157,13 @@ const Page = () => {
                               {item.Product.product_name || "Unknown"}
                             </span>
                             <span className="col-span-1 text-right">
-                              {item.price}
+                              {helper(item.price)}
                             </span>
                             <span className="col-span-1/4 text-right">
                               {item.quantity}
                             </span>
                             <span className="col-span-1 text-right">
-                              {item.sub_total}
+                              {helper(item.sub_total)}
                             </span>
                           </div>
                         ))}
@@ -178,10 +180,10 @@ const Page = () => {
                               )}
                             </span>
                             <span className="col-span-1 text-right">
-                              {details.SaleDetails.reduce(
+                              {helper(details.SaleDetails.reduce(
                                 (total, item) => total + item.sub_total,
                                 0
-                              )}
+                              ))}
                             </span>
                           </div>
                         </div>
