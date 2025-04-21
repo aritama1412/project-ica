@@ -246,7 +246,7 @@ const Page = () => {
               <button
                 // onClick={() => createTransaction()}
                 onClick={() => {
-                  const phoneNumber = "682337071412"; // Nomor dengan kode negara (62 untuk Indonesia)
+                  const phoneNumber = "6282337071412"; // Nomor dengan kode negara (62 untuk Indonesia)
                   const orderNumber = "12345"; // Ganti dengan nomor pesanan
                   const message = encodeURIComponent(`Halo, saya ingin melanjutkan pembayaran. Nomor pesanan saya: ${orderNumber}`);
                   const waLink = `https://wa.me/${phoneNumber}?text=${message}`;
