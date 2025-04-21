@@ -174,8 +174,26 @@ const Page = () => {
           </div>
           <div className="flex flex-col gap-3 w-1/2 scmobile:w-full bg-slate-100 border-2 border-slate-300 p-4">
             <div className="flex flex-col gap-1">
+              <label className="font-bold" htmlFor="phone">
+                Nomor Telepon <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="..."
+                inputMode="numeric"
+                value={phone}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d*$/.test(value)) { // Allow only digits
+                    setPhone(value);
+                  }
+                }}
+                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
               <label className="font-bold" htmlFor="Name">
-                Nama
+                Nama <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -186,20 +204,8 @@ const Page = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="phone">
-                Nomor Telepon
-              </label>
-              <input
-                type="text"
-                placeholder="..."
-                // value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
               <label className="font-bold" htmlFor="address">
-                Alamat Lengkap
+                Alamat Lengkap <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -211,7 +217,7 @@ const Page = () => {
             </div>
             <div className="flex flex-col gap-1">
               <label className="font-bold" htmlFor="drop point">
-                Pengambilan
+                Pengambilan <span className="text-red-500">*</span>
               </label>
               <Select
                 // color={"danger"}
@@ -230,24 +236,25 @@ const Page = () => {
                 ))}
               </Select>
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="pickup date">
-                Tanggal Ambil
-              </label>
-              <DatePicker
-                variant={"underlined"}
-                aria-label="date"
-                minValue={today(getLocalTimeZone())}
-                onChange={(date) => setPickupDate(date)}
-                className="max-w-[300px] scmobile:max-w-full bg-white px-2 border border-gray-300 rounded-sm"
-              />
+
+            <div className="w-full p-2 text-xs bg-white border-1 border-gray-300 rounded-lg">
+              <span className="text-red-500">* </span>
+                Silahkan mengirimkan bukti pembayaran pada WA Admin
             </div>
-            <div className="flex flex-row items-center justify-end mt-10">
+
+            <div className="flex flex-row items-center justify-end mt-5">
               <button
-                onClick={() => createTransaction()}
+                // onClick={() => createTransaction()}
+                onClick={() => {
+                  const phoneNumber = "682337071412"; // Nomor dengan kode negara (62 untuk Indonesia)
+                  const orderNumber = "12345"; // Ganti dengan nomor pesanan
+                  const message = encodeURIComponent(`Halo, saya ingin melanjutkan pembayaran. Nomor pesanan saya: ${orderNumber}`);
+                  const waLink = `https://wa.me/${phoneNumber}?text=${message}`;
+                  window.open(waLink, "_blank");
+                }}
                 className="bg-blue-500 px-5 py-2 rounded-lg text-white"
               >
-                Bayar
+                Lanjutkan pembayaran pada WA
               </button>
             </div>
           </div>
