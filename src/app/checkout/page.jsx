@@ -84,7 +84,15 @@ const Page = () => {
       });
       if (response.ok) {
         const result = await response.json();
-        alert("Transaction created successfully:", result);
+        const isConfirmed = window.confirm(`Transaction created successfully. Do you want to proceed?`);
+        
+        if (isConfirmed) {
+          const phoneNumber = "6282337071412"; 
+          const orderNumber = result.data.bill; 
+          const message = encodeURIComponent(`Halo, saya ingin melanjutkan pembayaran. Nomor pesanan saya: ${orderNumber}`);
+          const waLink = `https://wa.me/${phoneNumber}?text=${message}`;
+          window.open(waLink, "_blank");
+        }
       } else {
         console.error("Failed to create transaction:", await response.text());
       }
@@ -244,14 +252,7 @@ const Page = () => {
 
             <div className="flex flex-row items-center justify-end mt-5">
               <button
-                // onClick={() => createTransaction()}
-                onClick={() => {
-                  const phoneNumber = "6282337071412"; // Nomor dengan kode negara (62 untuk Indonesia)
-                  const orderNumber = "12345"; // Ganti dengan nomor pesanan
-                  const message = encodeURIComponent(`Halo, saya ingin melanjutkan pembayaran. Nomor pesanan saya: ${orderNumber}`);
-                  const waLink = `https://wa.me/${phoneNumber}?text=${message}`;
-                  window.open(waLink, "_blank");
-                }}
+                onClick={() => createTransaction()}
                 className="bg-blue-500 px-5 py-2 rounded-lg text-white"
               >
                 Lanjutkan pembayaran pada WA
