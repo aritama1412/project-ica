@@ -14,7 +14,7 @@ const NavbarHome = () => {
   const counter = useCounter();
   const cart = useCart();
   const router = useRouter();
- 
+  
   return (
     <div className="flex flex-col justify-center items-center sticky border-b-2 z-[10] ">
       <div className="flex flex-row justify-center items-center w-full px-[15px] py-[10px] bg-[#EDE8DC] mx-auto">

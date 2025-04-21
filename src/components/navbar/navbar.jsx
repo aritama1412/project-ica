@@ -28,22 +28,6 @@ const Navbar = () => {
   const cart = useCart();
   const router = useRouter();
 
-  const menuData = {
-    Tanaman: ["Tanaman Hias", "Tanaman Toga", "Tanaman Buah-buahan"],
-    Pot: ["Pot Plastik", "Pot Gantung", "Pot Semen"],
-    "Media Tanam": ["Organik (Pupuk)", "Kokopit"],
-    "Pupuk Kimia": ["Npk", "Tsp", "Orea", "Lanet"],
-    Jasa: [
-      "Jasa Perawatan Taman",
-      "Pembuatan taman dan kolam",
-      "Menerima dekorasi taman pengantin",
-    ],
-  };
-
-  const handleCekPesanan = () => {
-    router.push("/search-order");
-  };
-
   return (
     <div className="flex flex-col justify-center items-center sticky border-b-2 z-[10] ">
       <div className="flex flex-row gap-10 w-full justify-start scmed:justify-between items-center pt-5 pb-3 px-8 scmobile:pt-0 scmobile:pb-0 bg-[#EDE8DC] ">
@@ -58,28 +42,20 @@ const Navbar = () => {
           />
         </Link>
         <ul className="flex flex-row gap-10 hideNavBar:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4 text-[#664343]">
-          {/* {Object.keys(menuData).map((key, index) => (
-            <li
-              key={index}
-              className={`cursor-pointer relative ${
-                hoveredItem === key
-                  ? "group transition-all duration-300 ease-in-out"
-                  : ""
-              }`}
-              onMouseEnter={() => setHoveredItem(key)}
-              onMouseLeave={() => setHoveredItem(null)}
-            >
-              {key}
-              <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
-
-              {hoveredItem === key && <Dropdown items={menuData[key]} />}
-            </li>
-          ))} */}
           <li
             className={`cursor-pointer relative group transition-all duration-300 ease-in-out`}
             onMouseEnter={() => setHoveredItem(null)}
             onMouseLeave={() => setHoveredItem(null)}
-            onClick={() => handleCekPesanan()}
+            onClick={() => router.push("/products") }
+          >
+            Katalog
+            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
+          </li>
+          <li
+            className={`cursor-pointer relative group transition-all duration-300 ease-in-out`}
+            onMouseEnter={() => setHoveredItem(null)}
+            onMouseLeave={() => setHoveredItem(null)}
+            onClick={() => router.push("/search-order") }
           >
             Cek Pesanan
             <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
