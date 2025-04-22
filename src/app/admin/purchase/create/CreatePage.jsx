@@ -24,6 +24,8 @@ const CreatePage = () => {
   const [idProduct, setIdProduct] = useState("");
   const [idSupplier, setIdSupplier] = useState("");
   const [suppliersName, setSuppliersName] = useState("");
+  const [suppliers, setSuppliers] = useState([]);
+  const [selectedSupplier, setSelectedSupplier] = useState("");
   const [quantity, setQuantity] = useState(1);
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
@@ -47,33 +49,42 @@ const CreatePage = () => {
     }
   }, [rawProducts]);
 
+  const { data: suppliersData } = useSWR(
+    `http://localhost:4000/suppliers/get-all-suppliers`,
+    fetcher,
+    {
+      keepPreviousData: true,
+    }
+  );
+  useEffect(() => {
+    setIsLoading(true);
+    console.log('suppliersData', suppliersData)
+    if (suppliersData) {
+      setIsLoading(false);
+      setSuppliers(suppliersData.data);
+    }
+  }, [suppliersData, selectedSupplier]);
+
   const onSelectionChange = (id) => {
     const selected = products.find(
       (product) => parseInt(product.id_product) === parseInt(id)
     );
-    setSelectedProduct(selected);
-
-    setIdProduct(selected.id_product);
-    setIdSupplier(selected.id_supplier);
-    setPrice(selected.price);
-
-    // search supplier
-    // Search for the supplier based on the selected product's supplier ID
-
-    fetch(
-      `http://localhost:4000/suppliers/get-supplier?id=${selected.id_supplier}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          // Set the supplier name to state
-          console.log("data.data.supplier_name", data.data.supplier_name);
-          setSuppliersName(data.data.supplier_name);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching supplier data:", error);
-      });
+  
+    if (selected) {
+      console.log('selected:', selected);
+      setSelectedProduct(selected);
+      setIdProduct(selected.id_product);
+      setIdSupplier(selected.id_supplier); // Automatically set supplier ID
+      setPrice(selected.price);
+  
+      // Find and set the corresponding supplier
+      const supplier = suppliers.find(
+        (sup) => parseInt(sup.id_supplier) === parseInt(selected.id_supplier)
+      );
+      if (supplier) {
+        setSelectedSupplier(supplier.id_supplier); // Automatically select supplier
+      }
+    }
   };
 
   useEffect(() => {
@@ -126,6 +137,7 @@ const CreatePage = () => {
       created_by: 1, // Use the actual user ID
       details: createProducts.map((item) => ({
         id_product: item.idProduct,
+        id_supplier: item.idSupplier,
         price: item.price,
         quantity: item.quantity,
       })),
@@ -142,8 +154,7 @@ const CreatePage = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Purchase created successfully:", data);
-        // Optionally, clear the form or handle success
-        // redirect to http://localhost:3000/admin/purchase
+
         alert("Purchase created successfully!");
         router.push("/admin/purchase");
       })
@@ -165,7 +176,7 @@ const CreatePage = () => {
                 className="max-w-[250px] h-[32px] border border-gray-300 !bg-white rounded-lg"
                 label=" "
                 placeholder="Silahkan pilih ..."
-                onSelectionChange={onSelectionChange} // Listen to selection changes
+                onSelectionChange={onSelectionChange} 
               >
                 {products.map((product) => (
                   <AutocompleteItem key={product.id_product}>
@@ -176,25 +187,23 @@ const CreatePage = () => {
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
               <span>Nama Supplier</span>
-              {/* <Select
+              <Select
                 size={"sm"}
                 label=""
-                aria-label="Pickup Point"
+                isLoading={isLoading}
+                aria-label="supplier"
                 placeholder="Silahkan pilih ..."
                 className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
+                selectedKeys={[selectedSupplier.toString()]}
+                onChange={(value) => setSelectedSupplier(value)} // Update the state on change
               >
-                <SelectItem value="1">Supplier 1</SelectItem>
-                <SelectItem value="2">Supplier 2</SelectItem>
-                <SelectItem value="3">Supplier 3</SelectItem>
-              </Select> */}
-              <input
-                readOnly={true}
-                type="text"
-                className="border bg-gray-200 border-gray-300 px-1 max-w-[250px] cursor-not-allowed"
-                placeholder="..."
-                // defaultValue={price}
-                defaultValue={suppliersName} // Use `value` instead of `defaultValue`
-              />
+                {suppliers.map((data) => (
+                  <SelectItem key={data.id_supplier} value={data.id_supplier}>
+                    {data.supplier_name}
+                  </SelectItem>
+                ))}
+              </Select>
+
             </div>
           </div>
           <div className="flex flex-row justify-start items-center gap-4">

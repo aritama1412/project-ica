@@ -13,7 +13,7 @@ import Cookies from "js-cookie"; // Install js-cookie if not already installed
 
 const menus = {
   stockProduct: {
-    name: "Stok Produk",
+    name: "Produk",
     link: "product",
     icon: <BiSolidShoppingBag />,
   },
