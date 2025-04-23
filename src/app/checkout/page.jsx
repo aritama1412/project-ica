@@ -38,10 +38,22 @@ const Page = () => {
   console.log("savedCart", savedCart);
 
   const createTransaction = async () => {
-    // if (!cart || !cart.length) {
-    //   console.error("Cart is empty!");
-    //   return;
-    // }
+    if (!phone.trim()) {
+      alert("Harap isi nomor telepone.");
+      return;
+    }
+    if (!name.trim()) {
+      alert("Harap isi nomor nama.");
+      return;
+    }
+    if (!address.trim()) {
+      alert("Harap isi alamat.");
+      return;
+    }
+    if (!pickupPoint.trim()) {
+      alert("Harap isi pengambilan.");
+      return;
+    }
     const today = new Date();
 
     const formattedDate = `${pickupDate.year}-${String(
@@ -189,6 +201,7 @@ const Page = () => {
                 type="text"
                 placeholder="..."
                 inputMode="numeric"
+                required
                 value={phone}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -206,6 +219,7 @@ const Page = () => {
               <input
                 type="text"
                 placeholder="..."
+                required
                 // value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
@@ -218,6 +232,7 @@ const Page = () => {
               <input
                 type="text"
                 placeholder="..."
+                required
                 // value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
@@ -233,6 +248,7 @@ const Page = () => {
                 label=""
                 aria-label="Pickup Point"
                 placeholder="Silahkan pilih ..."
+                required
                 onChange={(e) => setPickupPoint(e.target.value)}
                 // onChange={(date) => setPickupDate(date)}
                 className="max-w-[300px] scmobile:max-w-full border border-gray-300 !bg-white rounded-lg"
