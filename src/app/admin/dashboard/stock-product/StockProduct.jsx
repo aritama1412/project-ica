@@ -144,7 +144,7 @@ export default function StockProduct({ setActiveMenu }) {
 
   return (
     <div className="p-4 border border-gray-200">
-      <h1>Stok Produk</h1>
+      <h1>Produk</h1>
       <div className="mt-2">
         <div className="flex items-center justify-between mt-2 mb-4">
           <Button

@@ -8,8 +8,10 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const CreatePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const [productName, setProductName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSupplier, setSelectedSupplier] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [stock, setStock] = useState(0);
@@ -24,12 +26,29 @@ const CreatePage = () => {
     }
   );
 
+  const { data: suppliersData } = useSWR(
+    `http://localhost:4000/suppliers/get-all-suppliers`,
+    fetcher,
+    {
+      keepPreviousData: true,
+    }
+  );
+
   useEffect(() => {
+    console.log('categoriesData', categoriesData)
     if (categoriesData) {
       setIsLoading(false);
       setCategories(categoriesData);
     }
   }, [categoriesData]);
+
+  useEffect(() => {
+    console.log('suppliersData', suppliersData)
+    if (suppliersData) {
+      setIsLoading(false);
+      setSuppliers(suppliersData.data);
+    }
+  }, [suppliersData]);
 
   // Handle file input change (allow multiple files)
   const handleImageChange = (e) => {
@@ -48,11 +67,12 @@ const CreatePage = () => {
     const formData = new FormData();
     formData.append("product_name", productName);
     formData.append("id_category", selectedCategory);
+    formData.append("id_supplier", selectedSupplier);
     formData.append("price", price);
     formData.append("description", description);
     formData.append("status", showInCatalog);
     formData.append("stock", stock);
-    formData.append("creator", 1); // Assuming the editor is the logged-in user
+    formData.append("creator", 1); 
     images.forEach((image) => {
       formData.append("images", image); // Append each image file
     });
@@ -133,6 +153,24 @@ const CreatePage = () => {
                 placeholder="..."
                 onChange={(e) => setDescription(e.target.value)}
               />
+            </div>
+            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
+              <span>Supplier</span>
+              <Select
+                size={"sm"}
+                label=""
+                isLoading={isLoading}
+                aria-label="supplier"
+                placeholder="Silahkan pilih ..."
+                className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
+                onChange={(e) => setSelectedSupplier(e.target.value)} // Update on change
+              >
+                {suppliers.map((data, index) => (
+                  <SelectItem key={index} value={data.id_supplier}>
+                    {data.supplier_name}
+                  </SelectItem>
+                ))}
+              </Select>
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
               <span>Jumlah Stok</span>
