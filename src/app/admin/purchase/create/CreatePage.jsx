@@ -7,7 +7,7 @@ import {
   Autocomplete,
   AutocompleteSection,
   AutocompleteItem,
-} from "@heroui/autocomplete";
+} from "@nextui-org/autocomplete";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
@@ -20,11 +20,11 @@ const CreatePage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [idProduct, setIdProduct] = useState("");
   const [idSupplier, setIdSupplier] = useState("");
   const [suppliersName, setSuppliersName] = useState("");
   const [suppliers, setSuppliers] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedSupplier, setSelectedSupplier] = useState("");
   const [quantity, setQuantity] = useState(1);
   const today = new Date();
@@ -90,9 +90,8 @@ const CreatePage = () => {
   useEffect(() => {
     console.log("total price changed");
     setTotalPrice(price * quantity);
-  }, [price, quantity, selectedProduct]); // Dependency array ensures this runs when `price` or `quantity` changes
+  }, [price, quantity, selectedProduct]); 
 
-  // let formatter = useDateFormatter({ dateStyle: "full" });
   const handleSaveProduct = () => {
     if (!idProduct || quantity <= 0) {
       alert("Please select a product and enter a valid quantity.");
@@ -106,13 +105,15 @@ const CreatePage = () => {
       price,
       quantity,
       totalPrice,
-      date: date.toString(), // Optional: format this date properly
+      date: date.toString(), 
     };
     console.log("newProduct", newProduct);
 
     setCreateProducts((prevProducts) => [...prevProducts, newProduct]);
 
     // Optionally reset fields after saving
+    setSelectedSupplier("");
+    setSelectedProduct("");
     setIdProduct("");
     setIdSupplier("");
     setQuantity(1);
@@ -128,7 +129,6 @@ const CreatePage = () => {
   };
 
   const handleSubmit = () => {
-    // Prepare the purchase data
     const purchaseData = {
       grand_total: createProducts.reduce(
         (total, item) => total + item.price * item.quantity,
@@ -162,6 +162,13 @@ const CreatePage = () => {
         console.error("Error creating purchase:", error);
       });
   };
+  const [value, setValue] = useState([]);
+  const handleSelectionChange = (e) => {
+    setValue(e.target.value);
+    setSelectedSupplier(e.target.value);
+    setIdSupplier(parseInt(e.target.value));
+  };
+
 
   return (
     <div className="flex flex-col p-4 w-full">
@@ -173,16 +180,16 @@ const CreatePage = () => {
               <span>Nama Produk</span>
               <Autocomplete
                 size={"sm"}
-                className="max-w-[250px] h-[32px] border border-gray-300 !bg-white rounded-lg"
                 label=" "
+                aria-label="Produk"
                 placeholder="Silahkan pilih ..."
+                className="max-w-[250px] h-[32px] border border-gray-300 !bg-white rounded-lg"
+                isLoading={isLoading}
+                defaultItems={products}
+                defaultSelectedKey={[idProduct.toString()]}
                 onSelectionChange={onSelectionChange} 
               >
-                {products.map((product) => (
-                  <AutocompleteItem key={product.id_product}>
-                    {product.product_name}
-                  </AutocompleteItem>
-                ))}
+                {(item) => <AutocompleteItem key={item.id_product}>{item.product_name}</AutocompleteItem>}
               </Autocomplete>
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
@@ -190,12 +197,12 @@ const CreatePage = () => {
               <Select
                 size={"sm"}
                 label=""
-                isLoading={isLoading}
                 aria-label="supplier"
                 placeholder="Silahkan pilih ..."
                 className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
+                isLoading={isLoading}
                 selectedKeys={[selectedSupplier.toString()]}
-                onChange={(value) => setSelectedSupplier(value)} // Update the state on change
+                onChange={handleSelectionChange}
               >
                 {suppliers.map((data) => (
                   <SelectItem key={data.id_supplier} value={data.id_supplier}>
@@ -226,12 +233,6 @@ const CreatePage = () => {
                 value={date}
                 onChange={setDate}
               />
-              {/* <p className="text-default-500 text-sm">
-                Selected date:{" "}
-                {date
-                  ? formatter.format(date.toDate(getLocalTimeZone()))
-                  : "--"}
-              </p> */}
             </div>
           </div>
           <div className="flex flex-row justify-start items-center gap-4">
@@ -240,12 +241,10 @@ const CreatePage = () => {
               <input
                 readOnly={false}
                 type="number"
-                // cursor-not-allowed
                 className="border border-gray-300 px-1 max-w-[250px]"
                 placeholder="..."
-                // defaultValue={price}
-                value={price} // Use `value` instead of `defaultValue`
-                onChange={(e) => setPrice(e.target.value)}
+                value={price} 
+                onChange={(e) => setPrice(parseFloat(e.target.value))}
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
@@ -280,30 +279,28 @@ const CreatePage = () => {
           </div>
           {createProducts &&
             createProducts.map((item, index) => (
-              <>
-                <div
-                  className="grid grid-cols-11 text-center gap-2 mb-2"
-                  key={index}
-                >
-                  <span className="col-span-4 text-left">
-                    {item.productName}
-                  </span>
-                  <span className="col-span-2 text-right">
-                    {helper(item.price)}
-                  </span>
-                  <span className="col-span-1 text-right">{item.quantity}</span>
+              <div
+                className="grid grid-cols-11 text-center gap-2 mb-2"
+                key={index}
+              >
+                <span className="col-span-4 text-left">
+                  {item.productName}
+                </span>
+                <span className="col-span-2 text-right">
+                  {helper(item.price)}
+                </span>
+                <span className="col-span-1 text-right">{item.quantity}</span>
 
-                  <span className="col-span-3 text-right">
-                    {helper(item.price * item.quantity)}
-                  </span>
-                  <span
-                    onClick={() => handleDeleteProduct(index)} // Call delete function
-                    className="col-span-1 text-right cursor-pointer"
-                  >
-                    ❌
-                  </span>
-                </div>
-              </>
+                <span className="col-span-3 text-right">
+                  {helper(item.price * item.quantity)}
+                </span>
+                <span
+                  onClick={() => handleDeleteProduct(index)} // Call delete function
+                  className="col-span-1 text-right cursor-pointer"
+                >
+                  ❌
+                </span>
+              </div>
             ))}
           <div className="border-t-2 pt-2 border-t-black">
             <div className="grid grid-cols-11 font-semibold text-center gap-2 mb-4">
