@@ -243,8 +243,8 @@ const CreatePage = () => {
                 // cursor-not-allowed
                 className="border bg-gray-200 border-gray-300 px-1 max-w-[250px] "
                 placeholder="..."
-                // defaultValue={price}
-                value={price} // Use `value` instead of `defaultValue`
+                defaultValue={price}
+                // value={price} // Use `value` instead of `defaultValue`
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
