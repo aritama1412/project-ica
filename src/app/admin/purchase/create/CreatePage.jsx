@@ -75,8 +75,7 @@ const CreatePage = () => {
       setSelectedProduct(selected);
       setIdProduct(selected.id_product);
       setIdSupplier(selected.id_supplier); // Automatically set supplier ID
-      // setPrice(selected.price);
-      setPrice(parseFloat(selected.price));
+      setPrice(selected.price);
   
       // Find and set the corresponding supplier
       const supplier = suppliers.find(
@@ -244,9 +243,9 @@ const CreatePage = () => {
                 // cursor-not-allowed
                 className="border border-gray-300 px-1 max-w-[250px]"
                 placeholder="..."
-                defaultValue={price}
+                // defaultValue={price}
+                value={price} // Use `value` instead of `defaultValue`
                 onChange={(e) => setPrice(e.target.value)}
-                // value={price} // Use `value` instead of `defaultValue`
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
