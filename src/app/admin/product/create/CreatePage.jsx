@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 import { DatePicker } from "@nextui-org/react";
 import useSWR from "swr";
+import { useRouter } from "next/navigation";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const CreatePage = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
@@ -78,18 +80,37 @@ const CreatePage = () => {
     });
 
     try {
+      console.log({
+        productName,
+        selectedCategory,
+        selectedSupplier,
+        price,
+        description,
+        showInCatalog,
+        stock,
+        images,
+      });
+
       const response = await fetch("http://localhost:4000/products/create", {
         method: "POST", // Or POST if necessary
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to update product");
-      }
+      let result;
+try {
+  result = await response.json();
+} catch (err) {
+  console.warn("Failed to parse JSON response:", err);
+  throw new Error("Invalid JSON response from server");
+}
 
-      const result = await response.json();
-      alert("Product created successfully!");
-      router.back();
+if (!response.ok) {
+  console.error("Backend error:", result);
+  throw new Error(result.message || "Failed to create product");
+}
+
+alert("Product created successfully!");
+router.back();
       // Redirect or update the state here if needed
     } catch (error) {
       console.error("Error creating product:", error);
@@ -124,13 +145,13 @@ const CreatePage = () => {
                 aria-label="category"
                 placeholder="Silahkan pilih ..."
                 className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                onChange={(e) => setSelectedCategory(e.target.value)} // Update on change
+                onSelectionChange={(key) => setSelectedCategory(Array.from(key)[0])} // Update on change
               >
-                {categories.map((data, index) => (
-                  <SelectItem key={index} value={data.id_category}>
-                    {data.name}
-                  </SelectItem>
-                ))}
+                {categories.map((data) => (
+    <SelectItem key={data.id_category} value={data.id_category}>
+      {data.name}
+    </SelectItem>
+  ))}
               </Select>
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
@@ -163,13 +184,13 @@ const CreatePage = () => {
                 aria-label="supplier"
                 placeholder="Silahkan pilih ..."
                 className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                onChange={(e) => setSelectedSupplier(e.target.value)} // Update on change
+                onSelectionChange={(key) => setSelectedSupplier(Array.from(key)[0])} // Update on change
               >
-                {suppliers.map((data, index) => (
-                  <SelectItem key={index} value={data.id_supplier}>
-                    {data.supplier_name}
-                  </SelectItem>
-                ))}
+                {suppliers.map((data) => (
+    <SelectItem key={data.id_supplier} value={data.id_supplier}>
+      {data.supplier_name}
+    </SelectItem>
+  ))}
               </Select>
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
@@ -193,7 +214,7 @@ const CreatePage = () => {
                 aria-label="Pickup Point"
                 placeholder="Silahkan pilih ..."
                 className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                onChange={(e) => setShowInCatalog(e.target.value)}
+                onChange={setShowInCatalog}
               >
                 <SelectItem key="1" value="1">
                   Ya
