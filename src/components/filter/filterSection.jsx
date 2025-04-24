@@ -14,6 +14,9 @@ import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Checkbox } from "@nextui-org/checkbox";
 import useOpenFilterStore from "@/../stores/openFilterStore";
 import { useEffect } from "react";
+import useSWR from "swr";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const colors = [
   { id: 1, name: "Red", code: "#FF0000" },
@@ -52,6 +55,7 @@ const services = [
 const FilterSection = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [dataFilter, setDataFilter] = useState([]);
+  const [categories, setCategories] = useState([]);
   const openFilter = useOpenFilterStore();
   const modalEl = useRef();
 
@@ -68,6 +72,22 @@ const FilterSection = () => {
     setDataFilter([]);
     onClose(); // function to close your modal
   };
+
+  
+  const { data: categoriesData } = useSWR(
+    `http://localhost:4000/categories/get-all-categories`,
+    fetcher,
+    {
+      keepPreviousData: true,
+    }
+  );
+  useEffect(() => {
+    console.log('categoriesData', categoriesData)
+    if (categoriesData) {
+      setCategories(categoriesData);
+    }
+  }, [categoriesData]);
+
 
   return (
     <div className="flex flex-col scmobile:flex-row scmobile:gap-2 scmobile:overflow-x-auto items-center h-full w-[320px] scmobile:w-full max-w-[320px] scmobile:max-w-full mt-[20px] scmobile:mt-1 scmobile:mb-1 px-2">
