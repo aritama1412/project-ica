@@ -47,15 +47,7 @@ export default function Transaction({ setActiveMenu }) {
     if (!data?.data) return [];
     if (!searchQuery) return data.data;
 
-    // Map status codes to their corresponding text values
-    const statusMap = {
-      0: "pending",
-      1: "lunas",
-      2: "batal",
-    };
-
     return data.data.filter((item) => {
-      const statusText = statusMap[item.status] || ""; // Convert status to text
       return (
         item.bill.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -67,7 +59,7 @@ export default function Transaction({ setActiveMenu }) {
           .includes(searchQuery.toLowerCase()) ||
         String(item.grand_total).includes(searchQuery) ||
         String(item.customer_phone).includes(searchQuery) ||
-        statusText.toLowerCase().includes(searchQuery.toLowerCase()) // Match status text
+        String(item.status).includes(searchQuery)
       );
     });
   }, [data?.data, searchQuery]);
@@ -120,16 +112,6 @@ export default function Transaction({ setActiveMenu }) {
 
     if (columnKey === "date_sale") {
       return moment(item[columnKey]).format("DD-MM-YYYY HH:mm");
-    }
-
-    if (columnKey === "status") {
-      if (item[columnKey] === "0") {
-        return "Pending";
-      } else if (item[columnKey] === "1") {
-        return "Lunas";
-      } else {
-        return "Batal";
-      }
     }
 
     if (columnKey === "grand_total") {

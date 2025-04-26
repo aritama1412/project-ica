@@ -49,6 +49,13 @@ const EditPage = () => {
   // Handle form submission to update product
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!name || !category || !phone || !address || !status) {
+      console.log('name: '+ name + ' category: ' + category + ' phone: ' + phone + ' address: ' + address + ' status: ' + status);
+      alert("Harap isi semua field.");
+      return;
+    }
+
     const response = await fetch("http://localhost:4000/suppliers/edit", {
       method: "PATCH",
       headers: {
@@ -73,6 +80,10 @@ const EditPage = () => {
     router.back();
   };
 
+  const handleSelectionChange = (e) => {
+    setCategory(e.target.value);
+  };
+
   return (
     <div className="flex flex-col p-4 w-full">
       <h1 className="text-3xl font-bold">Edit Supplier</h1>
@@ -83,7 +94,7 @@ const EditPage = () => {
         <div className="flex flex-col w-full">
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Nama Supplier</span>
+              <label>Nama Supplier <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 className="border border-gray-300 px-1 max-w-[250px]"
@@ -93,17 +104,17 @@ const EditPage = () => {
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Jenis Produk</span>
+              <label>Jenis Produk <span className="text-red-500">*</span></label>
               <Select
                 size={"sm"}
                 label=""
                 aria-label="Pickup Point"
                 placeholder="Silahkan pilih ..."
                 className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                defaultSelectedKeys={[category && category.toString()]}
-                selectedKeys={[category && category.toString()]}
-                value={category}
-                onChange={(e) => setCategory(e.target.value)} // Update on change
+                selectedKeys={[category.toString()]}
+                // defaultSelectedKeys={[category && category.toString()]}
+                // value={category}
+                onChange={handleSelectionChange}
               >
                 {categoriesData &&
                   categoriesData?.map((data, index) => (
@@ -117,7 +128,7 @@ const EditPage = () => {
 
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Nomor Supplier</span>
+              <label>Nomor Supplier <span className="text-red-500">*</span></label>
               <input
                 type="number"
                 className="border border-gray-300 px-1 max-w-[250px]"
@@ -127,7 +138,7 @@ const EditPage = () => {
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Alamat</span>
+              <label>Alamat <span className="text-red-500">*</span></label>
               <textarea
                 type="text"
                 className="border border-gray-300 px-1 max-w-[250px]"
@@ -139,7 +150,7 @@ const EditPage = () => {
           </div>
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Status</span>
+              <label>Status <span className="text-red-500">*</span></label>
               <Select
                 size={"sm"}
                 label=""

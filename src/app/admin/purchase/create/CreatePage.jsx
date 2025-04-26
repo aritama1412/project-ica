@@ -21,6 +21,7 @@ const CreatePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [idProduct, setIdProduct] = useState("");
+  const [note, setNote] = useState("");
   const [idSupplier, setIdSupplier] = useState("");
   const [suppliersName, setSuppliersName] = useState("");
   const [suppliers, setSuppliers] = useState([]);
@@ -93,7 +94,7 @@ const CreatePage = () => {
   }, [price, quantity, selectedProduct]); 
 
   const handleSaveProduct = () => {
-    if (!idProduct || quantity <= 0) {
+    if (!idProduct || quantity <= 0 || !date) {
       alert("Please select a product and enter a valid quantity.");
       return;
     }
@@ -107,7 +108,6 @@ const CreatePage = () => {
       totalPrice,
       date: date.toString(), 
     };
-    console.log("newProduct", newProduct);
 
     setCreateProducts((prevProducts) => [...prevProducts, newProduct]);
 
@@ -129,12 +129,17 @@ const CreatePage = () => {
   };
 
   const handleSubmit = () => {
+    if(createProducts.length === 0 ) {
+      alert("Please add at least one product.");
+      return;
+    }
     const purchaseData = {
       grand_total: createProducts.reduce(
         (total, item) => total + item.price * item.quantity,
         0
       ),
-      created_by: 1, // Use the actual user ID
+      created_by: 1,
+      note: note,
       details: createProducts.map((item) => ({
         id_product: item.idProduct,
         id_supplier: item.idSupplier,
@@ -177,7 +182,7 @@ const CreatePage = () => {
         <div className="flex flex-col gap-4 w-1/2 bg-slate-100 p-4">
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <span>Nama Produk</span>
+              <label>Nama Produk <span className="text-red-500">*</span></label>
               <Autocomplete
                 size={"sm"}
                 label=" "
@@ -193,7 +198,7 @@ const CreatePage = () => {
               </Autocomplete>
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <span>Nama Supplier</span>
+              <label>Nama Supplier <span className="text-red-500">*</span></label>
               <Select
                 size={"sm"}
                 label=""
@@ -215,7 +220,7 @@ const CreatePage = () => {
           </div>
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <span>Jumlah</span>
+              <label>Jumlah <span className="text-red-500">*</span></label>
               <input
                 type="number"
                 className="border border-gray-300 px-1 max-w-[250px]"
@@ -225,7 +230,7 @@ const CreatePage = () => {
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <span>Tanggal</span>
+              <label>Tanggal <span className="text-red-500">*</span></label>
               <DatePicker
                 variant={"underlined"}
                 aria-label="date"
@@ -258,6 +263,7 @@ const CreatePage = () => {
               />
             </div>
           </div>
+
           <div className="flex items-start mt-10">
             <button
               // type="submit"
@@ -316,6 +322,15 @@ const CreatePage = () => {
               </span>
               <span className="col-span-3 text-right"></span>
             </div>
+          </div>
+          <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
+            <span>Catatan</span>
+            <textarea
+              type="text"
+              className="border border-gray-300 px-1 max-w-[250px]"
+              placeholder="..."
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
           <button
             // type="submit"

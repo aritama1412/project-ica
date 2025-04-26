@@ -42,23 +42,19 @@ export default function Purchase({ setActiveMenu }) {
   const rowsPerPage = 10;
 
   // Filtered Data Based on Search Query
-  // Filtered Data Based on Search Query
   const filteredData = React.useMemo(() => {
     if (!data?.data) return [];
     if (!searchQuery) return data.data;
-
-    // Map status codes to their corresponding text values
-    const statusMap = {
-      0: "pending",
-      1: "lunas",
-      2: "batal",
-    };
-
+  
     return data.data.filter((item) => {
-      const statusText = statusMap[item.status] || ""; // Convert status to text
       return (
         item.bill.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        // Check if any supplier_name matches the search query
+        item.PurchaseDetails?.some((detail) =>
+          detail.Product?.Supplier?.supplier_name
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase())
+        ) ||
         String(moment(item.date_sale).format("DD-MM-YYYY HH:mm")).includes(
           searchQuery
         ) ||
@@ -67,10 +63,11 @@ export default function Purchase({ setActiveMenu }) {
           .includes(searchQuery.toLowerCase()) ||
         String(item.grand_total).includes(searchQuery) ||
         String(item.customer_phone).includes(searchQuery) ||
-        statusText.toLowerCase().includes(searchQuery.toLowerCase()) // Match status text
+        String(item.status).includes(searchQuery)
       );
     });
   }, [data?.data, searchQuery]);
+  
 
   const totalItems = filteredData.length;
 
@@ -132,14 +129,14 @@ export default function Purchase({ setActiveMenu }) {
       ); // Join them with commas or return an empty string if no names are found
     }
 
-    if (columnKey === "status") {
-      if (item[columnKey] === "0") {
-        return "Pending";
-      } else if (item[columnKey] === "1") {
-        return "Lunas";
-      } else {
-        return "Batal";
-      }
+    if (columnKey === "supplier") {
+      return (
+        item?.PurchaseDetails?.map(
+          (detail) => detail.Product?.Supplier?.supplier_name
+        ) // Extract supplier names
+          .filter((name) => name) // Filter out undefined or null values
+          .join(", ") || ""
+      ); // Join them with commas or return an empty string if no names are found
     }
 
     if (columnKey === "grand_total") {
