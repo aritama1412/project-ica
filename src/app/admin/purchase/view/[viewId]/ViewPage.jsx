@@ -67,7 +67,7 @@ const ViewPage = () => {
               <input
                 type="text"
                 placeholder="..."
-                defaultValue={helper(transaction?.data?.grand_total)}
+                defaultValue={transaction?.data?.grand_total && helper(transaction?.data?.grand_total)}
                 disabled
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
               />
@@ -129,11 +129,7 @@ const ViewPage = () => {
               <div className="flex flex-col">
                 <span>Status</span>
                 <span className="bg-sky-400 px-3 py-1  rounded-lg">
-                  {transaction?.data?.status === "0"
-                    ? "Pending"
-                    : transaction?.data?.status === "1"
-                    ? "Lunas"
-                    : "Batal"}
+                  {transaction?.data?.status}
                 </span>
               </div>
             </div>

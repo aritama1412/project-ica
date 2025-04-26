@@ -185,11 +185,7 @@ const ViewPage = () => {
               <div className="flex flex-col">
                 <span>Status</span>
                 <span className="bg-sky-400 px-3 py-1  rounded-lg">
-                  {transaction?.data?.status === "0"
-                    ? "Pending"
-                    : transaction?.data?.status === "1"
-                    ? "Lunas"
-                    : "Batal"}
+                  {transaction?.data?.status}
                 </span>
               </div>
             </div>

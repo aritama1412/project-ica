@@ -9,24 +9,6 @@ import { useDateFormatter } from "@react-aria/i18n";
 import helper from "@/../helper/helper";
 import moment from "moment";
 
-const dropData = [
-  {
-    name: "Tanaman Hias",
-    value: "Tanaman Hias",
-  },
-  {
-    name: "Tanaman Buah",
-    value: "Tanaman Buah",
-  },
-  {
-    name: "Pupuk Kimia",
-    value: "Pupuk Kimia",
-  },
-  {
-    name: "Pot Gantung",
-    value: "Pot Gantung",
-  },
-];
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -35,6 +17,8 @@ const ViewPage = () => {
   const [tanggalBeli, setTanggalBeli] = useState(parseDate("2025-01-01"));
   const { editId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState("");
+  const [note, SetNote] = useState("");
 
   const { data: transaction } = useSWR(
     `http://localhost:4000/purchases/get-purchase?id=${editId}`,
@@ -44,9 +28,16 @@ const ViewPage = () => {
     }
   );
 
-  const handleSubmit = async (statusValue) => {
+  useEffect(() => {
+    if (transaction?.data?.status !== undefined) {
+      setStatus(transaction.data.status);
+      SetNote(transaction.data.note);
+      console.log('note:', transaction.data.note);
+    }
+  }, [transaction]);
+
+  const handleSubmit = async (status) => {
     const idPurchase = transaction?.data?.id_purchase;
-    console.log("idPurchase", idPurchase);
     try {
       const response = await fetch("http://localhost:4000/purchases/edit", {
         method: "PATCH",
@@ -55,7 +46,8 @@ const ViewPage = () => {
         },
         body: JSON.stringify({
           id_purchase: idPurchase,
-          status: `${statusValue}`,
+          note: note,
+          status: `${status}`,
           updated_by: 1,
           updated_at: new Date(),
         }),
@@ -64,13 +56,18 @@ const ViewPage = () => {
       if (!response.ok) {
         throw new Error("Failed to edit purchase");
       }
-
+      console.log('note xxx', note )
       const result = await response.json();
       alert("Purchase edited successfully!");
-      router.back();
+      // router.back();
     } catch (error) {
       alert(error.message);
     }
+  };
+
+  const handleStatus = (e) => {
+    setStatus(e.target.value); 
+    handleSubmit(e.target.value);
   };
 
   return (
@@ -115,7 +112,7 @@ const ViewPage = () => {
               <input
                 type="text"
                 placeholder="..."
-                defaultValue={helper(transaction?.data?.grand_total)}
+                defaultValue={transaction?.data?.grand_total && helper(transaction?.data?.grand_total)}
                 disabled
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
               />
@@ -128,8 +125,8 @@ const ViewPage = () => {
                 type="text"
                 className="border border-gray-300 px-1 max-w-[300px] text-gray-700"
                 placeholder="..."
-                defaultValue={transaction?.data?.note || ""}
-                disabled
+                defaultValue={note || ""}
+                onChange={(e) => SetNote(e.target.value)}
               />
             </div>
           </div>
@@ -176,41 +173,28 @@ const ViewPage = () => {
             <div className="flex flex-row items-end justify-between mt-10">
               <div className="flex flex-col">
                 <span>Status</span>
-                <span className="bg-sky-400 px-3 py-1  rounded-lg">
-                  {transaction?.data?.status === "0"
-                    ? "Pending"
-                    : transaction?.data?.status === "1"
-                    ? "Lunas"
-                    : "Batal"}
-                </span>
-              </div>
-              <div className="flex flex-row gap-2">
-                {(transaction?.data?.status === "0" ||
-                  transaction?.data?.status === "2") && (
-                  <button
-                    onClick={() => handleSubmit(1)}
-                    className="bg-gray-500 px-5 py-2 rounded-lg text-white"
-                  >
-                    Lunaskan
-                  </button>
-                )}
-                {(transaction?.data?.status === "1" ||
-                  transaction?.data?.status === "2") && (
-                  <button
-                    onClick={() => handleSubmit(0)}
-                    className="bg-blue-500 px-5 py-2 rounded-lg text-white"
-                  >
-                    Pendingkan
-                  </button>
-                )}
-                {transaction?.data?.status !== "2" && (
-                  <button
-                    onClick={() => handleSubmit(2)}
-                    className="bg-red-500 px-5 py-2 rounded-lg text-white"
-                  >
-                    Batalkan
-                  </button>
-                )}
+                <Select
+                  size={"sm"}
+                  label=""
+                  aria-label="Status"
+                  placeholder="Silahkan pilih ..."
+                  className="w-full min-w-[200px] border border-gray-300 !bg-white rounded-lg"
+                  selectedKeys={[status]}
+                  onChange={handleStatus}
+                >
+                  <SelectItem key="menunggu pembayaran" defaultValue="0" textValue="Menunggu Pembayaran">
+                    Menunggu Pembayaran
+                  </SelectItem>
+                  <SelectItem key="proses" defaultValue="1" textValue="Proses">
+                    Proses
+                  </SelectItem>
+                  <SelectItem key="selesai" defaultValue="2" textValue="Selesai">
+                    Selesai
+                  </SelectItem>
+                  <SelectItem key="batal" defaultValue="3" textValue="Batal">  
+                    Batal
+                  </SelectItem>
+                </Select>
               </div>
             </div>
           </div>

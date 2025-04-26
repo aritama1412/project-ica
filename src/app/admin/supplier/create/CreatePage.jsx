@@ -30,6 +30,12 @@ const CreatePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!supplierName || !category || !phone || !address) {
+      alert("Harap isi semua field.");
+      return;
+    }
+
     // send data thru json body to this url http://localhost:4000/suppliers/create
     const response = await fetch("http://localhost:4000/suppliers/create", {
       method: "POST",
@@ -51,36 +57,10 @@ const CreatePage = () => {
     const result = await response.json();
     alert("Supplier created successfully!");
     router.back();
+  };
 
-    // const formData = new FormData();
-    // formData.append(
-    //   "supplier",
-    //   JSON.stringify({
-    //     supplier_name: supplierName,
-    //     id_category: category,
-    //     phone: phone,
-    //     address: address,
-    //   })
-    // );
-
-    // try {
-    //   const response = await fetch("http://localhost:4000/suppliers/create", {
-    //     method: "POST", // Or POST if necessary
-    //     body: formData,
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error("Failed to create supplier");
-    //   }
-
-    //   const result = await response.json();
-    //   alert("Supplier created successfully!");
-    //   router.back();
-    //   // Redirect or update the state here if needed
-    // } catch (error) {
-    //   console.error("Error creating supplier:", error);
-    //   alert("Error creating supplier");
-    // }
+  const handleSelectionChange = (e) => {
+    setCategory(e.target.value);
   };
 
   return (
@@ -90,7 +70,7 @@ const CreatePage = () => {
         <div className="flex flex-col w-full">
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Nama Supplier</span>
+              <label>Nama Supplier <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 className="border border-gray-300 px-1 max-w-[250px]"
@@ -99,7 +79,7 @@ const CreatePage = () => {
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Jenis Produk</span>
+              <label>Jenis Produk <span className="text-red-500">*</span></label>
               <Select
                 size={"sm"}
                 label=""
@@ -107,10 +87,10 @@ const CreatePage = () => {
                 aria-label="Pickup Point"
                 placeholder="Silahkan pilih ..."
                 className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={handleSelectionChange}
               >
                 {categories.map((data, index) => (
-                  <SelectItem key={index} value={data.id_category}>
+                  <SelectItem key={data.id_category} value={data.id_category}>
                     {data.name}
                   </SelectItem>
                 ))}
@@ -119,7 +99,7 @@ const CreatePage = () => {
           </div>
           <div className="flex flex-row justify-start items-center gap-4">
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Nomor Supplier</span>
+              <label>Nomor Supplier <span className="text-red-500">*</span></label>
               <input
                 type="number"
                 className="border border-gray-300 px-1 max-w-[250px]"
@@ -128,7 +108,7 @@ const CreatePage = () => {
               />
             </div>
             <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <span>Alamat</span>
+              <label>Alamat <span className="text-red-500">*</span></label>
               <textarea
                 type="text"
                 className="border border-gray-300 px-1 max-w-[250px]"
