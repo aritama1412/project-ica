@@ -55,6 +55,12 @@ const useCart = create(
             count: Number(state.count) - 1, // Decrement total count
           };
         }),
+
+        clearCart: () =>
+          set(() => ({
+            cart: [],
+            count: 0,
+          })),
     }),
     {
       name: "cart-storage", // Unique name for storage key

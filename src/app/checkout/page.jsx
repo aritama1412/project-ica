@@ -99,11 +99,18 @@ const Page = () => {
         const isConfirmed = window.confirm(`Transaction created successfully. Do you want to proceed?`);
         
         if (isConfirmed) {
-          const phoneNumber = "6282337071412"; 
+          const phoneNumber = "6289678488038"; 
           const orderNumber = result.data.bill; 
           const message = encodeURIComponent(`Halo, saya ingin melanjutkan pembayaran. Nomor pesanan saya: ${orderNumber}`);
           const waLink = `https://wa.me/${phoneNumber}?text=${message}`;
           window.open(waLink, "_blank");
+
+          cart.clearCart(); // Clear the cart after successful transaction
+          setPhone("");
+          setName("");
+          setAddress("");
+          setPickupPoint("");
+
         }
       } else {
         console.error("Failed to create transaction:", await response.text());
@@ -220,7 +227,7 @@ const Page = () => {
                 type="text"
                 placeholder="..."
                 required
-                // value={name}
+                value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
               />
@@ -233,7 +240,7 @@ const Page = () => {
                 type="text"
                 placeholder="..."
                 required
-                // value={address}
+                value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
               />
@@ -249,6 +256,7 @@ const Page = () => {
                 aria-label="Pickup Point"
                 placeholder="Silahkan pilih ..."
                 required
+                value={pickupPoint}
                 onChange={(e) => setPickupPoint(e.target.value)}
                 // onChange={(date) => setPickupDate(date)}
                 className="max-w-[300px] scmobile:max-w-full border border-gray-300 !bg-white rounded-lg"
