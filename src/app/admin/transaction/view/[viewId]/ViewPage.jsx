@@ -8,25 +8,6 @@ import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
 import helper from "@/../helper/helper";
 
-const dropData = [
-  {
-    name: "Tanaman Hias",
-    value: "Tanaman Hias",
-  },
-  {
-    name: "Tanaman Buah",
-    value: "Tanaman Buah",
-  },
-  {
-    name: "Pupuk Kimia",
-    value: "Pupuk Kimia",
-  },
-  {
-    name: "Pot Gantung",
-    value: "Pot Gantung",
-  },
-];
-
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const ViewPage = () => {
@@ -126,14 +107,30 @@ const ViewPage = () => {
             </div>
             <div className="flex flex-col gap-1">
               <label className="font-bold" htmlFor="pickup date">
-                Tanggal Ambil
+                Estimasi Tanggal Sampai
               </label>
               <DatePicker
                 variant={"underlined"}
                 aria-label="date"
                 value={
-                  transaction?.data?.date_pick_up &&
-                  parseDate(transaction?.data?.date_pick_up.split("T")[0])
+                  transaction?.data?.date_estimation &&
+                  parseDate(transaction?.data?.date_estimation.split("T")[0])
+                }
+                isDisabled
+                isLoading={isLoading}
+                className="max-w-[300px] bg-white px-2 border border-gray-300 rounded-sm"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="font-bold" htmlFor="pickup date">
+              Tanggal Sampai
+              </label>
+              <DatePicker
+                variant={"underlined"}
+                aria-label="date"
+                value={
+                  transaction?.data?.date_received &&
+                  parseDate(transaction?.data?.date_received.split("T")[0])
                 }
                 isDisabled
                 isLoading={isLoading}

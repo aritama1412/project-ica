@@ -36,7 +36,7 @@ const ViewPage = () => {
     }
   }, [transaction]);
 
-  const handleSubmit = async (status) => {
+  const handleSubmit = async () => {
     const idPurchase = transaction?.data?.id_purchase;
     try {
       const response = await fetch("http://localhost:4000/purchases/edit", {
@@ -56,10 +56,9 @@ const ViewPage = () => {
       if (!response.ok) {
         throw new Error("Failed to edit purchase");
       }
-      console.log('note xxx', note )
       const result = await response.json();
       alert("Purchase edited successfully!");
-      // router.back();
+      router.push("/admin/purchase");
     } catch (error) {
       alert(error.message);
     }
@@ -67,7 +66,6 @@ const ViewPage = () => {
 
   const handleStatus = (e) => {
     setStatus(e.target.value); 
-    handleSubmit(e.target.value);
   };
 
   return (
@@ -195,6 +193,15 @@ const ViewPage = () => {
                     Batal
                   </SelectItem>
                 </Select>
+              </div>
+              <div className="flex items-start mt-10">
+                <button
+                  onClick={handleSubmit}
+                  type="submit"
+                  className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
+                >
+                  Simpan
+                </button>
               </div>
             </div>
           </div>
