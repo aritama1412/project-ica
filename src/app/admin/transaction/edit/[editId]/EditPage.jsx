@@ -16,6 +16,8 @@ const EditPage = () => {
   const { editId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [status, setStatus] = useState("");
+  const [estimationDate, setEstimationDate] = useState(parseDate("2025-01-01"));
+  const [dateReceived, setDateReceived] = useState(null);
 
   const { data: transaction } = useSWR(
     `http://localhost:4000/sales/get-sale?id=${editId}`,
@@ -27,13 +29,21 @@ const EditPage = () => {
 
   // Update status whenever transaction changes
   useEffect(() => {
-    if (transaction?.data?.status !== undefined) {
+    if (transaction?.data?.status != undefined) {
       setStatus(transaction.data.status);
-      console.log('transaction status:', transaction.data.status);
     }
+    if (transaction?.data?.date_estimation != undefined) {
+      setEstimationDate(parseDate(transaction?.data?.date_estimation.split("T")[0]));
+    }
+
+    console.log('date_received', transaction?.data?.date_received)
+    if (transaction?.data?.date_received != null) {
+      setDateReceived(parseDate(transaction?.data?.date_received.split("T")[0]));
+    }
+
   }, [transaction]);
 
-  const handleSubmit = async (status) => {
+  const handleSubmit = async () => {
     const idSale = transaction?.data?.id_sale;
     
     try {
@@ -45,6 +55,8 @@ const EditPage = () => {
         body: JSON.stringify({
           id_sale: idSale,
           status: `${status}`,
+          date_estimation: estimationDate,
+          date_received: dateReceived,
           updated_by: 1,
           updated_at: new Date(),
         }),
@@ -56,7 +68,7 @@ const EditPage = () => {
 
       const result = await response.json();
       alert("Transaction edited successfully!");
-      router.back();
+      router.push("/admin/transaction");
     } catch (error) {
       alert(error.message);
     }
@@ -64,9 +76,13 @@ const EditPage = () => {
 
   const handleStatus = (e) => {
     setStatus(e.target.value); 
-    handleSubmit(e.target.value);
+    // handleSubmit(e.target.value);
   };
 
+  useEffect(() => {
+    console.log('estimationDate', estimationDate)
+    console.log('dateReceived', dateReceived)
+  }, [estimationDate, dateReceived]);
 
   return (
     <div className="flex flex-col p-4 w-full">
@@ -114,11 +130,6 @@ const EditPage = () => {
               <label className="font-bold" htmlFor="address">
                 Alamat
               </label>
-              {/* <input
-                type="text"
-                placeholder="..."
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
-              /> */}
               <textarea
                 type="text"
                 className="border border-gray-300 px-1 max-w-[300px] text-gray-700"
@@ -151,16 +162,13 @@ const EditPage = () => {
             </div>
             <div className="flex flex-col gap-1">
               <label className="font-bold" htmlFor="pickup date">
-                Tanggal Ambil
+                Estimasi tanggal diterima
               </label>
               <DatePicker
                 variant={"underlined"}
                 aria-label="date"
-                value={
-                  transaction?.data?.date_pick_up &&
-                  parseDate(transaction?.data?.date_pick_up.split("T")[0])
-                }
-                isDisabled
+                value={estimationDate}
+                onChange={setEstimationDate}
                 isLoading={isLoading}
                 className="max-w-[300px] bg-white px-2 border border-gray-300 rounded-sm"
               />
@@ -231,6 +239,30 @@ const EditPage = () => {
                     Batal
                   </SelectItem>
                 </Select>
+              </div>
+            </div>
+            <div className="flex flex-row items-end justify-between mt-10">
+              <div div className="flex flex-col gap-1">
+                <label className="font-bold" htmlFor="pickup date">
+                  Tanggal diterima
+                </label>
+                <DatePicker
+                  variant={"underlined"}
+                  aria-label="date"
+                  value={dateReceived}
+                  onChange={setDateReceived}
+                  isLoading={isLoading}
+                  className="max-w-[300px] bg-white px-2 border border-gray-300 rounded-sm"
+                />
+              </div>
+              <div className="flex items-start mt-10">
+                <button
+                  onClick={handleSubmit}
+                  type="submit"
+                  className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
+                >
+                  Simpan
+                </button>
               </div>
             </div>
           </div>

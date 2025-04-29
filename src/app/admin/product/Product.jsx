@@ -29,6 +29,7 @@ export default function Product({ setActiveMenu }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = React.useState(1);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const { data, isLoading } = useSWR(
     `http://localhost:4000/products/get-all-products-admin`,
@@ -76,6 +77,29 @@ export default function Product({ setActiveMenu }) {
   const handleEdit = (id) => {
     router.push(`/admin/product/edit/${id}`);
   };
+  const handleDelete = (id) => {
+    // hit http://localhost:4000/products/delete with data id_product=id
+    fetch("http://localhost:4000/products/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id_product: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => 
+        data.status == 'success' ? setIsDeleted(true) : alert("Failed deleting product")
+    );
+  };
+
+  useEffect(() => {
+    if (isDeleted) {
+      alert("Product deleted successfully!");
+      // reload page
+      window.location.reload(); // Full reload
+      setIsDeleted(false);
+    }
+  }, [isDeleted, router]);
 
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
@@ -154,14 +178,14 @@ export default function Product({ setActiveMenu }) {
                             <EditIcon />
                           </span>
                         </Tooltip>
-                        {/* <Tooltip color="danger" content="Delete">
+                        <Tooltip color="danger" content="Delete">
                           <span
-                            onClick={() => handleDetail(item?.id_product)}
+                            onClick={() => handleDelete(item?.id_product)}
                             className="text-lg text-danger cursor-pointer active:opacity-50"
                           >
                             <DeleteIcon />
                           </span>
-                        </Tooltip> */}
+                        </Tooltip>
                       </div>
                     ) : columnKey === "id_category" ? (
                       item?.Category?.name || "N/A"

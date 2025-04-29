@@ -76,7 +76,7 @@ const Page = () => {
       ),
       status: "0",
       date_sale: today,
-      date_pick_up: formattedDate,
+      date_estimation: formattedDate,
       pick_up_type: pickupPoint,
       created_by: 1,
       details: savedCart.map((item) => ({
