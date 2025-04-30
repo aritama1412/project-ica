@@ -1,11 +1,13 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaRegStar } from "react-icons/fa6";
-import { useState, useEffect } from "react";
+import useFilterStore from "@/../stores/filterStore";
 
 export default function ProductCard() {
   const [products, setProducts] = useState([]);
+  const filters = useFilterStore((state) => state.filters);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -22,15 +24,39 @@ export default function ProductCard() {
     getProducts();
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
+  const applyFilters = (products) => {
+    let filteredProducts = products;
+
+    // Category Filter
+    if (filters.category) {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.id_category === filters.category
+      );
+    }
+
+    // Price Filter
+    if (filters.price) {
+      const { min, max } = filters.price;
+      filteredProducts = filteredProducts.filter(
+        (product) => product.price >= min && product.price <= max
+      );
+    }
+
+    // Add more filters here...
+
+    return filteredProducts;
+  };
+
+  const filteredProducts = applyFilters(products);
+
   return (
     <>
-      {products &&
-        products.length > 0 &&
-        products.map((flower) => (
+      {filteredProducts &&
+        filteredProducts.length > 0 &&
+        filteredProducts.map((flower) => (
           <Link
             href={`/products/${flower.id_product}`}
             key={flower.id_product}
-            // bg-red-500
             className=" flex flex-col min-h-[350px] w-[175px] min-w-[175px] cursor-pointer rounded-md shadow-md hover:shadow-xl transition-all duration-300 ease-in-out"
           >
             <div key={flower.id_product} className="w-full ">
