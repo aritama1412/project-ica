@@ -15,42 +15,9 @@ import { Checkbox } from "@nextui-org/checkbox";
 import useOpenFilterStore from "@/../stores/openFilterStore";
 import { useEffect } from "react";
 import useSWR from "swr";
+import FilterPrice from "./filterPrice";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
-const colors = [
-  { id: 1, name: "Red", code: "#FF0000" },
-  { id: 2, name: "Green", code: "#00FF00" },
-  { id: 3, name: "Blue", code: "#0000FF" },
-  { id: 4, name: "Yellow", code: "#FFFF00" },
-  { id: 5, name: "Cyan", code: "#00FFFF" },
-  { id: 6, name: "Magenta", code: "#FF00FF" },
-  { id: 7, name: "Black", code: "#000000" },
-  { id: 8, name: "White", code: "#FFFFFF" },
-  { id: 9, name: "Orange", code: "#FFA500" },
-  { id: 10, name: "Purple", code: "#800080" },
-  { id: 11, name: "Pink", code: "#FFC0CB" },
-  { id: 12, name: "Brown", code: "#A52A2A" },
-  { id: 13, name: "Gray", code: "#808080" },
-];
-
-const flowers = [
-  { id: 1, name: "Tanaman Hias", category: "flowers" },
-  { id: 2, name: "Tanaman Toga", category: "flowers" },
-  { id: 3, name: "Tanaman Buah-buahan", category: "flowers" },
-];
-
-const vases = [
-  { id: 1, name: "Pot Plastik", category: "vases" },
-  { id: 2, name: "Pot Gantung", category: "vases" },
-  { id: 3, name: "Pot Semen", category: "vases" },
-];
-
-const services = [
-  { id: 1, name: "Jasa Perawatan Taman", category: "services" },
-  { id: 2, name: "Pembuatan taman dan kolam", category: "services" },
-  { id: 3, name: "Menerima dekorasi taman pengantin", category: "services" },
-];
 
 const FilterSection = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -81,9 +48,11 @@ const FilterSection = () => {
       keepPreviousData: true,
     }
   );
+
   useEffect(() => {
     console.log('categoriesData', categoriesData)
     if (categoriesData) {
+      categoriesData.unshift({ id_category: 0, name: "Semua Kategori" });
       setCategories(categoriesData);
     }
   }, [categoriesData]);
@@ -91,11 +60,8 @@ const FilterSection = () => {
 
   return (
     <div className="flex flex-col scmobile:flex-row scmobile:gap-2 scmobile:overflow-x-auto items-center h-full w-[320px] scmobile:w-full max-w-[320px] scmobile:max-w-full mt-[20px] scmobile:mt-1 scmobile:mb-1 px-2">
-      <FilterCard data={flowers} filterText="Tanaman" />
-      <FilterCard data={vases} filterText="Pot" />
-      <FilterCard data={services} filterText="Jasa" />
-      <FilterCard data={flowers} filterText="Media Tanam" />
-      <FilterCard data={vases} filterText="Pupuk Kimia" />
+      <FilterCard data={categories} filterText="Kategori" />
+      <FilterPrice data={categories} filterText="Harga" />
       <Modal
         isOpen={isOpen}
         placement={"bottom-center"}
