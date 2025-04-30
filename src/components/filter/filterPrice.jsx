@@ -21,6 +21,12 @@ function FilterPrice({ filterText }) {
     setFilter("price", { min: minPrice, max: maxPrice }); // Save to the store
   };
 
+  const clearPriceFilter = () => {
+    setMinPrice(0);
+    setMaxPrice(500000);
+    setFilter("price", { min: 0, max: 500000 }); // Reset the store
+  };
+
   // Sync local state with the store when the component mounts or filters change
   useEffect(() => {
     if (filters.price) {
@@ -75,9 +81,14 @@ function FilterPrice({ filterText }) {
             type="number"
           />
 
-          <Button color="primary" variant="bordered" onClick={applyPriceFilter}>
-            Terapkan
-          </Button>
+          <div className="flex flex-row justify-center gap-2">
+            <Button color="primary" className="w-full" variant="bordered" onClick={applyPriceFilter}>
+              Terapkan
+            </Button>
+            <Button color="danger" className="w-full" variant="bordered" onClick={clearPriceFilter}>
+              Bersihkan
+            </Button>
+          </div>
         </div>
       )}
     </div>
