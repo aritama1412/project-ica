@@ -23,8 +23,7 @@ const FilterSection = () => {
   useEffect(() => {
     if (categoriesData) {
       // Add "All Categories" at the top of the categories list
-      const allCategories = [{ id_category: 0, name: "Semua Kategori" }, ...categoriesData];
-      setCategories(allCategories);
+      setCategories(categoriesData);
     }
   }, [categoriesData]);
 

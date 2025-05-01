@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "../../components/navbar/navbar";
-import FilterSection from "../../components/filter/filterSection";
-import ProductSection from "../../components/products/productSection";
+import FilterSection from "@/components/filter/filterSection";
+import ProductSection from "@/components/products/productSection";
+import Navbar from "@/components/navbar/navbar";
 
 const page = () => {
   return (
