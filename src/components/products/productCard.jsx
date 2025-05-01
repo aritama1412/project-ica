@@ -96,12 +96,12 @@ export default function ProductCard() {
                   </h2>
                 </div>
                 <div className="flex flex-row items-center justify-between mt-2 text-xs">
-                  <div className="flex items-center bg-[#e5e7eb] px-2 rounded-md">
+                  {/* <div className="flex items-center bg-[#e5e7eb] px-2 rounded-md">
                     <FaRegStar />
                     <span className="pl-1 scmobile:text-mobilesm">
                       {flower.rating}
                     </span>
-                  </div>
+                  </div> */}
                   <span>Stok: {flower.stock}</span>
                 </div>
               </div>
