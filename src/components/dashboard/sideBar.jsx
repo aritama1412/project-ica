@@ -6,16 +6,26 @@ import {
   BiSolidTruck,
   BiSolidCartAdd,
   BiLogIn,
+  BiSolidDashboard,
+  BiMoney,
+  BiBarChartAlt,
+  BiCartAlt,
+  BiSolidStoreAlt,
 } from "react-icons/bi";
 import useSidebarAdmin from "@/../stores/sidebarAdminStore";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie"; // Install js-cookie if not already installed
 
 const menus = {
+  dashboard: {
+    name: "Dashboard",
+    link: "dashboard",
+    icon: <BiBarChartAlt />,
+  },
   stockProduct: {
     name: "Produk",
     link: "product",
-    icon: <BiSolidShoppingBag />,
+    icon: <BiSolidStoreAlt />,
   },
   supplier: {
     name: "Supplier",
@@ -30,7 +40,12 @@ const menus = {
   purchase: {
     name: "Transaksi Pembelian",
     link: "purchase",
-    icon: <BiSolidCartAdd />,
+    icon: <BiCartAlt />,
+  },
+  kas: {
+    name: "Kas",
+    link: "kas",
+    icon: <BiMoney />,
   },
   logout: {
     name: "Logout",
