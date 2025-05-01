@@ -147,7 +147,7 @@ export default function Product({ setActiveMenu }) {
             <TableColumn key="id_category">Katogori</TableColumn>
             <TableColumn key="stock">Stok</TableColumn>
             <TableColumn key="description">Deskripsi</TableColumn>
-            <TableColumn key="rating">Rating</TableColumn>
+            {/* <TableColumn key="rating">Rating</TableColumn> */}
             <TableColumn key="status_info">Status</TableColumn>
             <TableColumn key="action">ACTIONS</TableColumn>
           </TableHeader>
