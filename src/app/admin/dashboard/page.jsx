@@ -152,9 +152,15 @@ const Dashboard = () => {
                       <Image
                         width={14}
                         height={14}
-                        src={`http://localhost:4000` + product.Images?.[0]?.image}
+                        // src={`http://localhost:4000` + product.Images?.[0]?.image}
                         alt={product.product_name}
                         className="w-14 h-14 object-cover mb-3 rounded"
+                        src={
+                          product.Images && product.Images[0]
+                            ? `http://localhost:4000${product.Images?.[0]?.image}`
+                            : "https://placehold.co/600x600?text=Image+Not+Found"
+                        }
+                        unoptimized={true}
                       />
                       <h3 className="font-semibold text-center">{product.product_name}</h3>
                       <p className="text-sm text-gray-500">Stok: {product.stock}</p>
