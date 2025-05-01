@@ -28,7 +28,7 @@ const Dashboard = () => {
   // URLs
   const currentYear = new Date().getFullYear();
   const salesDataUrl = `http://localhost:4000/sales/get-sales-per-month?year=${currentYear}`;
-  const productSalesUrl = "http://localhost:4000/sales/get-product-sales?year=2025";
+  const productSalesUrl = `http://localhost:4000/sales/get-product-sales?year=${currentYear}`;
   const lowStockUrl = "http://localhost:4000/sales/get-low-stock-products";
 
   // Fetch functions
