@@ -1,39 +1,25 @@
 "use client";
 import Image from "next/image";
-import logo from "../../../public/images/logos/logo1.jpg"; // oke
+import logo from "../../../public/images/logos/logo1.jpg"; // Logo import
 
 import { useState } from "react";
 import Link from "next/link";
-import useCounter from "../../../stores/store";
 import useCart from "../../../stores/cartStore";
 import { BiCart } from "react-icons/bi";
 import { useRouter } from "next/navigation";
-
-const Dropdown = ({ items }) => (
-  <ul className="bg-white absolute shadow-md rounded ml-[-16px]">
-    {items.map((item, index) => (
-      <li
-        key={index}
-        className="px-4 py-2 cursor-pointer w-[200px] font-normal text-sm hover:bg-gray-100"
-      >
-        {item}
-      </li>
-    ))}
-  </ul>
-);
+import { FiMenu, FiX } from "react-icons/fi"; // Import icons for hamburger and close
 
 const Navbar = () => {
-  const [hoveredItem, setHoveredItem] = useState(null);
-  const counter = useCounter();
   const cart = useCart();
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle menu
 
   return (
-    <div className="flex flex-col justify-center items-center sticky border-b-2 z-[10] ">
-      <div className="flex flex-row gap-10 w-full justify-start scmed:justify-between items-center pt-5 pb-3 px-8 scmobile:pt-0 scmobile:pb-0 bg-[#EDE8DC] ">
+    <div className="flex flex-col justify-center items-center border-b-2 z-[10]">
+      <div className="bg-[#EDE8DC] sticky flex flex-row justify-between w-full px-5 items-center">
         <Link href="/" className="cursor-pointer">
           <Image
-            className="object-cover w-[100px] max-w-[100px] h-[100px] max-h-[100px] rounded-full"
+            className="object-cover w-[100px] max-w-[100px] h-[100px] max-h-[100px] rounded-full hover:opacity-90 transition-opacity duration-300"
             src={logo}
             width={100}
             height={100}
@@ -41,39 +27,52 @@ const Navbar = () => {
             alt="flowers"
           />
         </Link>
-        <ul className="flex flex-row gap-10 hideNavBar:hidden scmed:gap-5 w-full justify-start items-center font-bold relative pl-4 text-[#664343]">
+
+        {/* Hamburger Menu Button */}
+        <button
+          className="text-2xl md:hidden"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle Menu"
+        >
+          {isMenuOpen ? <FiX /> : <FiMenu />}
+        </button>
+
+        {/* Menu Items */}
+        <ul
+          className={`${
+            isMenuOpen ? "block" : "hidden"
+          } absolute top-full left-0 w-full bg-[#EDE8DC] md:static md:flex md:flex-row md:gap-5 md:items-center md:w-auto font-bold text-[#664343]`}
+        >
           <li
-            className={`cursor-pointer relative group transition-all duration-300 ease-in-out`}
-            onMouseEnter={() => setHoveredItem(null)}
-            onMouseLeave={() => setHoveredItem(null)}
-            onClick={() => router.push("/products") }
+            className="cursor-pointer relative group transition-all duration-300 ease-in-out p-4 md:p-0 hover:text-[#006769]"
+            onClick={() => {
+              router.push("/products");
+            }}
           >
             Katalog
-            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
           </li>
           <li
-            className={`cursor-pointer relative group transition-all duration-300 ease-in-out`}
-            onMouseEnter={() => setHoveredItem(null)}
-            onMouseLeave={() => setHoveredItem(null)}
-            onClick={() => router.push("/search-order") }
+            className="cursor-pointer relative group transition-all duration-300 ease-in-out p-4 md:p-0 hover:text-[#006769]"
+            onClick={() => {
+              router.push("/search-order");
+            }}
           >
             Cek Pesanan
-            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-black"></span>
+          </li>
+          <li className="p-4 md:p-0">
+            <Link
+              href="/checkout"
+              className="bg-[#006769] border-2 border-[#40A578] rounded-full text-[#FFFAE6] px-2 py-2 flex items-center justify-center hover:bg-[#40A578] transition-all duration-300"
+            >
+              <BiCart className="w-8 h-8 " />
+              {cart && cart.count > 0 && (
+                <span className="absolute top-4 right-3 p-3 scmobile:top-4 scmobile:right-6 flex items-center justify-center border-2 border-[#006769] w-4 h-4 text-xs text-white bg-red-500 rounded-full">
+                  {cart.count}
+                </span>
+              )}
+            </Link>
           </li>
         </ul>
-        <div className="flex flex-row gap-3">
-          <Link
-            href="/checkout"
-            className="bg-[#006769] border-2 border-[#40A578] rounded-full text-[#FFFAE6] px-2 py-2"
-          >
-            <BiCart className="w-8 h-8" />
-            {cart && cart.count > 0 && (
-              <span className="absolute top-9 right-6 p-3 scmobile:top-4 scmobile:right-6 flex items-center justify-center border-2 border-[#006769] w-4 h-4 text-xs text-white bg-red-500 rounded-full">
-                {cart && cart.count}
-              </span>
-            )}
-          </Link>
-        </div>
       </div>
     </div>
   );
