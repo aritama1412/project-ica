@@ -126,7 +126,7 @@ const Page = (data) => {
                 key={index}
                 // src={`http://localhost:4000` + item.image}
                 src={
-                  flower.Images && flower.Images[0]
+                  item.image && item.image
                     ? `http://localhost:4000${item.image}`
                     : "https://placehold.co/600x600?text=Image+Not+Found"
                 }
