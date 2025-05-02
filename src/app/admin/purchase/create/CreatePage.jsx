@@ -36,7 +36,7 @@ const CreatePage = () => {
   const [createProducts, setCreateProducts] = useState([]);
 
   const { data: rawProducts } = useSWR(
-    `http://localhost:4000/products/get-all-products?limit=100&offset=0`,
+    `http://localhost:4000/products/get-all-products-admin`,
     fetcher,
     {
       keepPreviousData: true,
@@ -45,6 +45,7 @@ const CreatePage = () => {
 
   useEffect(() => {
     if (rawProducts) {
+      console.log('rawProducts', rawProducts)
       setProducts(rawProducts.data);
       setIsLoading(false);
     }
