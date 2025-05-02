@@ -73,7 +73,7 @@ const Dashboard = () => {
     labels: dataBar.map((item) => item.month),
     datasets: [
       {
-        label: "Penjualan tahun " + currentYear,
+        label: "Penjualan tahun "  + currentYear,
         data: dataBar.map((item) => item.total_sales),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
