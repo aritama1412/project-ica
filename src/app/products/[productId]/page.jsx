@@ -39,7 +39,7 @@ const Page = (data) => {
     const item = {
       id: product.id_product,
       name: product.product_name,
-      img: product.Images[0].image,
+      img: product.Images && product.Images.length > 0 ? product.Images[0].image: null,
       price: product.price,
       quantity: quantity,
     };
@@ -124,7 +124,12 @@ const Page = (data) => {
             {product.Images.map((item, index) => (
               <Image
                 key={index}
-                src={`http://localhost:4000` + item.image}
+                // src={`http://localhost:4000` + item.image}
+                src={
+                  flower.Images && flower.Images[0]
+                    ? `http://localhost:4000${item.image}`
+                    : "https://placehold.co/600x600?text=Image+Not+Found"
+                }
                 // src="https://images.unsplash.com/photo-1549989476-69a92fa57c36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
                 // style={{
                 //   display: "block",
@@ -137,7 +142,22 @@ const Page = (data) => {
                 height={378}
                 loading="eager"
                 alt="flowers"
+                unoptimized={true}
               />
+              // <Image
+              //   className="object-cover"
+              //   src={
+              //     flower.Images && flower.Images[0]
+              //       ? `http://localhost:4000${flower.Images[0].image}`
+              //       : "https://placehold.co/600x600?text=Image+Not+Found"
+              //   }
+              //   width={175}
+              //   height={175}
+              //   style={{ width: "175px", height: "175px" }}
+              //   loading="eager"
+              //   alt="flowers"
+              //   unoptimized={true}
+              // />
             ))}
           </Carousel>
         ) : (
