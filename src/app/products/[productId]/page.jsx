@@ -28,6 +28,7 @@ const Page = (data) => {
         }
       );
       const productJson = await res.json();
+      console.log('productJson.data', productJson.data)
       setProduct(productJson.data);
     };
 
@@ -35,6 +36,7 @@ const Page = (data) => {
 
     // eslint-disable-next-line
   }, []);
+
   const addToCart = () => {
     const item = {
       id: product.id_product,
@@ -56,6 +58,17 @@ const Page = (data) => {
     }
     console.log("quantity after: ", quantity);
   };
+
+  useEffect(() => {
+    console.log('product', product)
+    console.log('product', product.Images?.length)
+    product.Images?.map((item, index) => (
+      console.log('item', item)
+      // item.Images && item.Images[0]
+      //   ? `http://localhost:4000${item.image}`
+    ))
+  }, [product])
+
   return (
     <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen scmobile:pb-[100px]">
       <Navbar />
@@ -121,12 +134,12 @@ const Page = (data) => {
             slidesToSlide={1}
             swipeable
           >
-            {product.Images.map((item, index) => (
+            {product.Images?.map((item, index) => (
               <Image
                 key={index}
                 // src={`http://localhost:4000` + item.image}
                 src={
-                  flower.Images && flower.Images[0]
+                  item.image
                     ? `http://localhost:4000${item.image}`
                     : "https://placehold.co/600x600?text=Image+Not+Found"
                 }
