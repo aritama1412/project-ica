@@ -66,6 +66,9 @@ const Dashboard = () => {
     fetchSalesData();
     fetchProductSalesData();
     fetchLowStockProducts();
+
+    // disable eslint
+    // eslint-disable-next-line 
   }, []);
 
   // Prepare bar chart data

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import useFilterStore from "@/../stores/filterStore";
+import useCart from "@/../stores/cartStore";
 
 export default function ProductCard() {
   const [products, setProducts] = useState([]);
@@ -69,68 +70,87 @@ export default function ProductCard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
+  const [savedCart, setSavedCart] = useState([]);
+  const cart = useCart();
+  useEffect(() => {
+    setSavedCart(cart.cart);
+  }, [cart]);
+  console.log("savedCart", savedCart);
+
+
   return (
     <>
       <div className="flex !flex-row w-full h-full">
         {/* <div className="w-full grid grid-cols-5 gap-2 place-items-center mt-[20px]"> */}
         <div className="w-full grid grid-cols-2 gap-2 place-items-center lg:grid-cols-3 xl:grid-cols-4 mt-[20px]">
           {filteredProducts.length > 0 &&
-            filteredProducts.map((flower) => (
-              <Link
-                href={`/products/${flower.id_product}`}
-                // href="#"
-                key={flower.id_product}
-                className="flex flex-col min-h-[310px] w-[175px] min-w-[175px] cursor-pointer rounded-md shadow-md hover:shadow-xl transition-all duration-300 ease-in-out"
-              >
-                <div key={flower.id_product} className="w-full">
-                  <div className="relative flex justify-center rounded-lg w-full min-w-[175px]">
-                    <Image
-                      className="object-cover"
-                      src={
-                        flower.Images && flower.Images[0]
-                          ? `http://localhost:4000${flower.Images[0].image}`
-                          : "https://placehold.co/600x600?text=Image+Not+Found"
-                      }
-                      width={175}
-                      height={175}
-                      style={{ width: "175px", height: "175px" }}
-                      loading="eager"
-                      alt="flowers"
-                      unoptimized={true}
-                    />
-                    {flower.isBestseller && (
-                      <span className="text-xs absolute top-0 right-0 pr-1 pl-2 pb-[1px] font-semibold rounded-bl-lg text-[#603F26] bg-[#F9E400]">
-                        Paling Populer
-                      </span>
-                    )}
-                  </div>
+            filteredProducts.map((flower) => {
+              // Calculate the total quantity for the current product in the cart
+              const totalQuantityInCart = savedCart
+                .filter((item) => item.id === flower.id_product)
+                .reduce((total, item) => total + item.quantity, 0);
 
-                  <div className="flex flex-col gap-1 p-2">
-                    {/* <p className="text-sm font-semibold line-clamp-2 break-words min-h-[45px] flex items-start overflow-hidden"> */}
-                    <p className="text-xs font-semibold line-clamp-2 break-words min-h-[40px]">
-                      {flower.product_name}
-                    </p>
-                    <hr />
-                    <p className="text-xs line-clamp-2 break-words min-h-[2rem]">
-                      {flower.description}
-                    </p>
-                    <div className="flex flex-row items-center justify-between">
-                      <h2 className="font-semibold">
-                        {flower.price.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        })}
-                      </h2>
+              // Calculate adjusted stock
+              const adjustedStock = Math.max(flower.stock - totalQuantityInCart, 0); // Ensure stock doesn't go below 0
+
+
+              return (
+                <Link
+                  href={`/products/${flower.id_product}`}
+                  key={flower.id_product}
+                  className="flex flex-col min-h-[310px] w-[175px] min-w-[175px] cursor-pointer rounded-md shadow-md hover:shadow-xl transition-all duration-300 ease-in-out"
+                >
+                  <div key={flower.id_product} className="w-full">
+                    <div className="relative flex justify-center rounded-lg w-full min-w-[175px]">
+                      <Image
+                        className="object-cover"
+                        src={
+                          flower.Images && flower.Images[0]
+                            ? `http://localhost:4000${flower.Images[0].image}`
+                            : "https://placehold.co/600x600?text=Image+Not+Found"
+                        }
+                        width={175}
+                        height={175}
+                        style={{ width: "175px", height: "175px" }}
+                        loading="eager"
+                        alt="flowers"
+                        unoptimized={true}
+                      />
+                      {flower.isBestseller && (
+                        <span className="text-xs absolute top-0 right-0 pr-1 pl-2 pb-[1px] font-semibold rounded-bl-lg text-[#603F26] bg-[#F9E400]">
+                          Paling Populer
+                        </span>
+                      )}
                     </div>
-                    <div className="flex flex-row items-center justify-between mt-2 text-xs">
-                      <span>Stok: {flower.stock}</span>
+
+                    <div className="flex flex-col gap-1 p-2">
+                      <p className="text-xs font-semibold line-clamp-2 break-words min-h-[40px]">
+                        {flower.product_name}
+                      </p>
+                      <hr />
+                      <p className="text-xs line-clamp-2 break-words min-h-[2rem]">
+                        {flower.description}
+                      </p>
+                      <div className="flex flex-row items-center justify-between">
+                        <h2 className="font-semibold">
+                          {flower.price.toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          })}
+                        </h2>
+                      </div>
+                      <div className="flex flex-row items-center justify-between mt-2 text-xs">
+                        {/* Display adjusted stock */}
+                        <span>Stok: {adjustedStock}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
+
         </div>
       </div>
 
