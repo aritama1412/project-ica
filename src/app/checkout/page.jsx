@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import FilterSection from "../../components/filter/filterSection";
-import ProductSection from "../../components/products/productSection";
 import { DatePicker } from "@nextui-org/react";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 import useCart from "@/../stores/cartStore";

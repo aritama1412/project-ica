@@ -44,7 +44,7 @@ export default function ProductCard() {
       );
     }
 
-    // Add more filters here...
+    // Add more filters 
     setFilteredProducts(filtered);
   };
 
@@ -72,13 +72,15 @@ export default function ProductCard() {
   return (
     <>
       <div className="flex !flex-row w-full h-full">
-        <div className="w-full grid grid-cols-5 gap-2 place-items-center mt-[20px]">
+        {/* <div className="w-full grid grid-cols-5 gap-2 place-items-center mt-[20px]"> */}
+        <div className="w-full grid grid-cols-2 gap-2 place-items-center lg:grid-cols-3 xl:grid-cols-4 mt-[20px]">
           {filteredProducts.length > 0 &&
             filteredProducts.map((flower) => (
               <Link
                 href={`/products/${flower.id_product}`}
+                // href="#"
                 key={flower.id_product}
-                className="flex flex-col min-h-[350px] w-[175px] min-w-[175px] cursor-pointer rounded-md shadow-md hover:shadow-xl transition-all duration-300 ease-in-out"
+                className="flex flex-col min-h-[310px] w-[175px] min-w-[175px] cursor-pointer rounded-md shadow-md hover:shadow-xl transition-all duration-300 ease-in-out"
               >
                 <div key={flower.id_product} className="w-full">
                   <div className="relative flex justify-center rounded-lg w-full min-w-[175px]">
@@ -103,12 +105,13 @@ export default function ProductCard() {
                     )}
                   </div>
 
-                  <div className="flex flex-col max-h-[75px] p-2">
-                    <p className="text-sm font-semibold scmobile:text-mobilexl line-clamp-2 break-words min-h-[45px] flex items-center">
+                  <div className="flex flex-col gap-1 p-2">
+                    {/* <p className="text-sm font-semibold line-clamp-2 break-words min-h-[45px] flex items-start overflow-hidden"> */}
+                    <p className="text-xs font-semibold line-clamp-2 break-words min-h-[40px]">
                       {flower.product_name}
                     </p>
-                    <hr className="mb-2" />
-                    <p className="text-xs line-clamp-3 break-words min-h-[3.1rem] mb-2">
+                    <hr />
+                    <p className="text-xs line-clamp-2 break-words min-h-[2rem]">
                       {flower.description}
                     </p>
                     <div className="flex flex-row items-center justify-between">

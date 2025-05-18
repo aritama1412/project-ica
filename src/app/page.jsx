@@ -1,5 +1,4 @@
 "use client";
-import ProductSection from "../components/products/productSection.jsx";
 import FilterSection from "../components/filter/filterSection.jsx";
 import Navbar from "../components/navbar/navbar.jsx";
 import Image from "next/image.js";
@@ -23,26 +22,26 @@ export default function Home() {
           </h1>
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center min-h-[1200px] w-full bg-white mx-auto">
-        <div className="flex flex-row h-[400px] w-full max-w-[1280px] ">
+      <div className="flex flex-col justify-center items-center h-full sm:min-h-[1200px] w-full bg-white mx-auto">
+        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] ">
           <div className="flex justify-center items-center w-1/2">
             <Image
               src="/images/home/07.jpg"
               alt="logo"
               height={300}
               width={300}
-              className="object-cover rounded-lg min-h-[300px] min-w-[300px]"
+              className="object-cover rounded-lg max-h-[150px] max-w-[150px] sm:min-h-[300px] sm:min-w-[300px] "
             />
           </div>
           <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
             <h1 className="text-4xl md:text-6xl font-bold">Fresh</h1>
-            <p className="text-sm md:text-lg font-bold">Bunga dari kami selalu segar dan <br /> merupakan kualitas terbaik.</p>
+            <p className="text-sm md:text-lg font-bold text-gray-500">Bunga dari kami selalu segar dan merupakan kualitas terbaik.</p>
           </div>
         </div>
-        <div className="flex flex-row h-[400px] w-full max-w-[1280px] ">
+        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] ">
           <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
             <h1 className="text-4xl md:text-6xl font-bold">Lengkap</h1>
-            <p className="text-sm md:text-lg font-bold">Kami menyediakan berbagai kebutuhan berkebun anda <br /> seperti pot, pupuk dan sebagainya.</p>
+            <p className="text-sm md:text-lg font-bold text-gray-500">Kami menyediakan berbagai kebutuhan berkebun anda seperti pot, pupuk dan sebagainya.</p>
           </div>
           <div className="flex justify-center items-center w-1/2">
             <Image
@@ -50,23 +49,23 @@ export default function Home() {
               alt="logo"
               height={300}
               width={300}
-              className="object-cover rounded-lg min-h-[300px] min-w-[300px]"
+              className="object-cover rounded-lg max-h-[150px] max-w-[150px] sm:min-h-[300px] sm:min-w-[300px] "
             />
           </div>
         </div>
-        <div className="flex flex-row h-[400px] w-full max-w-[1280px] ">
+        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] ">
           <div className="flex justify-center items-center w-1/2">
             <Image
               src="/images/home/06.jpg"
               alt="logo"
               height={300}
               width={300}
-              className="object-cover rounded-lg min-h-[300px] min-w-[300px]"
+              className="object-cover rounded-lg max-h-[150px] max-w-[150px] sm:min-h-[300px] sm:min-w-[300px] "
             />
           </div>
           <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
             <h1 className="text-4xl md:text-6xl font-bold">Mudah</h1>
-            <p className="text-sm md:text-lg font-bold">Beli bunga keinginanmu tanpa harus melakukan registrasi.</p>
+            <p className="text-sm md:text-lg font-bold text-gray-500">Beli bunga keinginanmu tanpa harus melakukan registrasi.</p>
           </div>
         </div>
       </div>
