@@ -4,7 +4,18 @@ import Navbar from "@/components/navbar/navbar";
 import ProductCard from "@/components/products/productCard";
 import { CiFilter } from "react-icons/ci";
 import {useState} from "react";
-import {
+// import {
+  // Modal,
+  // ModalContent,
+  // ModalHeader,
+  // ModalBody,
+  // ModalFooter,
+  // useDisclosure,
+  // RadioGroup,
+  // Radio,
+// } from "@nextui-org/modal";
+import { 
+  Button, 
   Modal,
   ModalContent,
   ModalHeader,
@@ -12,13 +23,11 @@ import {
   ModalFooter,
   useDisclosure,
   RadioGroup,
-  Radio,
-} from "@nextui-org/modal";
-import { Button } from "@nextui-org/react";
+  Radio, } from "@nextui-org/react";
 import { BiCart } from "react-icons/bi";
 import Link from "next/link";
 
-const page = () => {
+const Page = () => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   return (
@@ -71,4 +80,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
