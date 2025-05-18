@@ -72,13 +72,16 @@ const Page = () => {
             <BiSearchAlt2 className="mt-[2px]" />
           </button>
         </div>
-        <div className="w-full bg-slate-100 ">
-          <div className="grid grid-cols-6 font-semibold text-center gap-2 mb-4 bg-[#fbba1c] p-4 rounded-t-2xl">
-            <span className="col-span-1 text-left">Tanggal</span>
+
+
+        <div className="w-full bg-slate-100 overflow-x-auto">
+          <div className="min-w-[900px] grid grid-cols-6 font-semibold text-center gap-2 mb-4 bg-[#fbba1c] p-4 rounded-t-2xl">
+            <span className="col-span-1 text-left">Tanggal Order</span>
             <span className="col-span-1 text-right">Nomor Invoice</span>
-            <span className="col-span-1 text-right">Nomor HP</span>
+            {/* <span className="col-span-1 text-right">Nomor HP</span> */}
             <span className="col-span-1 text-right">Total</span>
             <span className="col-span-1 text-right">Status</span>
+            <span className="col-span-1 text-right">Estimasi diterima</span>
             <span className="col-span-1 text-right">#</span>
           </div>
 
@@ -86,7 +89,7 @@ const Page = () => {
             transactions.map((item, index) => (
               <div
                 key={index}
-                className="grid grid-cols-6 text-center items-center gap-2 mb-2 px-4"
+                className="min-w-[900px] grid grid-cols-6 text-center items-center gap-2 mb-2 px-4"
               >
                 <span className="col-span-1 text-left">
                   {new Date(item.date_sale)
@@ -102,13 +105,25 @@ const Page = () => {
                     .replace(",", "")}
                 </span>
                 <span className="col-span-1 text-right">{item.bill}</span>
-                <span className="col-span-1 text-right">
+                {/* <span className="col-span-1 text-right">
                   {item.customer_phone}
-                </span>
+                </span> */}
                 <span className="col-span-1 text-right">
                   {helper(item.grand_total)}
                 </span>
                 <span className="col-span-1 text-right">{item.status}</span>
+                <span className="col-span-1 text-right">
+                  {item.date_estimation
+                    ? new Date(item.date_estimation)
+                        .toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .replace(/\//g, "-")
+                        .replace(",", "")
+                    : "-"}
+                </span>
                 <span className="col-span-1 text-right">
                   <BiSearchAlt2
                     onClick={() => {
@@ -120,7 +135,7 @@ const Page = () => {
               </div>
             ))
           ) : (
-            <div className="grid grid-cols-6 text-center items-center gap-2 mb-2 px-4">
+            <div className="min-w-[900px] grid grid-cols-6 text-center items-center gap-2 mb-2 px-4">
               <span className="col-span-1 text-left">-</span>
               <span className="col-span-1 text-right">-</span>
               <span className="col-span-1 text-right">-</span>
@@ -130,6 +145,7 @@ const Page = () => {
             </div>
           )}
         </div>
+
 
         <Modal size={"5xl"} isOpen={isOpen} onOpenChange={onOpenChange}>
           <ModalContent>
@@ -142,9 +158,8 @@ const Page = () => {
                   <div className="w-full bg-slate-100 p-4">
                     <div className="grid grid-cols-6 font-semibold text-center gap-2 mb-4">
                       <span className="col-span-3 text-left">Produk</span>
-                      <span className="col-span-1 text-right">Harga</span>
                       <span className="col-span-1/4 text-right">Qty</span>
-                      <span className="col-span-1 text-right">Total</span>
+                      <span className="col-span-2 text-right">Total</span>
                     </div>
                     {details.SaleDetails && details.SaleDetails.length > 0 ? (
                       <>
@@ -154,15 +169,13 @@ const Page = () => {
                             className="grid grid-cols-6 text-center gap-2 mb-2"
                           >
                             <span className="col-span-3 text-left">
-                              {item.Product.product_name || "Unknown"}
-                            </span>
-                            <span className="col-span-1 text-right">
-                              {helper(item.price)}
+                              {item.Product.product_name || "-"} <br />
+                              ({helper(item.price)})
                             </span>
                             <span className="col-span-1/4 text-right">
                               {item.quantity}
                             </span>
-                            <span className="col-span-1 text-right">
+                            <span className="col-span-2 text-right">
                               {helper(item.sub_total)}
                             </span>
                           </div>
@@ -172,14 +185,13 @@ const Page = () => {
                             <span className="col-span-3 text-left">
                               Grand Total
                             </span>
-                            <span className="col-span-1/4 text-right"></span>
                             <span className="col-span-1 text-right">
                               {details.SaleDetails.reduce(
                                 (total, item) => total + item.quantity,
                                 0
                               )}
                             </span>
-                            <span className="col-span-1 text-right">
+                            <span className="col-span-2 text-right">
                               {helper(details.SaleDetails.reduce(
                                 (total, item) => total + item.sub_total,
                                 0

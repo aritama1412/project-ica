@@ -36,7 +36,7 @@ const FilterSection = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 scmobile:flex-row scmobile:gap-2 scmobile:overflow-x-auto items-center h-full w-[320px] scmobile:w-full max-w-[320px] scmobile:max-w-full mt-[20px] scmobile:mt-1 scmobile:mb-1 px-2">
+    <>
       {/* Category Filter: Always Open */}
       <div className="flex flex-col gap-2 w-full p-4 border border-gray-300 rounded-lg">
         <h3 className="font-bold text-lg text-gray-800">Kategori</h3>
@@ -55,8 +55,12 @@ const FilterSection = () => {
       </div>
 
       {/* Price Filter */}
-      <FilterPrice data={categories} filterText="Harga" />
-    </div>
+      {/* <div className="flex flex-col items-center w-[320px] sc3row:w-[280px] max-w-[320px] border mb-3 py-2 scmobile:mb-1 rounded-2xl shadow-lg"> */}
+      <div className="flex flex-col items-center w-full border mb-3 py-2 rounded-2xl shadow-lg">
+        <FilterPrice data={categories} filterText="Harga" />
+      </div>
+
+    </>
   );
 };
 

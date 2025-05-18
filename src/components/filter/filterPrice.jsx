@@ -36,12 +36,13 @@ function FilterPrice({ filterText }) {
   }, [filters.price]);
 
   return (
-    <div className="flex flex-col items-center w-[320px] sc3row:w-[280px] max-w-[320px] border mb-3 py-2 scmobile:mb-1 rounded-2xl shadow-lg">
+    <>
       {/* Filter Header */}
-      <div
+      {/* <div
         className="flex flex-row justify-between items-center px-5 scmobile:px-3 w-full cursor-pointer"
         onClick={toggleVisibility}
-      >
+      > */}
+      <div className="hidden">
         <span className="scmobile:text-center flex font-bold w-full whitespace-nowrap">
           {filterText}
         </span>
@@ -83,7 +84,7 @@ function FilterPrice({ filterText }) {
 
           <div className="flex flex-row justify-center gap-2">
             <Button color="primary" className="w-full" variant="bordered" onClick={applyPriceFilter}>
-              Terapkan
+              Terapkan Harga
             </Button>
             <Button color="danger" className="w-full" variant="bordered" onClick={clearPriceFilter}>
               Bersihkan
@@ -91,7 +92,7 @@ function FilterPrice({ filterText }) {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

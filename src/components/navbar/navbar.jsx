@@ -62,11 +62,13 @@ const Navbar = () => {
           <li className="p-4 md:p-0">
             <Link
               href="/checkout"
-              className="bg-[#006769] border-2 border-[#40A578] rounded-full text-[#FFFAE6] px-2 py-2 flex items-center justify-center hover:bg-[#40A578] transition-all duration-300"
+              // className="bg-[#006769] border-2 border-[#40A578] rounded-full text-[#FFFAE6] px-2 py-2 flex items-center justify-center hover:bg-[#40A578] transition-all duration-300"
+              className="flex items-center gap-2 justify-center bg-[#006769] border-2 border-[#40A578] rounded-full text-[#FFFAE6] px-2 py-2  hover:bg-[#40A578] transition-all duration-300"
             >
               <BiCart className="w-8 h-8 " />
               {cart && cart.count > 0 && (
-                <span className="absolute top-4 right-3 p-3 scmobile:top-4 scmobile:right-6 flex items-center justify-center border-2 border-[#006769] w-4 h-4 text-xs text-white bg-red-500 rounded-full">
+                // <span className="absolute top-4 right-3 p-3 scmobile:top-4 scmobile:right-6 flex items-center justify-center border-2 border-[#006769] w-4 h-4 text-xs text-white bg-red-500 rounded-full">
+                <span className="text-lg border-1 border-white rounded-full w-8 h-8 flex items-center justify-center">
                   {cart.count}
                 </span>
               )}
