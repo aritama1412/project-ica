@@ -15,10 +15,10 @@ import {
   Button,
 } from "@nextui-org/react";
 
-import { EditIcon } from "./EditIcon";
-import { DeleteIcon } from "./DeleteIcon";
-import { EyeIcon } from "./EyeIcon";
 import { columns, transactions } from "./data";
+import { EditIcon } from "@/components/icons/EditIcon";
+import { DeleteIcon } from "@/components/icons/DeleteIcon";
+import { EyeIcon } from "@/components/icons/EyeIcon";
 
 const statusColorMap = {
   active: "success",
