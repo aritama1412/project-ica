@@ -4,9 +4,9 @@ import logo from "../../../../public/images/logos/logo1.jpg";
 import React, { useState } from "react";
 import { Header } from "@/components/dashboard/header";
 import SideBar from "@/components/dashboard/sideBar";
-import StockProduct from "./Product";
+import Product from "./Product";
 
-const Product = () => {
+const ProductPage = () => {
   const [activeMenu, setActiveMenu] = useState("");
 
   return (
@@ -15,10 +15,10 @@ const Product = () => {
       <div className="flex flex-row h-full min-w-full">
         <SideBar setActiveMenu={setActiveMenu} />
 
-        <StockProduct />
+        <Product />
       </div>
     </div>
   );
 };
 
-export default Product;
+export default ProductPage;

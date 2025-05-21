@@ -16,13 +16,12 @@ import {
   Radio,
   Button,
 } from "@nextui-org/react";
-import { EditIcon } from "./EditIcon";
-import { DeleteIcon } from "./DeleteIcon";
-import { EyeIcon } from "./EyeIcon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import moment from "moment";
+import { EyeIcon } from "@/components/icons/EyeIcon";
+import { EditIcon } from "@/components/icons/EditIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
