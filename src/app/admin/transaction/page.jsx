@@ -6,7 +6,7 @@ import { Header } from "@/components/dashboard/header";
 import SideBar from "@/components/dashboard/sideBar";
 import Transaction from "./Transaction";
 
-const Stock = () => {
+const TransactionPage = () => {
   const [activeMenu, setActiveMenu] = useState("");
 
   return (
@@ -21,4 +21,4 @@ const Stock = () => {
   );
 };
 
-export default Stock;
+export default TransactionPage;
