@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   BiSolidShoppingBag,
   BiSolidTruck,
@@ -57,6 +57,7 @@ const menus = {
 export default function SideBar() {
   const activeMenu = useSidebarAdmin((state) => state.menu); // Access current `menu` state
   const setActiveMenu = useSidebarAdmin((state) => state.setMenu); // Access `setMenu` method
+  const [lowStock, setLowStock] = useState(0);
   const router = useRouter();
 
   const handleActiveMenu = (key) => {
@@ -74,6 +75,27 @@ export default function SideBar() {
   useEffect(() => {
     console.log("activeMenu", activeMenu);
   }, [activeMenu]);
+
+  const getLowStockUrl = `http://localhost:4000/products/get-low-stock`;
+  // Fetch functions
+  const fetchLowStock = async () => {
+    try {
+      const response = await fetch(getLowStockUrl);
+      const data = await response.json();
+      console.log('data', data)
+      // get length
+      setLowStock(data.data.length)
+    } catch (error) {
+      console.error("Error fetching sales data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLowStock();
+
+    // disable eslint
+    // eslint-disable-next-line 
+  }, []);
 
   return (
     <>
@@ -107,7 +129,12 @@ export default function SideBar() {
                     <span className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                       {menus[key].icon}
                     </span>
-                    <span className="ms-3">{menus[key].name}</span>
+                    <span className="ms-3 flex flex-row justify-between items-center w-full">
+                      {menus[key].name} 
+                      {menus[key].name == 'Dashboard' && lowStock && lowStock > 0? (
+                        <h5 className="text-xs bg-red-500 px-2 text-white font-bold rounded-md">{lowStock}</h5> 
+                      ): null}
+                    </span>
                   </Link>
                 )}
               </li>
