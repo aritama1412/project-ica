@@ -144,7 +144,7 @@ const Dashboard = () => {
               )}
             </div>
             <div className="bg-white p-5 shadow rounded h-[400px] min-h-[400px] max-h-[400px] overflow-y-auto">
-              <h2 className="text-xl font-bold mb-3">Produk stok rendah</h2>
+              <h2 className="text-xl font-bold mb-3">5 Produk stok terendah</h2>
               {lowStockProducts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {lowStockProducts.map((product) => (
