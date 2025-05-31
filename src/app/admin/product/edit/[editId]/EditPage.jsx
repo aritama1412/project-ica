@@ -173,7 +173,7 @@ const EditPage = () => {
   };
 
   return (
-    <div className="flex flex-col p-4 w-full">
+    <div className="flex flex-col p-4 w-screen">
       <h1 className="text-3xl font-bold">Edit Produk</h1>
       <form
         onSubmit={handleSubmit}
@@ -304,35 +304,38 @@ const EditPage = () => {
 
           <hr />
           
-          <div className="border-1 border-gray-300 rounded-md px-3 py-3 flex flex-row gap-4">
+          <div className="border-1 border-gray-300 rounded-md px-3 py-3 flex flex-wrap gap-4 w-full">
             {productData?.Images && productData.Images.length > 0 ? (
-              productData.Images.map((image, index) => {
-                return (
-                  <div key={index} className="flex flex-col gap-3 min-h-[220px]">
-                    <Image
-                      src={`http://localhost:4000${image.image}`}
-                      onClick={() => window.open(`http://localhost:4000${image.image}`)}
-                      alt={image.image}
-                      className="max-w-[200px] min-h-[200px] max-h-[200px] object-cover"
-                      width={200}
-                      height={200}
-                    />
-                    <Button
-                      color="danger"
-                      variant="flat"
-                      isLoading={!!loadingStates[image.id_image]} // Ensure this is specific to the image ID
-                      onClick={() => handleDeleteImage(image.id_image)}
-                    >
-                      Hapus
-                    </Button>
-                  </div>
-                );
-              })
+              productData.Images.map((image, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-3 min-h-[220px] max-w-[200px] flex-grow"
+                  style={{ flex: "0 0 auto" }} // Ensures items maintain their size and wrap as needed
+                >
+                  <Image
+                    src={`http://localhost:4000${image.image}`}
+                    onClick={() => window.open(`http://localhost:4000${image.image}`)}
+                    alt={image.image}
+                    className="max-w-[200px] min-h-[200px] max-h-[200px] object-cover"
+                    width={200}
+                    height={200}
+                  />
+                  <Button
+                    color="danger"
+                    variant="flat"
+                    isLoading={!!loadingStates[image.id_image]} // Ensure this is specific to the image ID
+                    onClick={() => handleDeleteImage(image.id_image)}
+                    className="max-w-[200px]"
+                  >
+                    Hapus
+                  </Button>
+                </div>
+              ))
             ) : (
-              <div className="text-gray-500">Gambar tidak ditemukan</div>
+              <div className="text-gray-500 w-full text-center">Gambar tidak ditemukan</div>
             )}
           </div>
-          
+
           <div className="flex items-start mt-10">
             <button
               type="submit"
