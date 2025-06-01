@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DatePicker } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -11,6 +12,8 @@ const EditPage = () => {
   const router = useRouter();
   const { editId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+  const [loadingStates, setLoadingStates] = useState({});
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [showInCatalog, setShowInCatalog] = useState(null);
@@ -18,7 +21,8 @@ const EditPage = () => {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [stock, setStock] = useState("");
-  const [images, setImages] = useState([]); // State for multiple images
+  const [images, setImages] = useState([]);
+  const [productData, setProductData] = useState([]);
 
   const { data: product } = useSWR(
     `http://localhost:4000/products/get-product?id=${editId}`,
@@ -45,6 +49,7 @@ const EditPage = () => {
       setPrice(product?.data?.price);
       setStock(product?.data?.stock);
       setDescription(product?.data?.description);
+      setProductData(product?.data);
     }
 
     if (categoriesData) {
@@ -62,6 +67,63 @@ const EditPage = () => {
       alert("You can only upload a maximum of 5 images.");
     }
   };
+
+  // set data for setisloading state
+  useEffect(() => {
+
+    let newLoadingStates = {};
+    product?.data?.Images && product.data.Images.map((image, index) => {
+      return newLoadingStates[image.id_image] = false;
+    });
+    setLoadingStates(newLoadingStates);
+    console.log('newLoadingStates', newLoadingStates)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product])
+
+  useEffect(() => {
+    console.log('loadingStates', loadingStates)
+  }, [loadingStates])
+
+  const handleDeleteImage = (imageId) => {
+    console.log('imageId', imageId)
+    // loadingStates to true, match the id
+    setLoadingStates((prevState) => ({
+      ...prevState,
+      [imageId]: true,
+    }));
+
+    // delete 
+    // hit http://localhost:4000/products/delete-image with data id_image
+    // on success remove data from view
+    fetch("http://localhost:4000/products/delete-image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id_image: imageId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == "success") {
+          console.log('data.status', data.status)
+          // hit again api get product detail
+          // remove image from product
+          const newProduct = productData.Images.filter((image) => image.id_image !== imageId);
+          setProductData((prevState) => ({
+            ...prevState,
+            Images: newProduct,
+          }));
+
+          // setLoadingStates((prevState) => ({
+          //   ...prevState,
+          //   [imageId]: false,
+          // }));
+        }else{
+          alert(data.message);
+        }
+      });
+  }
 
   // Handle form submission to update product
   const handleSubmit = async (e) => {
@@ -111,7 +173,7 @@ const EditPage = () => {
   };
 
   return (
-    <div className="flex flex-col p-4 w-full">
+    <div className="flex flex-col p-4 w-screen">
       <h1 className="text-3xl font-bold">Edit Produk</h1>
       <form
         onSubmit={handleSubmit}
@@ -239,6 +301,41 @@ const EditPage = () => {
               </small>
             </div>
           </div>
+
+          <hr />
+          
+          <div className="border-1 border-gray-300 rounded-md px-3 py-3 flex flex-wrap gap-4 w-full">
+            {productData?.Images && productData.Images.length > 0 ? (
+              productData.Images.map((image, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-3 min-h-[220px] max-w-[200px] flex-grow"
+                  style={{ flex: "0 0 auto" }} // Ensures items maintain their size and wrap as needed
+                >
+                  <Image
+                    src={`http://localhost:4000${image.image}`}
+                    onClick={() => window.open(`http://localhost:4000${image.image}`)}
+                    alt={image.image}
+                    className="max-w-[200px] min-h-[200px] max-h-[200px] object-cover"
+                    width={200}
+                    height={200}
+                  />
+                  <Button
+                    color="danger"
+                    variant="flat"
+                    isLoading={!!loadingStates[image.id_image]} // Ensure this is specific to the image ID
+                    onClick={() => handleDeleteImage(image.id_image)}
+                    className="max-w-[200px]"
+                  >
+                    Hapus
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <div className="text-gray-500 w-full text-center">Gambar tidak ditemukan</div>
+            )}
+          </div>
+
           <div className="flex items-start mt-10">
             <button
               type="submit"

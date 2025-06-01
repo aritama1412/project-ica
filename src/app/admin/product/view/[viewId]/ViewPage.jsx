@@ -4,6 +4,7 @@ import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 import { DatePicker } from "@nextui-org/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -19,6 +20,8 @@ const ViewPage = () => {
       keepPreviousData: true,
     }
   );
+
+  console.log('product', product)
 
   return (
     <div className="flex flex-col p-4 w-full">
@@ -102,7 +105,7 @@ const ViewPage = () => {
               </Select>
             </div>
             {/* Upload Images */}
-            <div className="flex flex-col gap-1 mb-3">
+            {/* <div className="flex flex-col gap-1 mb-3">
               <span>Upload Gambar (Max 5 images)</span>
               <input
                 type="file"
@@ -113,8 +116,35 @@ const ViewPage = () => {
               <small className="text-gray-500">
                 You can upload up to 5 images.
               </small>
-            </div>
+            </div> */}
           </div>
+
+          <hr />
+
+          
+          <div className="border-1 border-gray-300 rounded-md px-3 py-3 flex flex-wrap gap-4 w-full">
+            {product?.data?.Images && product?.data?.Images.length > 0 ? (
+              product?.data?.Images.map((image, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-3 min-h-[220px] max-w-[200px] flex-grow"
+                  style={{ flex: "0 0 auto" }} // Ensures items maintain their size and wrap as needed
+                >
+                  <Image
+                    src={`http://localhost:4000${image.image}`}
+                    onClick={() => window.open(`http://localhost:4000${image.image}`)}
+                    alt={image.image}
+                    className="max-w-[200px] min-h-[200px] max-h-[200px] object-cover"
+                    width={200}
+                    height={200}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="text-gray-500 w-full text-center">Gambar tidak ditemukan</div>
+            )}
+          </div>
+
           <div className="flex items-start mt-10">
             <button
               type="button"
