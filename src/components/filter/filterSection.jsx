@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import FilterCard from "./filterCard";
-import { Checkbox } from "@nextui-org/checkbox";
+import { Checkbox } from "@heroui/checkbox";
 import useFilterStore from "@/../stores/filterStore"; // Import the updated filter store
 import useSWR from "swr";
 import FilterPrice from "./filterPrice";

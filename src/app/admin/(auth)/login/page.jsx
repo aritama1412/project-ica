@@ -3,7 +3,7 @@
 import Image from "next/image";
 import logo from "../../../../../public/images/logos/logo1.jpg";
 import { useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie"; // Import js-cookie for managing cookies
 
