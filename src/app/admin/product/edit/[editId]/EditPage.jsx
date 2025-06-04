@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { Button } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { Button } from "@heroui/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";

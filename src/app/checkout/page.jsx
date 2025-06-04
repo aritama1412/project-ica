@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import FilterSection from "../../components/filter/filterSection";
-import { DatePicker } from "@nextui-org/react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
+import { DatePicker } from "@heroui/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
 import useCart from "@/../stores/cartStore";
 import helper from "@/../helper/helper";
 import { getLocalTimeZone, today } from "@internationalized/date";

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import FilterSection from "../../components/filter/filterSection";
-import { Input } from "@nextui-org/react";
+import { Input } from "@heroui/react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { BiArrowToBottom } from "react-icons/bi";
 import helper from "@/../helper/helper";
@@ -15,7 +15,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 const Page = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();

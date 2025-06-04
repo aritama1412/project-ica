@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { SlArrowDown } from "react-icons/sl";
 import useFilterStore from "@/../stores/filterStore";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input } from "@heroui/react";
 
 function FilterPrice({ filterText }) {
   const [isVisible, setIsVisible] = useState(true);

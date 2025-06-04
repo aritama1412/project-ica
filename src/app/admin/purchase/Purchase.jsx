@@ -15,7 +15,7 @@ import {
   RadioGroup,
   Radio,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
