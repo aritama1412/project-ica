@@ -14,7 +14,7 @@ const ViewPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { data: product } = useSWR(
-    `http://localhost:4000/products/get-product?id=${viewId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-product?id=${viewId}`,
     fetcher,
     {
       keepPreviousData: true,
@@ -131,8 +131,8 @@ const ViewPage = () => {
                   style={{ flex: "0 0 auto" }} // Ensures items maintain their size and wrap as needed
                 >
                   <Image
-                    src={`http://localhost:4000${image.image}`}
-                    onClick={() => window.open(`http://localhost:4000${image.image}`)}
+                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image.image}`}
+                    onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_BASE_URL}${image.image}`)}
                     alt={image.image}
                     className="max-w-[200px] min-h-[200px] max-h-[200px] object-cover"
                     width={200}

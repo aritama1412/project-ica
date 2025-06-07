@@ -27,9 +27,7 @@ const Dashboard = () => {
 
   // URLs
   const currentYear = new Date().getFullYear();
-  const salesDataUrl = `http://localhost:4000/sales/get-sales-per-month?year=${currentYear}`;
-  const productSalesUrl = `http://localhost:4000/sales/get-product-sales?year=${currentYear}`;
-  const lowStockUrl = "http://localhost:4000/sales/get-low-stock-products";
+  const lowStockUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-low-stock-products`;
 
   // Fetch functions
   const fetchSalesData = async () => {
@@ -155,12 +153,11 @@ const Dashboard = () => {
                       <Image
                         width={14}
                         height={14}
-                        // src={`http://localhost:4000` + product.Images?.[0]?.image}
                         alt={product.product_name}
                         className="w-14 h-14 object-cover mb-3 rounded"
                         src={
                           product.Images && product.Images[0]
-                            ? `http://localhost:4000${product.Images?.[0]?.image}`
+                            ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${product.Images?.[0]?.image}`
                             : "https://placehold.co/600x600?text=Image+Not+Found"
                         }
                         unoptimized={true}

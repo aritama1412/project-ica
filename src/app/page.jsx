@@ -6,6 +6,7 @@ import NavbarHome from "@/components/navbar/navbarHome.jsx";
 import Link from "next/link.js";
 
 export default function Home() {
+
   return (
     <main className="flex flex-col justify-center w-full min-w-screen max-w-screen mx-auto h-full min-h-screen bg-red-500">
       <NavbarHome />

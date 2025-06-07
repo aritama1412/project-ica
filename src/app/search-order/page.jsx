@@ -28,7 +28,7 @@ const Page = () => {
 
     const getTransactions = async () => {
       const res = await fetch(
-        `http://localhost:4000/sales/check?invoice=${invoice}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/check?invoice=${invoice}`,
         {
           cache: "no-store",
         }

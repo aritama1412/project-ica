@@ -14,7 +14,7 @@ const CreatePage = () => {
   const [category, setCategory] = useState("");
   const [address, setAddress] = useState("");
   const { data: categoriesData } = useSWR(
-    `http://localhost:4000/categories/get-all-categories`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/get-all-categories`,
     fetcher,
     {
       keepPreviousData: true,
@@ -36,8 +36,7 @@ const CreatePage = () => {
       return;
     }
 
-    // send data thru json body to this url http://localhost:4000/suppliers/create
-    const response = await fetch("http://localhost:4000/suppliers/create", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

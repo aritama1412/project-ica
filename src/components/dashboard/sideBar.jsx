@@ -76,7 +76,7 @@ export default function SideBar() {
     console.log("activeMenu", activeMenu);
   }, [activeMenu]);
 
-  const getLowStockUrl = `http://localhost:4000/products/get-low-stock`;
+  const getLowStockUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-low-stock`;
   // Fetch functions
   const fetchLowStock = async () => {
     try {

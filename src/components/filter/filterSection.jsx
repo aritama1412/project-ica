@@ -13,7 +13,7 @@ const FilterSection = () => {
   const [categories, setCategories] = useState([]);
 
   const { data: categoriesData } = useSWR(
-    `http://localhost:4000/categories/get-all-categories`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/get-all-categories`,
     fetcher,
     {
       keepPreviousData: true,

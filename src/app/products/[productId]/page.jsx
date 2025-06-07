@@ -22,7 +22,7 @@ const Page = (data) => {
     openFilter.setFilter(null);
     const getProducts = async () => {
       const res = await fetch(
-        `http://localhost:4000/products/get-product?id=${data.params.productId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-product?id=${data.params.productId}`,
         {
           cache: "no-store",
         }
@@ -64,8 +64,6 @@ const Page = (data) => {
     console.log('product', product.Images?.length)
     product.Images?.map((item, index) => (
       console.log('item', item)
-      // item.Images && item.Images[0]
-      //   ? `http://localhost:4000${item.image}`
     ))
   }, [product])
 
@@ -137,10 +135,9 @@ const Page = (data) => {
             {product.Images?.map((item, index) => (
               <Image
                 key={index}
-                // src={`http://localhost:4000` + item.image}
                 src={
                   item.image
-                    ? `http://localhost:4000${item.image}`
+                    ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${item.image}`
                     : "https://placehold.co/600x600?text=Image+Not+Found"
                 }
                 // src="https://images.unsplash.com/photo-1549989476-69a92fa57c36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
@@ -157,20 +154,6 @@ const Page = (data) => {
                 alt="flowers"
                 unoptimized={true}
               />
-              // <Image
-              //   className="object-cover"
-              //   src={
-              //     flower.Images && flower.Images[0]
-              //       ? `http://localhost:4000${flower.Images[0].image}`
-              //       : "https://placehold.co/600x600?text=Image+Not+Found"
-              //   }
-              //   width={175}
-              //   height={175}
-              //   style={{ width: "175px", height: "175px" }}
-              //   loading="eager"
-              //   alt="flowers"
-              //   unoptimized={true}
-              // />
             ))}
           </Carousel>
         ) : (

@@ -86,7 +86,7 @@ const Page = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:4000/sales/create", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

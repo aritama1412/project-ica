@@ -13,16 +13,24 @@ export default function ProductCard() {
   const filters = useFilterStore((state) => state.filters);
 
   const fetchProducts = async (page) => {
-    const res = await fetch(
-      `http://localhost:4000/products/get-all-products?category=${filters.category}&limit=20&offset=${(page - 1) * 20}`,
-      {
-        cache: "no-store",
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-all-products?category=${filters.category}&limit=20&offset=${(page - 1) * 20}`,
+        { cache: "no-store" }
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP Error: ${res.status}`);
       }
-    );
-    const products = await res.json();
-    setProducts(products.data.products);
-    setCurrentPage(products.data.currentPage);
-    setTotalPages(products.data.totalPages);
+
+      const products = await res.json();
+      console.log("Fetched Products:", products); // Log to verify response
+      setProducts(products.data.products);
+      setCurrentPage(products.data.currentPage);
+      setTotalPages(products.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const applyFilters = async (products) => {
@@ -31,7 +39,7 @@ export default function ProductCard() {
     // Category Filter
     if (filters.category || filters.category === 0) {
       const res = await fetch(
-        `http://localhost:4000/products/get-all-products?category=${filters.category}&limit=20&offset=${(currentPage - 1) * 20}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-all-products?category=${filters.category}&limit=20&offset=${(currentPage - 1) * 20}`
       );
       const filteredProductsData = await res.json();
       filtered = filteredProductsData.data.products;
@@ -106,7 +114,7 @@ export default function ProductCard() {
                         className="object-cover"
                         src={
                           flower.Images && flower.Images[0]
-                            ? `http://localhost:4000${flower.Images[0].image}`
+                            ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${flower.Images[0].image}`
                             : "https://placehold.co/600x600?text=Image+Not+Found"
                         }
                         width={175}
