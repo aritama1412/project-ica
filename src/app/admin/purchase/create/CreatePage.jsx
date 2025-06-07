@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DatePicker } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { DatePicker } from "@heroui/react";
 import helper from "@/../helper/helper";
 import {
   Autocomplete,
   AutocompleteSection,
   AutocompleteItem,
-} from "@nextui-org/autocomplete";
+} from "@heroui/autocomplete";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
