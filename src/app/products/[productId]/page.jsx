@@ -17,6 +17,7 @@ const Page = (data) => {
   const [quantity, setQuantity] = useState(1);
   const openFilter = useOpenFilterStore();
   const [product, setProduct] = useState([]);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     openFilter.setFilter(null);
@@ -49,6 +50,12 @@ const Page = (data) => {
     console.log("item", item);
 
     cart.add(item, quantity); // Pass both item and quantity to add
+
+    // Trigger animation/message
+    setAddedToCart(true);
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 2000);
   };
 
   const handleQuantity = (type) => {
@@ -196,6 +203,11 @@ const Page = (data) => {
             >
               Beli
             </button>
+            {addedToCart && (
+              <div className="ml-3 text-green-600 font-semibold animate-pulse">
+                ✔ Produk telah ditambahkan ke keranjang!
+              </div>
+            )}
           </div>
 
           <div className="hidden scmobile:fixed scmobile:bottom-0 scmobile:left-0 scmobile:block scmobile:px-4 py-2 w-full inset-x-0 bg-white shadow-[0px_-10px_40px_10px_rgba(0,_0,_0,_0.1)] border-gray-300">
@@ -248,7 +260,13 @@ const Page = (data) => {
               >
                 Beli
               </button>
+              {addedToCart && (
+                <div className="absolute bottom-20 right-3 px-3 py-3 bg-white ml-3 text-green-700 font-semibold animate-pulse">
+                  ✔ Produk telah ditambahkan ke keranjang!
+                </div>
+              )}
             </div>
+
           </div>
         </div>
       </div>
