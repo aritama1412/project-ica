@@ -68,7 +68,6 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    console.log('zzz')
     fetchSalesData();
     fetchProductSalesData();
     fetchLowStockProducts();
@@ -76,7 +75,6 @@ const Dashboard = () => {
     // disable eslint
     // eslint-disable-next-line 
   }, []);
-
 
   // Prepare bar chart data
   const chartData = {

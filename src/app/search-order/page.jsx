@@ -125,6 +125,18 @@ const Page = () => {
                     : "-"}
                 </span>
                 <span className="col-span-1 text-right">
+                  {item.date_estimation
+                    ? new Date(item.date_estimation)
+                        .toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .replace(/\//g, "-")
+                        .replace(",", "")
+                    : "-"}
+                </span>
+                <span className="col-span-1 text-right">
                   <BiSearchAlt2
                     onClick={() => {
                       openDetail(item);

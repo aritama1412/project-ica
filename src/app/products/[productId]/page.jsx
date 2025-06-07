@@ -161,6 +161,20 @@ const Page = (data) => {
                 alt="flowers"
                 unoptimized={true}
               />
+              // <Image
+              //   className="object-cover"
+              //   src={
+              //     flower.Images && flower.Images[0]
+              //       ? `http://localhost:4000${flower.Images[0].image}`
+              //       : "https://placehold.co/600x600?text=Image+Not+Found"
+              //   }
+              //   width={175}
+              //   height={175}
+              //   style={{ width: "175px", height: "175px" }}
+              //   loading="eager"
+              //   alt="flowers"
+              //   unoptimized={true}
+              // />
             ))}
           </Carousel>
         ) : (
