@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DatePicker } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
 
