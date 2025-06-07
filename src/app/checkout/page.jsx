@@ -86,7 +86,7 @@ const Page = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:4000/sales/create", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const Page = () => {
         const isConfirmed = window.confirm(`Transaction created successfully. Do you want to proceed?`);
         
         if (isConfirmed) {
-          const phoneNumber = "6289678488038"; 
+          const phoneNumber = "6288989918089"; 
           const orderNumber = result.data.bill; 
           const message = encodeURIComponent(`Halo, saya ingin melanjutkan pembayaran. Nomor pesanan saya: ${orderNumber}`);
           const waLink = `https://wa.me/${phoneNumber}?text=${message}`;

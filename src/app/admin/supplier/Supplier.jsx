@@ -30,7 +30,7 @@ export default function Supplier({ setActiveMenu }) {
   const [page, setPage] = React.useState(1);
 
   const { data, isLoading } = useSWR(
-    `http://localhost:4000/suppliers/get-all-suppliers`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/get-all-suppliers`,
     fetcher,
     {
       keepPreviousData: true,

@@ -17,7 +17,7 @@ const ViewPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { data: transaction } = useSWR(
-    `http://localhost:4000/sales/get-sale?id=${viewId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-sale?id=${viewId}`,
     fetcher,
     {
       keepPreviousData: true,

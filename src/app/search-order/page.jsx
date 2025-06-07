@@ -28,7 +28,7 @@ const Page = () => {
 
     const getTransactions = async () => {
       const res = await fetch(
-        `http://localhost:4000/sales/check?invoice=${invoice}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/check?invoice=${invoice}`,
         {
           cache: "no-store",
         }
@@ -76,13 +76,13 @@ const Page = () => {
 
         <div className="w-full bg-slate-100 overflow-x-auto">
           <div className="min-w-[900px] grid grid-cols-6 font-semibold text-center gap-2 mb-4 bg-[#fbba1c] p-4 rounded-t-2xl">
-            <span className="col-span-1 text-left">Tanggal Order</span>
-            <span className="col-span-1 text-right">Nomor Invoice</span>
+            <span className="col-span-1 text-center">Tanggal Order</span>
+            <span className="col-span-1 text-center">Nomor Invoice</span>
             {/* <span className="col-span-1 text-right">Nomor HP</span> */}
-            <span className="col-span-1 text-right">Total</span>
-            <span className="col-span-1 text-right">Status</span>
-            <span className="col-span-1 text-right">Estimasi diterima</span>
-            <span className="col-span-1 text-right">#</span>
+            <span className="col-span-1 text-center">Total</span>
+            <span className="col-span-1 text-center">Status</span>
+            <span className="col-span-1 text-center">Estimasi diterima</span>
+            <span className="col-span-1 text-center">#</span>
           </div>
 
           {transactions && transactions.length > 0 ? (
@@ -104,14 +104,26 @@ const Page = () => {
                     .replace(/\//g, "-")
                     .replace(",", "")}
                 </span>
-                <span className="col-span-1 text-right">{item.bill}</span>
+                <span className="col-span-1 text-center">{item.bill}</span>
                 {/* <span className="col-span-1 text-right">
                   {item.customer_phone}
                 </span> */}
                 <span className="col-span-1 text-right">
                   {helper(item.grand_total)}
                 </span>
-                <span className="col-span-1 text-right">{item.status}</span>
+                <span className="col-span-1 text-center">{item.status}</span>
+                <span className="col-span-1 text-center">
+                  {item.date_estimation
+                    ? new Date(item.date_estimation)
+                        .toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .replace(/\//g, "-")
+                        .replace(",", "")
+                    : "-"}
+                </span>
                 <span className="col-span-1 text-right">
                   {item.date_estimation
                     ? new Date(item.date_estimation)

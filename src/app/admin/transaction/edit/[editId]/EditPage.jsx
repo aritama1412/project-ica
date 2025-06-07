@@ -20,7 +20,7 @@ const EditPage = () => {
   const [dateReceived, setDateReceived] = useState(null);
 
   const { data: transaction } = useSWR(
-    `http://localhost:4000/sales/get-sale?id=${editId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-sale?id=${editId}`,
     fetcher,
     {
       keepPreviousData: true,
@@ -47,7 +47,7 @@ const EditPage = () => {
     const idSale = transaction?.data?.id_sale;
     
     try {
-      const response = await fetch("http://localhost:4000/sales/edit", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/edit`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

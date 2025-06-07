@@ -12,7 +12,7 @@ const ViewPage = () => {
   const { viewId } = useParams();
 
   const { data: supplier } = useSWR(
-    `http://localhost:4000/suppliers/get-supplier?id=${viewId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/get-supplier?id=${viewId}`,
     fetcher,
     {
       keepPreviousData: true,
