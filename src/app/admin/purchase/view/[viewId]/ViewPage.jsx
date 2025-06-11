@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DatePicker } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
@@ -18,7 +18,7 @@ const ViewPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { data: transaction } = useSWR(
-    `http://localhost:4000/purchases/get-purchase?id=${viewId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/purchases/get-purchase?id=${viewId}`,
     fetcher,
     {
       keepPreviousData: true,

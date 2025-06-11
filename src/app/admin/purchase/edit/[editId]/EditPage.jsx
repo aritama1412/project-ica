@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DatePicker } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
@@ -21,7 +21,7 @@ const ViewPage = () => {
   const [note, SetNote] = useState("");
 
   const { data: transaction } = useSWR(
-    `http://localhost:4000/purchases/get-purchase?id=${editId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/purchases/get-purchase?id=${editId}`,
     fetcher,
     {
       keepPreviousData: true,
@@ -39,7 +39,7 @@ const ViewPage = () => {
   const handleSubmit = async () => {
     const idPurchase = transaction?.data?.id_purchase;
     try {
-      const response = await fetch("http://localhost:4000/purchases/edit", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/purchases/edit`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

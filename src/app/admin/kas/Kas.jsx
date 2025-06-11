@@ -15,7 +15,7 @@ import {
   RadioGroup,
   Radio,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
@@ -31,7 +31,7 @@ export default function Kas({ setActiveMenu }) {
   const [isDeleted, setIsDeleted] = useState(false);
 
   const { data, isLoading } = useSWR(
-    `http://localhost:4000/cashflow/get-cashflow`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/cashflow/get-cashflow`,
     fetcher,
     {
       keepPreviousData: true,

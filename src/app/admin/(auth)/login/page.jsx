@@ -3,7 +3,7 @@
 import Image from "next/image";
 import logo from "../../../../../public/images/logos/logo1.jpg";
 import { useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie"; // Import js-cookie for managing cookies
 
@@ -16,7 +16,7 @@ const LoginPage = () => {
   const handleLogin = () => {
     setIsLoading(true);
 
-    fetch("http://localhost:4000/auth/login", {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -15,7 +15,7 @@ import {
   RadioGroup,
   Radio,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
@@ -31,7 +31,7 @@ export default function Purchase({ setActiveMenu }) {
   const [page, setPage] = React.useState(1);
 
   const { data, isLoading } = useSWR(
-    `http://localhost:4000/purchases/get-all-purchases`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/purchases/get-all-purchases`,
     fetcher,
     {
       keepPreviousData: true,

@@ -13,7 +13,7 @@ import {useState} from "react";
   // useDisclosure,
   // RadioGroup,
   // Radio,
-// } from "@nextui-org/modal";
+// } from "@heroui/modal";
 import { 
   Button, 
   Modal,
@@ -23,7 +23,7 @@ import {
   ModalFooter,
   useDisclosure,
   RadioGroup,
-  Radio, } from "@nextui-org/react";
+  Radio, } from "@heroui/react";
 import { BiCart } from "react-icons/bi";
 import Link from "next/link";
 

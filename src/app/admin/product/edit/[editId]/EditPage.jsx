@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { Button } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { Button } from "@heroui/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -25,7 +25,7 @@ const EditPage = () => {
   const [productData, setProductData] = useState([]);
 
   const { data: product } = useSWR(
-    `http://localhost:4000/products/get-product?id=${editId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-product?id=${editId}`,
     fetcher,
     {
       keepPreviousData: true,
@@ -33,7 +33,7 @@ const EditPage = () => {
   );
 
   const { data: categoriesData } = useSWR(
-    `http://localhost:4000/categories/get-all-categories`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/get-all-categories`,
     fetcher,
     {
       keepPreviousData: true,
@@ -94,9 +94,7 @@ const EditPage = () => {
     }));
 
     // delete 
-    // hit http://localhost:4000/products/delete-image with data id_image
-    // on success remove data from view
-    fetch("http://localhost:4000/products/delete-image", {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/delete-image`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,7 +151,7 @@ const EditPage = () => {
     });
 
     try {
-      const response = await fetch("http://localhost:4000/products/edit", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/edit`, {
         method: "POST", // Or POST if necessary
         body: formData,
       });
@@ -313,8 +311,8 @@ const EditPage = () => {
                   style={{ flex: "0 0 auto" }} // Ensures items maintain their size and wrap as needed
                 >
                   <Image
-                    src={`http://localhost:4000${image.image}`}
-                    onClick={() => window.open(`http://localhost:4000${image.image}`)}
+                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image.image}`}
+                    onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_BASE_URL}${image.image}`)}
                     alt={image.image}
                     className="max-w-[200px] min-h-[200px] max-h-[200px] object-cover"
                     width={200}

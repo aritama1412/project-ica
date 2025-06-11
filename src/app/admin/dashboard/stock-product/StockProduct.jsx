@@ -13,7 +13,7 @@ import {
   RadioGroup,
   Radio,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { columns, transactions } from "./data";
 import { EditIcon } from "@/components/icons/EditIcon";

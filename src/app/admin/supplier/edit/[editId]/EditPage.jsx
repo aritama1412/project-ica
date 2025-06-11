@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DatePicker } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 
@@ -19,7 +19,7 @@ const EditPage = () => {
   const [status, setStatus] = useState("");
 
   const { data: supplier } = useSWR(
-    `http://localhost:4000/suppliers/get-supplier?id=${editId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/get-supplier?id=${editId}`,
     fetcher,
     {
       keepPreviousData: true,
@@ -27,7 +27,7 @@ const EditPage = () => {
   );
 
   const { data: categoriesData } = useSWR(
-    `http://localhost:4000/categories/get-all-categories`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/get-all-categories`,
     fetcher,
     {
       keepPreviousData: true,
@@ -56,7 +56,7 @@ const EditPage = () => {
       return;
     }
 
-    const response = await fetch("http://localhost:4000/suppliers/edit", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/edit`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

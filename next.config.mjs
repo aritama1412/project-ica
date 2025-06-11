@@ -5,7 +5,7 @@ const nextConfig = {
     API_URL: "http://localhost:4000",
   },
   images: {
-    domains: ["localhost", "placehold.co"], // Add both localhost and placehold.co in a single array
+    domains: ["localhost", "placehold.co", "http://api.pondokdaun.beauty/"], // Add both localhost and placehold.co in a single array
   },
 };
 

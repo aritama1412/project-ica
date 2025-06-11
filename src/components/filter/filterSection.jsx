@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import FilterCard from "./filterCard";
-import { Checkbox } from "@nextui-org/checkbox";
+import { Checkbox } from "@heroui/checkbox";
 import useFilterStore from "@/../stores/filterStore"; // Import the updated filter store
 import useSWR from "swr";
 import FilterPrice from "./filterPrice";
@@ -13,7 +13,7 @@ const FilterSection = () => {
   const [categories, setCategories] = useState([]);
 
   const { data: categoriesData } = useSWR(
-    `http://localhost:4000/categories/get-all-categories`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/get-all-categories`,
     fetcher,
     {
       keepPreviousData: true,

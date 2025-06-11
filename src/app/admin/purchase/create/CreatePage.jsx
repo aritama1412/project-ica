@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
-import { DatePicker } from "@nextui-org/react";
+import { Select, SelectSection, SelectItem } from "@heroui/select";
+import { DatePicker } from "@heroui/react";
 import helper from "@/../helper/helper";
 import {
   Autocomplete,
   AutocompleteSection,
   AutocompleteItem,
-} from "@nextui-org/autocomplete";
+} from "@heroui/autocomplete";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
 import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
@@ -36,7 +36,7 @@ const CreatePage = () => {
   const [createProducts, setCreateProducts] = useState([]);
 
   const { data: rawProducts } = useSWR(
-    `http://localhost:4000/products/get-all-products-admin`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-all-products-admin`,
     fetcher,
     {
       keepPreviousData: true,
@@ -52,7 +52,7 @@ const CreatePage = () => {
   }, [rawProducts]);
 
   const { data: suppliersData } = useSWR(
-    `http://localhost:4000/suppliers/get-all-suppliers`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/get-all-suppliers`,
     fetcher,
     {
       keepPreviousData: true,
@@ -150,7 +150,7 @@ const CreatePage = () => {
     };
     console.log("purchaseData", purchaseData);
     // Make an API call to save the data
-    fetch("http://localhost:4000/purchases/create", {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/purchases/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

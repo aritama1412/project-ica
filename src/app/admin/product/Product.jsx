@@ -15,7 +15,7 @@ import {
   RadioGroup,
   Radio,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
@@ -32,7 +32,7 @@ export default function Product({ setActiveMenu }) {
   const [isDeleted, setIsDeleted] = useState(false);
 
   const { data, isLoading } = useSWR(
-    `http://localhost:4000/products/get-all-products-admin`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/get-all-products-admin`,
     fetcher,
     {
       keepPreviousData: true,
@@ -78,8 +78,7 @@ export default function Product({ setActiveMenu }) {
     router.push(`/admin/product/edit/${id}`);
   };
   const handleDelete = (id) => {
-    // hit http://localhost:4000/products/delete with data id_product=id
-    fetch("http://localhost:4000/products/delete", {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/delete`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

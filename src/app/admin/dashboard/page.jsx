@@ -27,12 +27,13 @@ const Dashboard = () => {
 
   // URLs
   const currentYear = new Date().getFullYear();
-  const salesDataUrl = `http://localhost:4000/sales/get-sales-per-month?year=${currentYear}`;
-  const productSalesUrl = `http://localhost:4000/sales/get-product-sales?year=${currentYear}`;
-  const lowStockUrl = "http://localhost:4000/sales/get-low-stock-products";
-
+  const salesDataUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-sales-per-month?year=${currentYear}`;
+  const productSalesUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-product-sales?year=${currentYear}`;
+  const lowStockUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-low-stock-products`;
+  console.log('lowStockUrl', lowStockUrl)
   // Fetch functions
   const fetchSalesData = async () => {
+    console.log('fetchSalesData')
     try {
       const response = await fetch(salesDataUrl);
       const data = await response.json();
@@ -43,9 +44,12 @@ const Dashboard = () => {
   };
 
   const fetchProductSalesData = async () => {
+    console.log('fetchProductSalesData');
     try {
       const response = await fetch(productSalesUrl);
+      console.log('first');
       const data = await response.json();
+      console.log('dataxx: ', data);
       setDataPie(data.data);
     } catch (error) {
       console.error("Error fetching product sales data:", error);
@@ -53,6 +57,7 @@ const Dashboard = () => {
   };
 
   const fetchLowStockProducts = async () => {
+    console.log('fetchLowStockProducts')
     try {
       const response = await fetch(lowStockUrl);
       const data = await response.json();
@@ -155,12 +160,11 @@ const Dashboard = () => {
                       <Image
                         width={14}
                         height={14}
-                        // src={`http://localhost:4000` + product.Images?.[0]?.image}
                         alt={product.product_name}
                         className="w-14 h-14 object-cover mb-3 rounded"
                         src={
                           product.Images && product.Images[0]
-                            ? `http://localhost:4000${product.Images?.[0]?.image}`
+                            ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${product.Images?.[0]?.image}`
                             : "https://placehold.co/600x600?text=Image+Not+Found"
                         }
                         unoptimized={true}
