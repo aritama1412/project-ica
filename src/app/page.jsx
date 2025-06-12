@@ -18,9 +18,14 @@ export default function Home() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <h1 className="text-white text-4xl md:text-6xl font-bold">
-            Toko bunga andalanmu
-          </h1>
+          <div className="flex flex-col justify-center items-center gap-2">
+            <h1 className="text-white text-4xl md:text-6xl font-bold">
+              Pondok Daun
+            </h1>
+            <h1 className="text-white text-4xl md:text-6xl font-bold">
+              Toko bunga andalanmu
+            </h1>
+          </div>
         </div>
       </div>
       <div className="flex flex-col justify-center items-center h-full sm:min-h-[1200px] w-full bg-white mx-auto">
