@@ -24,6 +24,33 @@ const ViewPage = () => {
     }
   );
 
+  useEffect(() => {
+    // Handle the API call to mark the transaction as seen
+    const markTransactionAsSeen = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/seen?id_sale=${viewId}`, {
+          method: "get",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to mark transaction as seen");
+        }
+
+        const result = await response.json();
+        console.log("Transaction marked as seen:", result);
+      } catch (error) {
+        console.error("Error marking transaction as seen:", error.message);
+      }
+    };
+
+    if (editId) {
+      markTransactionAsSeen();
+    }
+  }, []);
+
   return (
     <div className="flex flex-col p-4 w-full">
       <h1 className="text-3xl font-bold">Detail Penjualan</h1>

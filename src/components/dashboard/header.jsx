@@ -1,8 +1,35 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { BiSolidBell } from "react-icons/bi";
 
 export const Header = ({ logo }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const router = useRouter();
+
+  const toggleDropdown = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const getNotif = async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-notifications`,
+        {
+          cache: "no-store",
+        }
+      );
+      const dataRaw = await res.json();
+      console.log('dataRaw', dataRaw.data)
+      setNotifications(dataRaw.data);
+    };
+
+    getNotif();
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
       {/* fixed top-0 */}
@@ -41,11 +68,46 @@ export const Header = ({ logo }) => {
                   alt="Logo"
                 />
                 <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                  Toko Bunga
+                  Pondok Daun
                 </span>
               </Link>
             </div>
-            <div className="flex items-center">
+            <div className=" flex  items-center gap-3">
+              <div className="cursor-pointer relative" onClick={toggleDropdown}>
+                {notifications && notifications.length > 0 && (
+                  <span className="absolute top-1 right-0 text-[12px] inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                    {notifications.length}
+                  </span>
+                )}
+                <BiSolidBell size={30} />
+              </div>
+
+              {/* Notification Dropdown */}
+              {isOpen && (
+                <div className="absolute top-14 right-0 w-96 bg-white border-2 border-gray-300 rounded-lg overflow-hidden z-50 shadow-lg shadow-gray-400  ">
+                  <div className="p-4 border-b">
+                    <h4 className="font-semibold text-lg">Notifikasi</h4>
+                  </div>
+                  <ul className="max-h-64 overflow-y-auto">
+                    {/* get data from notifications */}
+                    {notifications.map((notification, index) => (
+                      <li
+                        key={index}
+                        className="p-3 hover:bg-gray-100 cursor-pointer border-b"
+                        onClick={() => router.push(`/admin/transaction/edit/${notification.id_sale}`)}
+                      >
+                        Pembelian: {notification.bill} (
+                          {new Date(notification.created_at).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          }).replace(/\//g, '-')}
+                        )
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div className="flex items-center ms-3">
                 <div>
                   <button
