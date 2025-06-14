@@ -43,6 +43,18 @@ const EditPage = () => {
 
   }, [transaction]);
 
+  const formatDateFromObject = (dateObj) => {
+    if (!dateObj || !dateObj.year || !dateObj.month || !dateObj.day) {
+      return null; // Return null if any part of the date is missing
+    }
+
+    const year = dateObj.year;
+    const month = dateObj.month.toString().padStart(2, '0');
+    const day = dateObj.day.toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+
   useEffect(() => {
     // Handle the API call to mark the transaction as seen
     const markTransactionAsSeen = async () => {
@@ -82,8 +94,8 @@ const EditPage = () => {
         body: JSON.stringify({
           id_sale: idSale,
           status: `${status}`,
-          date_estimation: estimationDate,
-          date_received: dateReceived,
+          date_estimation: formatDateFromObject(estimationDate),
+          date_received: formatDateFromObject(dateReceived),
           updated_by: 1,
           updated_at: new Date(),
         }),
@@ -253,7 +265,7 @@ const EditPage = () => {
                   selectedKeys={[status]}
                   onChange={handleStatus}
                 >
-                  <SelectItem key="menunggu pembayaran" defaultValue="0" textValue="Menun ggu Pembayaran">
+                  <SelectItem key="menunggu pembayaran" defaultValue="0" textValue="Menunggu Pembayaran">
                     Menunggu Pembayaran
                   </SelectItem>
                   <SelectItem key="proses" defaultValue="1" textValue="Proses">

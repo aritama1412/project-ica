@@ -46,7 +46,7 @@ const ViewPage = () => {
       }
     };
 
-    if (editId) {
+    if (viewId) {
       markTransactionAsSeen();
     }
   }, []);
