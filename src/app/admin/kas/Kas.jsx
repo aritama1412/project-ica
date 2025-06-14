@@ -57,18 +57,12 @@ export default function Kas({ setActiveMenu }) {
 
   const totalItems = filteredData.length;
 
-  const pages = React.useMemo(() => {
-    return totalItems > 0 ? Math.ceil(totalItems / rowsPerPage) : 0;
-  }, [totalItems, rowsPerPage]);
-
   const loadingState = isLoading || totalItems === 0 ? "loading" : "idle";
 
   // Paginated Data
   const paginatedData = React.useMemo(() => {
-    const startIndex = (page - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    return filteredData.slice(startIndex, endIndex);
-  }, [filteredData, page, rowsPerPage]);
+    return filteredData;
+  }, [filteredData]);
 
   useEffect(() => {
     if (isDeleted) {
@@ -83,19 +77,6 @@ export default function Kas({ setActiveMenu }) {
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
       <h1 className="text-3xl">Kas</h1>
       <div className="mt-10">
-        {/* <div className="flex items-center justify-between mt-2 mb-4">
-          <input
-            type="text"
-            placeholder="  Search..."
-            className="border border-gray-400 rounded-lg"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setPage(1); // Reset to first page on new search
-            }}
-          />
-        </div> */}
-
         <Table
           aria-label="Example table with client async pagination"
         >
@@ -103,9 +84,9 @@ export default function Kas({ setActiveMenu }) {
             <TableColumn className="min-w-[100px]" key="tanggal">Tanggal</TableColumn>
             <TableColumn key="bill">Bill</TableColumn>
             <TableColumn key="keterangan" className="text-sm">Keterangan</TableColumn>
-            <TableColumn key="cash_out">Debit</TableColumn>
-            <TableColumn key="income">Kredit</TableColumn>
-            <TableColumn key="balance">Saldo</TableColumn>
+            <TableColumn key="income">Debit</TableColumn>
+            <TableColumn key="cash_out">Kredit</TableColumn>
+            <TableColumn className="min-w-[130px]"  key="balance">Saldo</TableColumn>
           </TableHeader>
           <TableBody
             items={paginatedData}
@@ -125,33 +106,39 @@ export default function Kas({ setActiveMenu }) {
                   }}
                   className="cursor-pointer hover:bg-gray-100"
                 >
-                  {(columnKey) => (
+                {(columnKey) => {
+                  let content;
+
+                  if (columnKey === "tanggal") {
+                    content = moment(item.tanggal).format("DD-MM-YYYY");
+                  } else if (columnKey === "cash_out") {
+                    content = item.cash_out.toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    });
+                  } else if (columnKey === "income") {
+                    content = item.income.toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    });
+                  } else if (columnKey === "balance") {
+                    content = item.balance.toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    });
+                  } else {
+                    content = getKeyValue(item, columnKey);
+                  }
+
+                  return (
                     <TableCell className={columnKey === "keterangan" ? "text-sm" : ""}>
-                      {columnKey === "tanggal" ? (
-                        moment(item.tanggal).format("DD-MM-YYYY")
-                      ) : columnKey === "cash_out" ? (
-                        item.cash_out.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                        })
-                      ) : columnKey === "income" ? (
-                        item.income.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                        })
-                      ) : columnKey === "balance" ? (
-                        item.balance.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                        })
-                      ) : (
-                        getKeyValue(item, columnKey)
-                      )}
+                      {content}
                     </TableCell>
-                  )}
+                  );
+                }}
                 </TableRow>
               );
             }}
