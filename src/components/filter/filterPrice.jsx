@@ -69,7 +69,7 @@ function FilterPrice({ filterText }) {
           <Input
             label="Harga Minimum"
             labelPlacement="outside"
-            placeholder="0.00"
+            placeholder="1.000"
             startContent={
               <div className="pointer-events-none flex items-center">
                 <span className="text-default-400 text-small">Rp</span>
@@ -83,7 +83,7 @@ function FilterPrice({ filterText }) {
           <Input
             label="Harga Maximum"
             labelPlacement="outside"
-            placeholder="0.00"
+            placeholder="500.000"
             startContent={
               <div className="pointer-events-none flex items-center">
                 <span className="text-default-400 text-small">Rp</span>
@@ -99,7 +99,7 @@ function FilterPrice({ filterText }) {
               Terapkan Harga
             </Button>
             <Button color="danger" className="w-full" variant="bordered" onClick={clearPriceFilter}>
-              Bersihkan
+              Hapus filter
             </Button>
           </div>
         </div>

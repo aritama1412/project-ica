@@ -205,7 +205,7 @@ const Page = () => {
               </label>
               <input
                 type="text"
-                placeholder="..."
+                placeholder="08xxxxxxxxxx"
                 inputMode="numeric"
                 required
                 value={phone}
@@ -224,7 +224,7 @@ const Page = () => {
               </label>
               <input
                 type="text"
-                placeholder="..."
+                placeholder="Nama Anda"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -237,7 +237,7 @@ const Page = () => {
               </label>
               <input
                 type="text"
-                placeholder="..."
+                placeholder="Jl Melati No.3"
                 required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
