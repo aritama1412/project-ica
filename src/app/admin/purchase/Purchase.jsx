@@ -94,20 +94,12 @@ export default function Purchase({ setActiveMenu }) {
     if (columnKey === "action") {
       return (
         <div className="flex flex-row gap-3">
-          <Tooltip content="Details">
-            <span
-              onClick={() => handleView(item?.id_purchase)}
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-            >
-              <EyeIcon />
-            </span>
-          </Tooltip>
           <Tooltip content="Edit">
             <span
               onClick={() => handleEdit(item?.id_purchase)}
               className="text-lg text-default-400 cursor-pointer active:opacity-50"
             >
-              <EditIcon />
+              <EyeIcon />
             </span>
           </Tooltip>
         </div>

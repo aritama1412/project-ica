@@ -20,7 +20,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { EyeIcon } from "@/components/icons/EyeIcon";
-import { EditIcon } from "@/components/icons/EditIcon";
 import { DeleteIcon } from "@/components/icons/DeleteIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -71,9 +70,6 @@ export default function Product({ setActiveMenu }) {
     return filteredData.slice(startIndex, endIndex);
   }, [filteredData, page, rowsPerPage]);
 
-  const handleView = (id) => {
-    router.push(`/admin/product/view/${id}`);
-  };
   const handleEdit = (id) => {
     router.push(`/admin/product/edit/${id}`);
   };
@@ -161,20 +157,12 @@ export default function Product({ setActiveMenu }) {
                   <TableCell>
                     {columnKey === "action" ? (
                       <div className="flex flex-row gap-3">
-                        <Tooltip content="Details">
-                          <span
-                            onClick={() => handleView(item?.id_product)}
-                            className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                          >
-                            <EyeIcon />
-                          </span>
-                        </Tooltip>
                         <Tooltip content="Edit">
                           <span
                             onClick={() => handleEdit(item?.id_product)}
                             className="text-lg text-default-400 cursor-pointer active:opacity-50"
                           >
-                            <EditIcon />
+                            <EyeIcon />
                           </span>
                         </Tooltip>
                         <Tooltip color="danger" content="Delete">
