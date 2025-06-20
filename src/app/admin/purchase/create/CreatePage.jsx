@@ -13,6 +13,9 @@ import { useParams, useRouter } from "next/navigation";
 import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
 import moment from "moment";
+import { showSuccessToast, showErrorToast } from "@/components/toast/ToastNotification";
+import {Input} from "@heroui/input";
+import {Textarea, Button} from "@heroui/react";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -96,7 +99,7 @@ const CreatePage = () => {
 
   const handleSaveProduct = () => {
     if (!idProduct || quantity <= 0 || !date) {
-      alert("Please select a product and enter a valid quantity.");
+      showErrorToast("Harap pilih produk dan masukkan jumlah yang valid.");
       return;
     }
 
@@ -131,7 +134,7 @@ const CreatePage = () => {
 
   const handleSubmit = () => {
     if(createProducts.length === 0 ) {
-      alert("Please add at least one product.");
+      showErrorToast("Masukkan setidaknya 1 produk.")
       return;
     }
     const purchaseData = {
@@ -161,8 +164,10 @@ const CreatePage = () => {
       .then((data) => {
         console.log("Purchase created successfully:", data);
 
-        alert("Purchase created successfully!");
-        router.push("/admin/purchase");
+        showSuccessToast('Data Pembelian berhasil dibuat.');
+        setTimeout(() => {
+          router.push("/admin/purchase");
+        }, 1500);
       })
       .catch((error) => {
         console.error("Error creating purchase:", error);
@@ -179,36 +184,75 @@ const CreatePage = () => {
   return (
     <div className="flex flex-col p-4 w-full">
       <h1 className="text-3xl font-bold">Tambah Pembelian</h1>
-      <div className="flex flex-row w-full gap-8 border border-gray-300 px-6 py-4 mt-4 rounded-sm">
-        <div className="flex flex-col gap-4 w-1/2 bg-slate-100 p-4">
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <label>Nama Produk <span className="text-red-500">*</span></label>
+      <form onSubmit={handleSubmit} className="flex flex-row w-full gap-8 border border-gray-300 px-6 py-4 mt-4 rounded-sm">
+        <div className="flex flex-row gap-4 w-1/2 border border-gray-200 p-4">
+          <div className="w-1/2">
+            <div className="flex flex-col gap-1 mb-3 ">
               <Autocomplete
-                size={"sm"}
-                label=" "
-                aria-label="Produk"
+                label="Nama Produk"
                 placeholder="Silahkan pilih ..."
-                className="max-w-[250px] h-[32px] border border-gray-300 !bg-white rounded-lg"
+                variant="bordered"
+                labelPlacement="outside"
                 isLoading={isLoading}
                 defaultItems={products}
                 defaultSelectedKey={[idProduct.toString()]}
                 onSelectionChange={onSelectionChange} 
+                isRequired
               >
                 {(item) => <AutocompleteItem key={item.id_product}>{item.product_name}</AutocompleteItem>}
               </Autocomplete>
             </div>
-            <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <label>Nama Supplier <span className="text-red-500">*</span></label>
+
+            <div className="flex flex-col gap-1 mb-3 ">
+              <Input
+                label="Jumlah"
+                placeholder="Jumlah"
+                variant="bordered"
+                labelPlacement="outside"
+                type="number"
+                isRequired
+                min={0}
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 mb-3 ">
+              <Input
+                label="Harga"
+                placeholder="0"
+                min={0}
+                variant="bordered"
+                labelPlacement="outside"
+                startContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">Rp</span>
+                  </div>
+                }
+                type="number"
+                // defaultValue={product?.data?.price}
+                value={price} 
+                onChange={(e) => setPrice(parseFloat(e.target.value))}
+                isRequired
+              />
+            </div>
+
+            <Button type="button" onClick={handleSaveProduct} color="success" variant="flat" isLoading={isLoading}>
+              Tambah
+            </Button>
+          </div>
+
+          <div className="w-1/2">
+            <div className="flex flex-col gap-1 mb-3 ">
               <Select
-                size={"sm"}
-                label=""
-                aria-label="supplier"
+                label="Nama Supplier"
                 placeholder="Silahkan pilih ..."
-                className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
+                labelPlacement="outside"
+                className=""
                 isLoading={isLoading}
                 selectedKeys={[selectedSupplier.toString()]}
                 onChange={handleSelectionChange}
+                isRequired
               >
                 {suppliers.map((data) => (
                   <SelectItem key={data.id_supplier} value={data.id_supplier}>
@@ -216,67 +260,45 @@ const CreatePage = () => {
                   </SelectItem>
                 ))}
               </Select>
+            </div>
 
-            </div>
-          </div>
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <label>Jumlah <span className="text-red-500">*</span></label>
-              <input
-                type="number"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <label>Tanggal <span className="text-red-500">*</span></label>
+            <div className="flex flex-col gap-1 mb-3 ">
+              <label className="text-sm">Tanggal <span className="text-red-500">*</span></label>
               <DatePicker
-                variant={"underlined"}
-                aria-label="date"
-                className="max-w-[250px] h-[32px] bg-white px-2 border border-gray-300 rounded-sm"
+                variant="bordered"
+                label=""
+                placeholder="Pilih Tanggal"
+                className=""
                 value={date}
                 onChange={setDate}
+                isRequired
               />
             </div>
-          </div>
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <span>Harga</span>
-              <input
-                readOnly={false}
+
+            <div className="flex flex-col gap-1 mb-3 ">
+              
+              <Input
+                readOnly
+                label="Total"
+                placeholder="0"
+                min={0}
+                variant="bordered"
+                labelPlacement="outside"
+                startContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">Rp</span>
+                  </div>
+                }
                 type="number"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
-                value={price} 
-                onChange={(e) => setPrice(parseFloat(e.target.value))}
-              />
-            </div>
-            <div className="flex flex-col gap-1 mb-3 min-w-[300px]">
-              <span>Total</span>
-              <input
-                readOnly={true}
-                type="number"
-                className="border bg-gray-200 border-gray-300 px-1 max-w-[250px] cursor-not-allowed"
-                placeholder="..."
+                // defaultValue={product?.data?.price}
                 value={totalPrice}
+                isRequired
               />
             </div>
           </div>
 
-          <div className="flex items-start mt-10">
-            <button
-              // type="submit"
-              type="button"
-              onClick={handleSaveProduct}
-              className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
-            >
-              Tambah
-            </button>
-          </div>
         </div>
-        <div className="w-full md:w-1/2 bg-slate-100 p-4">
+        <div className="w-full md:w-1/2 border border-gray-200 p-4">
           <div className="grid grid-cols-11 font-semibold text-center gap-2 mb-4">
             <span className="col-span-4 text-left">Produk</span>
             <span className="col-span-2 text-right">Harga</span>
@@ -325,24 +347,28 @@ const CreatePage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-            <span>Catatan</span>
-            <textarea
-              type="text"
-              className="border border-gray-300 px-1 max-w-[250px]"
-              placeholder="..."
+            <Textarea
+              classNames={{
+                base: "col-span-12 md:col-span-6 mb-6 md:mb-0",
+                input: "resize-y min-h-[40px]",
+              }}
+              // className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0"
+              label="Catatan"
+              labelPlacement="outside"
+              placeholder="Catatan ..."
+              variant="bordered"
+              isClearable
+              // disableAutosize
               onChange={(e) => setNote(e.target.value)}
+              onClear={() => setNote('')}
             />
           </div>
-          <button
-            // type="submit"
-            type="submit"
-            onClick={() => handleSubmit()}
-            className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
-          >
-            Simpan
-          </button>
+          
+          <Button type="submit" color="success" variant="flat" isLoading={isLoading}>
+            Tambah
+          </Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

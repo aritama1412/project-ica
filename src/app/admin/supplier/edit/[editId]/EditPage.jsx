@@ -1,9 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Select, SelectSection, SelectItem } from "@heroui/select";
-import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import {Input} from "@heroui/input";
+import {Textarea, Button} from "@heroui/react";
+import { showSuccessToast, showErrorToast } from "@/components/toast/ToastNotification";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -52,7 +55,7 @@ const EditPage = () => {
 
     if(!name || !category || !phone || !address || !status) {
       console.log('name: '+ name + ' category: ' + category + ' phone: ' + phone + ' address: ' + address + ' status: ' + status);
-      alert("Harap isi semua field.");
+      showErrorToast('Harap isi semua field.');
       return;
     }
 
@@ -76,8 +79,10 @@ const EditPage = () => {
     }
 
     const result = await response.json();
-    alert("Supplier edited successfully!");
-    router.back();
+    showSuccessToast('Supplier berhasil di rubah.');
+    setTimeout(() => {
+      router.push("/admin/supplier");
+    }, 1500);
   };
 
   const handleSelectionChange = (e) => {
@@ -92,91 +97,103 @@ const EditPage = () => {
         className="flex flex-row border border-gray-300 px-6 py-4 mt-4 rounded-sm"
       >
         <div className="flex flex-col w-full">
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Nama Supplier <span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+          <div className="flex flex-row">
+            <div className="w-1/3">
+              <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+                <Input
+                  label="Nama Supplier"
+                  placeholder="Nama Supplier"
+                  variant="bordered"
+                  labelPlacement="outside"
+                  type="text"
+                  value={name}
+                  isRequired
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+                <Input
+                  label="Nomor Supplier"
+                  placeholder="Nomor Supplier"
+                  variant="bordered"
+                  labelPlacement="outside"
+                  type="number"
+                  isRequired
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Jenis Produk <span className="text-red-500">*</span></label>
-              <Select
-                size={"sm"}
-                label=""
-                aria-label="Pickup Point"
-                placeholder="Silahkan pilih ..."
-                className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                selectedKeys={[category.toString()]}
-                // defaultSelectedKeys={[category && category.toString()]}
-                // value={category}
-                onChange={handleSelectionChange}
-              >
-                {categoriesData &&
-                  categoriesData?.map((data, index) => (
-                    <SelectItem key={index} value={data.value}>
-                      {data.name}
-                    </SelectItem>
-                  ))}
-              </Select>
+
+            <div className="w-1/3">
+              <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+                <Select
+                  label="Jenis Produk"
+                  labelPlacement="outside"
+                  className=""
+                  isRequired
+                  selectedKeys={[category.toString()]}
+                  // defaultSelectedKeys={[category && category.toString()]}
+                  // value={category}
+                  onChange={handleSelectionChange}
+                >
+                  {categoriesData &&
+                    categoriesData?.map((data, index) => (
+                      <SelectItem key={index} value={data.value}>
+                        {data.name}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+                <Select
+                  label="Status"
+                  labelPlacement="outside"
+                  isRequired
+                  selectedKeys={[status.toString()]}
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)} 
+                >
+                  <SelectItem key="1" defaultValue="1" textValue="Aktif">
+                    Aktif
+                  </SelectItem>
+                  <SelectItem key="0" defaultValue="0" textValue="Non Aktif">
+                    Non Aktif
+                  </SelectItem>
+                </Select>
+              </div>
+            </div>
+
+            <div className="w-1/3">
+              <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+                <Textarea
+                  classNames={{
+                    base: "col-span-12 md:col-span-6 mb-6 md:mb-0",
+                    input: "resize-y min-h-[100px]",
+                  }}
+                  // className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4"
+                  label="Alamat"
+                  isRequired
+                  labelPlacement="outside"
+                  placeholder="Alamat"
+                  variant="bordered"
+                  isClearable
+                  // disableAutosize
+                  // defaultValue={product?.data?.description}
+                  value={address || ""}
+                  onChange={(e) => setAddress(e.target.value)}
+                  onClear={() => setDescription('')}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Nomor Supplier <span className="text-red-500">*</span></label>
-              <input
-                type="number"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Alamat <span className="text-red-500">*</span></label>
-              <textarea
-                type="text"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
-                value={address || ""}
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Status <span className="text-red-500">*</span></label>
-              <Select
-                size={"sm"}
-                label=""
-                aria-label="Status"
-                placeholder="Silahkan pilih ..."
-                className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                selectedKeys={[status.toString()]}
-                value={status}
-                onChange={(e) => setStatus(e.target.value)} // Update on change
-              >
-                <SelectItem key="1" defaultValue="1" textValue="Ya">
-                  Aktif
-                </SelectItem>
-                <SelectItem key="0" defaultValue="0" textValue="Tidak">
-                  Non Aktif
-                </SelectItem>
-              </Select>
-            </div>
-          </div>
-          <div className="flex items-start mt-10">
-            <button
-              type="submit"
-              className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
-            >
+          <div className="flex items-start mt-10 px-2">
+            <Button type="submit" color="success" variant="flat" isLoading={isLoading}>
               Simpan
-            </button>
+            </Button>
           </div>
         </div>
       </form>

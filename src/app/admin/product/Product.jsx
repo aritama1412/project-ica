@@ -8,22 +8,19 @@ import {
   TableCell,
   Pagination,
   Spinner,
-  User,
-  Chip,
   Tooltip,
   getKeyValue,
-  RadioGroup,
-  Radio,
   Button,
   Link,
+  Input
 } from "@heroui/react";
 // import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { EyeIcon } from "@/components/icons/EyeIcon";
 import { DeleteIcon } from "@/components/icons/DeleteIcon";
-import Image from "next/image";
 import ImageWithFallback from "@/components/admin/ImageWithFallback";
+import { SearchIcon } from "@/components/icons/SearchIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -103,13 +100,7 @@ export default function Product({ setActiveMenu }) {
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
       <h1 className="text-3xl">Produk</h1>
       <div className="mt-10">
-        <div className="flex items-center justify-between mt-2 mb-4">
-          {/* <Link
-            href="/admin/product/create"
-            className="border-2 border-gray-500 px-4 py-1 rounded-lg bg-gray-200"
-          >
-            Tambah Barang
-          </Link> */}
+        <div className="flex items-center justify-between mb-4">
           <Button
             // showAnchorIcon
             as={Link}
@@ -119,10 +110,16 @@ export default function Product({ setActiveMenu }) {
           >
             Tambah Barang
           </Button>
-          <input
+          <Input
+            endContent={
+              <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
+            // label="Search..."
+            variant="bordered"
+            // labelPlacement="inside"
+            placeholder="Cari ..."
+            className="max-w-[300px]"
             type="text"
-            placeholder="  Search..."
-            className="border border-gray-400 rounded-lg"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -150,9 +147,10 @@ export default function Product({ setActiveMenu }) {
           }
         >
           <TableHeader>
-            <TableColumn key="gambar">Gambar</TableColumn>
+            <TableColumn key="image">Gambar</TableColumn>
             <TableColumn key="product_name">Produk</TableColumn>
             <TableColumn key="id_category">Katogori</TableColumn>
+            <TableColumn key="price">Harga</TableColumn>
             <TableColumn key="stock">Stok</TableColumn>
             {/* <TableColumn key="description">Deskripsi</TableColumn> */}
             {/* <TableColumn key="rating">Rating</TableColumn> */}
@@ -164,7 +162,7 @@ export default function Product({ setActiveMenu }) {
               <TableRow key={item?.id_product}>
                 {(columnKey) => {
                 
-                  if (columnKey === "gambar") {
+                  if (columnKey === "image") {
                     const imageUrl = item?.Images?.[0]?.image
                       ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${item.Images[0].image}`
                       : "https://placehold.co/500x500?text=Not+Found";
@@ -187,6 +185,18 @@ export default function Product({ setActiveMenu }) {
                     return (
                       <TableCell>
                         {item?.Category?.name || "N/A"}
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "price") {
+                    return (
+                      <TableCell>
+                        {item?.price.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,                          
+                        })}
                       </TableCell>
                     );
                   }

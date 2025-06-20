@@ -8,7 +8,9 @@ import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
 import helper from "@/../helper/helper";
 import moment from "moment";
-
+import { showSuccessToast, showErrorToast } from "@/components/toast/ToastNotification";
+import {Input} from "@heroui/input";
+import {Textarea, Button} from "@heroui/react";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -75,44 +77,47 @@ const ViewPage = () => {
         <div className="flex flex-row w-full gap-8">
           <div className="flex flex-col gap-3 w-1/2 bg-slate-100 p-4">
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="Name">
-                Bill
-              </label>
-              <input
+              <Input
+                label="No. Bill"
+                placeholder="No. Bill"
+                variant="bordered"
+                labelPlacement="outside"
                 type="text"
-                placeholder="..."
                 defaultValue={transaction?.data?.bill}
-                disabled
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
+                readOnly
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="Name">
-                Tanggal Beli
-              </label>
-              <input
+              <Input
+                label="Tanggal Beli"
+                placeholder="Tanggal Beli"
+                variant="bordered"
+                labelPlacement="outside"
                 type="text"
-                placeholder="..."
                 defaultValue={
                   transaction?.data?.purchase_date &&
                   moment(transaction?.data?.purchase_date).format(
                     "DD-MM-YYYY HH:mm"
                   )
                 }
-                disabled
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
+                readOnly
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="address">
-                Grand Total
-              </label>
-              <input
+              <Input
+                label="Grand Total"
+                placeholder="0"
+                readOnly
+                variant="bordered"
+                labelPlacement="outside"
+                startContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">Rp</span>
+                  </div>
+                }
                 type="text"
-                placeholder="..."
+                // defaultValue={product?.data?.price}
                 defaultValue={transaction?.data?.grand_total && helper(transaction?.data?.grand_total)}
-                disabled
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
               />
             </div>
             <div className="flex flex-col gap-1">

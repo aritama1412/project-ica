@@ -191,7 +191,7 @@ const EditPage = () => {
       showSuccessToast('Product updated successfully!');
       setTimeout(() => {
         router.push("/admin/product");
-      }, 2000);
+      }, 1500);
     } catch (error) {
       setIsLoading(false);
       console.error("Error updating product:", error);
@@ -355,7 +355,7 @@ const EditPage = () => {
                   placeholder="Deskripsi ..."
                   variant="bordered"
                   isClearable
-                  disableAutosize
+                  // disableAutosize
                   // defaultValue={product?.data?.description}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
