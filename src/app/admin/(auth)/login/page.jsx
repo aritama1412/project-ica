@@ -62,7 +62,7 @@ const LoginPage = () => {
             width={64}
             height={64}
             className="w-16 h-16 mr-2"
-            src={logo}
+            src={logo} priority
             alt="logo"
           />
           Toko Bunga

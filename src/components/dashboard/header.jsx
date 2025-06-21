@@ -63,7 +63,7 @@ export const Header = ({ logo }) => {
                 <Image
                   width={32}
                   height={32}
-                  src={logo}
+                  src={logo} priority
                   className="h-8 me-3"
                   alt="Logo"
                 />
@@ -121,7 +121,7 @@ export const Header = ({ logo }) => {
                       width={32}
                       height={32}
                       className="w-8 h-8 rounded-full"
-                      src={logo}
+                      src={logo} priority
                       alt="user photo"
                     />
                   </button>

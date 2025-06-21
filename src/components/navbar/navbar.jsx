@@ -20,7 +20,7 @@ const Navbar = () => {
         <Link href="/" className="cursor-pointer">
           <Image
             className="object-cover w-[100px] max-w-[100px] h-[100px] max-h-[100px] rounded-full hover:opacity-90 transition-opacity duration-300"
-            src={logo}
+            src={logo} priority
             width={100}
             height={100}
             loading="eager"
