@@ -41,19 +41,19 @@ const Page = () => {
 
   const createTransaction = async () => {
     if (!phone.trim()) {
-      alert("Harap isi nomor telepone.");
+      showErrorToast("Harap isi nomor telepone.");
       return;
     }
     if (!name.trim()) {
-      alert("Harap isi nomor nama.");
+      showErrorToast("Harap isi nomor nama.");
       return;
     }
     if (!address.trim()) {
-      alert("Harap isi alamat.");
+      showErrorToast("Harap isi alamat.");
       return;
     }
     if (!pickupPoint.trim()) {
-      alert("Harap isi pengambilan.");
+      showErrorToast("Harap isi pengambilan.");
       return;
     }
     const today = new Date();
