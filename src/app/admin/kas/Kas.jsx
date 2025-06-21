@@ -38,8 +38,6 @@ export default function Kas({ setActiveMenu }) {
     }
   );
 
-  const rowsPerPage = 10;
-
   // Filtered Data Based on Search Query
   const filteredData = React.useMemo(() => {
     if (!data?.data) return [];
@@ -64,6 +62,11 @@ export default function Kas({ setActiveMenu }) {
     return filteredData;
   }, [filteredData]);
 
+  // Calculate Final Balance
+  const finalBalance = React.useMemo(() => {
+    return filteredData.reduce((acc, item) => acc + (item.balance || 0), 0);
+  }, [filteredData]);
+
   useEffect(() => {
     if (isDeleted) {
       alert("Product deleted successfully!");
@@ -75,76 +78,118 @@ export default function Kas({ setActiveMenu }) {
 
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
-      <h1 className="text-3xl">Kas</h1>
+      <h1 className="text-3xl">
+        Kas:{" "}
+        {finalBalance.toLocaleString("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        })}
+      </h1>
       <div className="mt-10">
-        <Table
-          aria-label="Example table with client async pagination"
-        >
+        <Table aria-label="Example table with client async pagination">
           <TableHeader>
-            <TableColumn className="min-w-[100px]" key="tanggal">Tanggal</TableColumn>
+            <TableColumn className="min-w-[100px]" key="tanggal">
+              Tanggal
+            </TableColumn>
             <TableColumn key="bill">Bill</TableColumn>
-            <TableColumn key="keterangan" className="text-sm">Keterangan</TableColumn>
+            <TableColumn key="keterangan" className="text-sm">
+              Keterangan
+            </TableColumn>
             <TableColumn key="income">Debit</TableColumn>
             <TableColumn key="cash_out">Kredit</TableColumn>
-            <TableColumn className="min-w-[130px]"  key="balance">Saldo</TableColumn>
+            <TableColumn className="min-w-[130px]" key="balance">
+              Saldo
+            </TableColumn>
           </TableHeader>
           <TableBody
             items={paginatedData}
             loadingContent={<Spinner />}
             loadingState={loadingState}
           >
-            {(item) => {
-              return (
-                <TableRow
-                  key={item?.bill}
-                  onClick={() => {
-                    if (item.type === "in") {
-                      router.push(`/admin/transaction/view/${item.id_sale}`);
-                    } else if (item.type === "out") {
-                      router.push(`/admin/purchase/view/${item.id_purchase}`);
-                    }
-                  }}
-                  className="cursor-pointer hover:bg-gray-100"
-                >
+            {(item) => (
+              <TableRow
+                key={item?.bill}
+                onClick={() => {
+                  if (item.type === "in") {
+                    router.push(`/admin/transaction/view/${item.id_sale}`);
+                  } else if (item.type === "out") {
+                    router.push(`/admin/purchase/view/${item.id_purchase}`);
+                  }
+                }}
+                className="cursor-pointer hover:bg-gray-100"
+              >
                 {(columnKey) => {
-                  let content;
-
                   if (columnKey === "tanggal") {
-                    content = moment(item.tanggal).format("DD-MM-YYYY");
-                  } else if (columnKey === "cash_out") {
-                    content = item.cash_out.toLocaleString("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      minimumFractionDigits: 0,
-                    });
-                  } else if (columnKey === "income") {
-                    content = item.income.toLocaleString("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      minimumFractionDigits: 0,
-                    });
-                  } else if (columnKey === "balance") {
-                    content = item.balance.toLocaleString("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      minimumFractionDigits: 0,
-                    });
-                  } else {
-                    content = getKeyValue(item, columnKey);
+                    return (
+                      <TableCell>
+                        {moment(item.tanggal).format("DD-MM-YYYY")}
+                      </TableCell>
+                    );
                   }
 
-                  return (
-                    <TableCell className={columnKey === "keterangan" ? "text-sm" : ""}>
-                      {content}
-                    </TableCell>
-                  );
+                  if (columnKey === "cash_out") {
+                    return (
+                      <TableCell>
+                        {item.cash_out.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,
+                        })}
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "income") {
+                    return (
+                      <TableCell>
+                        {item.income.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,
+                        })}
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "balance") {
+                    return (
+                      <TableCell>
+                        {item.balance.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,
+                        })}
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "keterangan") {
+                    if (item.income > 0) {
+                      return (
+                        <TableCell className="text-sm">
+                          <strong>Penjualan:</strong> {item.keterangan}
+                        </TableCell>
+                      );
+                    }
+                    if (item.cash_out > 0) {
+                      return (
+                        <TableCell className="text-sm">
+                          <strong>Re-stock:</strong> {item.keterangan}
+                        </TableCell>
+                      );
+                    }
+                    return (
+                      <TableCell className="text-sm">{item.keterangan}</TableCell>
+                    );
+                  }
+
+                  return <TableCell>{item[columnKey]}</TableCell>;
                 }}
-                </TableRow>
-              );
-            }}
+              </TableRow>
+            )}
           </TableBody>
         </Table>
-
       </div>
     </div>
   );

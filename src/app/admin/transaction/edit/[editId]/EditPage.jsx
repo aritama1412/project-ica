@@ -85,7 +85,8 @@ const EditPage = () => {
     }
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const idSale = transaction?.data?.id_sale;
     
     try {

@@ -21,6 +21,7 @@ import { EyeIcon } from "@/components/icons/EyeIcon";
 import { DeleteIcon } from "@/components/icons/DeleteIcon";
 import ImageWithFallback from "@/components/admin/ImageWithFallback";
 import { SearchIcon } from "@/components/icons/SearchIcon";
+import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -150,12 +151,16 @@ export default function Product({ setActiveMenu }) {
             <TableColumn key="image">Gambar</TableColumn>
             <TableColumn key="product_name">Produk</TableColumn>
             <TableColumn key="id_category">Katogori</TableColumn>
-            <TableColumn key="price">Harga</TableColumn>
-            <TableColumn key="stock">Stok</TableColumn>
+            <TableColumn key="price" align="center">Harga</TableColumn>
+            <TableColumn key="stock" align="center">Stok</TableColumn>
             {/* <TableColumn key="description">Deskripsi</TableColumn> */}
             {/* <TableColumn key="rating">Rating</TableColumn> */}
-            <TableColumn key="status_info">Status</TableColumn>
-            <TableColumn key="action">ACTIONS</TableColumn>
+            <TableColumn key="status_info" align="center">Status</TableColumn>
+            <TableColumn key="action" align="center" width={25}>
+                <div className="flex justify-center items-center">
+                  <MenuGridIcon size="1rem" />
+                </div>
+              </TableColumn>
           </TableHeader>
           <TableBody items={paginatedData} loadingContent={<Spinner />} loadingState={loadingState}>
             {(item) => (
@@ -191,7 +196,7 @@ export default function Product({ setActiveMenu }) {
 
                   if (columnKey === "price") {
                     return (
-                      <TableCell>
+                      <TableCell className="text-right">
                         {item?.price.toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
@@ -204,7 +209,7 @@ export default function Product({ setActiveMenu }) {
                   if (columnKey === "action") {
                     return (
                       <TableCell>
-                        <div className="flex flex-row gap-3">
+                        <div className="relative flex items-center gap-2">
                           <Tooltip content="Edit">
                             <span
                               onClick={() => handleEdit(item?.id_product)}

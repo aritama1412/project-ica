@@ -132,7 +132,8 @@ const CreatePage = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if(createProducts.length === 0 ) {
       showErrorToast("Masukkan setidaknya 1 produk.")
       return;
@@ -365,7 +366,7 @@ const CreatePage = () => {
           </div>
           
           <Button type="submit" color="success" variant="flat" isLoading={isLoading}>
-            Tambah
+            Simpan
           </Button>
         </div>
       </form>

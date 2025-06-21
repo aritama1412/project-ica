@@ -20,6 +20,7 @@ import useSWR from "swr";
 import { EyeIcon } from "@/components/icons/EyeIcon";
 import { EditIcon } from "@/components/icons/EditIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
+import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -127,7 +128,9 @@ export default function Supplier({ setActiveMenu }) {
             <TableColumn key="supplier_name">Name</TableColumn>
             <TableColumn key="phone">phone</TableColumn>
             <TableColumn key="status_info">Status</TableColumn>
-            <TableColumn key="action">ACTIONS</TableColumn>
+            <TableColumn key="action" width={25} align="end">
+              <MenuGridIcon size="1rem" />
+            </TableColumn>
           </TableHeader>
           <TableBody
             items={paginatedData}
