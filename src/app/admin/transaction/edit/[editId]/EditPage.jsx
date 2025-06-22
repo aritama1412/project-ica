@@ -110,7 +110,7 @@ const EditPage = () => {
       }
 
       const result = await response.json();
-      showSuccessToast('Supplier berhasil di rubah.');
+      showSuccessToast('Data Penjualan berhasil di rubah.');
       setTimeout(() => {
         router.push("/admin/transaction");
       }, 1500);

@@ -22,6 +22,7 @@ import { DeleteIcon } from "@/components/icons/DeleteIcon";
 import ImageWithFallback from "@/components/admin/ImageWithFallback";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
+import { showSuccessToast } from "@/components/toast/ToastNotification";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -74,6 +75,7 @@ export default function Product({ setActiveMenu }) {
   const handleEdit = (id) => {
     router.push(`/admin/product/edit/${id}`);
   };
+
   const handleDelete = (id) => {
     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/delete`, {
       method: "POST",
@@ -84,16 +86,18 @@ export default function Product({ setActiveMenu }) {
     })
       .then((response) => response.json())
       .then((data) => 
-        data.status == 'success' ? setIsDeleted(true) : alert("Failed deleting product")
+        data.status == 'success' ? setIsDeleted(true) : showErrorToast("Gagal menghapus produk.")
     );
   };
 
   useEffect(() => {
     if (isDeleted) {
-      alert("Product deleted successfully!");
-      // reload page
+      showSuccessToast("Produk berhasil dihapus.");
       window.location.reload(); // Full reload
-      setIsDeleted(false);
+      setTimeout(() => {
+        router.push("/admin/product");
+        setIsDeleted(false);
+      }, 1500);
     }
   }, [isDeleted, router]);
 

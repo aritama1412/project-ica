@@ -64,7 +64,7 @@ const CreatePage = () => {
       setImages(files); // Store multiple files in the state
     } else {
       setIsValid(false);
-      showErrorToast('You can only upload a maximum of 5 images.');
+      showErrorToast('Maksimal unggah 5 gambar.');
     }
   };
 
@@ -116,14 +116,14 @@ const CreatePage = () => {
       throw new Error(result.message || "Failed to create product");
     }
 
-    showSuccessToast('Product updated successfully!');
+    showSuccessToast('Produk berhasil dibuat.');
     setTimeout(() => {
       router.push("/admin/product");
     }, 2000);
     } catch (error) {
       setIsLoading(false);
       console.error("Error creating product:", error);
-      showErrorToast(data.message);
+      showErrorToast("Terjadi kesalahan.");
     }
   };
 

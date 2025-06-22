@@ -3,6 +3,7 @@ import { Select, SelectSection, SelectItem } from "@heroui/select";
 import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
+import { showErrorToast, showSuccessToast } from "@/components/toast/ToastNotification";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const CreatePage = () => {
@@ -32,7 +33,7 @@ const CreatePage = () => {
     e.preventDefault();
 
     if(!supplierName || !category || !phone || !address) {
-      alert("Harap isi semua field.");
+      showErrorToast("Harap isi semua data.");
       return;
     }
 
@@ -54,8 +55,11 @@ const CreatePage = () => {
     }
 
     const result = await response.json();
-    alert("Supplier created successfully!");
-    router.back();
+    showSuccessToast("Supplier berhasil ditambahkan.");
+    // timeout 1500
+    setTimeout(() => {
+      router.push("/admin/supplier");
+    }, 1500);
   };
 
   const handleSelectionChange = (e) => {

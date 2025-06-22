@@ -28,7 +28,6 @@ export default function Kas({ setActiveMenu }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = React.useState(1);
-  const [isDeleted, setIsDeleted] = useState(false);
 
   const { data, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/cashflow/get-cashflow`,
@@ -62,25 +61,12 @@ export default function Kas({ setActiveMenu }) {
     return filteredData;
   }, [filteredData]);
 
-  // Calculate Final Balance
-  const finalBalance = React.useMemo(() => {
-    return filteredData.reduce((acc, item) => acc + (item.balance || 0), 0);
-  }, [filteredData]);
-
-  useEffect(() => {
-    if (isDeleted) {
-      alert("Product deleted successfully!");
-      // reload page
-      window.location.reload(); // Full reload
-      setIsDeleted(false);
-    }
-  }, [isDeleted, router]);
 
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
       <h1 className="text-3xl">
         Kas:{" "}
-        {finalBalance.toLocaleString("id-ID", {
+        {data && data.data[0].balance.toLocaleString("id-ID", {
           style: "currency",
           currency: "IDR",
           minimumFractionDigits: 0,

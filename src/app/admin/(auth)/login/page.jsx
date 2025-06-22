@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie"; // Import js-cookie for managing cookies
+import { showErrorToast } from "@/components/toast/ToastNotification";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,13 +42,14 @@ const LoginPage = () => {
           // Redirect to admin dashboard
           router.push("/admin/dashboard");
         } else {
-          alert(data.message);
+          showErrorToast("Username atau password salah.");
+          console.error(data.message);
         }
       })
       .catch((error) => {
         setIsLoading(false);
-        alert("An error occurred. Please try again.");
-        console.error("Error:", error);
+        showErrorToast("Terjadi kesalahan. Silahkan coba lagi.");
+        console.log("Error:", error);
       });
   };
 

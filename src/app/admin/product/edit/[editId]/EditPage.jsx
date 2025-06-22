@@ -90,7 +90,7 @@ const EditPage = () => {
       setImages(files); // Store multiple files in the state
     } else {
       setIsValid(false);
-      showErrorToast('You can only upload a maximum of 5 images.');
+      showErrorToast('Maksimal unggah 5 gambar.');
     }
   };
 
@@ -144,7 +144,8 @@ const EditPage = () => {
           //   [imageId]: false,
           // }));
         }else{
-          showErrorToast(data.message);
+          showErrorToast("Terjadi kesalahan.");
+          console.log(data.message);
         }
       });
   }
@@ -188,14 +189,14 @@ const EditPage = () => {
       }
 
       const result = await response.json();
-      showSuccessToast('Product updated successfully!');
+      showSuccessToast('Produk berhasil dirubah.');
       setTimeout(() => {
         router.push("/admin/product");
       }, 1500);
     } catch (error) {
       setIsLoading(false);
       console.error("Error updating product:", error);
-      showErrorToast(data.message);
+      showErrorToast("Terjadi kesalahan.");
     }
   };
 
