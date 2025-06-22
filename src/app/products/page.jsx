@@ -3,27 +3,14 @@ import FilterSection from "@/components/filter/filterSection";
 import Navbar from "@/components/navbar/navbar";
 import ProductCard from "@/components/products/productCard";
 import { CiFilter } from "react-icons/ci";
-import {useState} from "react";
-// import {
-  // Modal,
-  // ModalContent,
-  // ModalHeader,
-  // ModalBody,
-  // ModalFooter,
-  // useDisclosure,
-  // RadioGroup,
-  // Radio,
-// } from "@heroui/modal";
+
 import { 
-  Button, 
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
-  useDisclosure,
-  RadioGroup,
-  Radio, } from "@heroui/react";
+  useDisclosure
+} from "@heroui/react";
 import { BiCart } from "react-icons/bi";
 import Link from "next/link";
 
@@ -63,14 +50,6 @@ const Page = () => {
               <ModalBody>
                 <FilterSection />
               </ModalBody>
-              {/* <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter> */}
             </>
           )}
         </ModalContent>

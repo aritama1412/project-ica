@@ -8,20 +8,20 @@ import {
   TableCell,
   Pagination,
   Spinner,
-  User,
-  Chip,
   Tooltip,
   getKeyValue,
-  RadioGroup,
-  Radio,
   Button,
+  Link,
+  Input
 } from "@heroui/react";
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { EyeIcon } from "@/components/icons/EyeIcon";
-import { EditIcon } from "@/components/icons/EditIcon";
 import { DeleteIcon } from "@/components/icons/DeleteIcon";
+import ImageWithFallback from "@/components/admin/ImageWithFallback";
+import { SearchIcon } from "@/components/icons/SearchIcon";
+import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -71,9 +71,6 @@ export default function Product({ setActiveMenu }) {
     return filteredData.slice(startIndex, endIndex);
   }, [filteredData, page, rowsPerPage]);
 
-  const handleView = (id) => {
-    router.push(`/admin/product/view/${id}`);
-  };
   const handleEdit = (id) => {
     router.push(`/admin/product/edit/${id}`);
   };
@@ -104,17 +101,26 @@ export default function Product({ setActiveMenu }) {
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
       <h1 className="text-3xl">Produk</h1>
       <div className="mt-10">
-        <div className="flex items-center justify-between mt-2 mb-4">
-          <Link
+        <div className="flex items-center justify-between mb-4">
+          <Button
+            // showAnchorIcon
+            as={Link}
+            color="default"
             href="/admin/product/create"
-            className="border-2 border-gray-500 px-4 py-1 rounded-lg bg-gray-200"
+            variant="shadow"
           >
             Tambah Barang
-          </Link>
-          <input
+          </Button>
+          <Input
+            endContent={
+              <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
+            // label="Search..."
+            variant="bordered"
+            // labelPlacement="inside"
+            placeholder="Cari ..."
+            className="max-w-[300px]"
             type="text"
-            placeholder="  Search..."
-            className="border border-gray-400 rounded-lg"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -124,7 +130,7 @@ export default function Product({ setActiveMenu }) {
         </div>
 
         <Table
-          aria-label="Example table with client async pagination"
+          aria-label="Table"
           bottomContent={
             pages > 0 ? (
               <div className="flex w-full justify-center">
@@ -142,57 +148,95 @@ export default function Product({ setActiveMenu }) {
           }
         >
           <TableHeader>
+            <TableColumn key="image">Gambar</TableColumn>
             <TableColumn key="product_name">Produk</TableColumn>
             <TableColumn key="id_category">Katogori</TableColumn>
-            <TableColumn key="stock">Stok</TableColumn>
-            <TableColumn key="description">Deskripsi</TableColumn>
+            <TableColumn key="price" align="center">Harga</TableColumn>
+            <TableColumn key="stock" align="center">Stok</TableColumn>
+            {/* <TableColumn key="description">Deskripsi</TableColumn> */}
             {/* <TableColumn key="rating">Rating</TableColumn> */}
-            <TableColumn key="status_info">Status</TableColumn>
-            <TableColumn key="action">ACTIONS</TableColumn>
+            <TableColumn key="status_info" align="center">Status</TableColumn>
+            <TableColumn key="action" align="center" width={25}>
+                <div className="flex justify-center items-center">
+                  <MenuGridIcon size="1rem" />
+                </div>
+              </TableColumn>
           </TableHeader>
-          <TableBody
-            items={paginatedData}
-            loadingContent={<Spinner />}
-            loadingState={loadingState}
-          >
+          <TableBody items={paginatedData} loadingContent={<Spinner />} loadingState={loadingState}>
             {(item) => (
               <TableRow key={item?.id_product}>
-                {(columnKey) => (
-                  <TableCell>
-                    {columnKey === "action" ? (
-                      <div className="flex flex-row gap-3">
-                        <Tooltip content="Details">
-                          <span
-                            onClick={() => handleView(item?.id_product)}
-                            className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                          >
-                            <EyeIcon />
-                          </span>
-                        </Tooltip>
-                        <Tooltip content="Edit">
-                          <span
-                            onClick={() => handleEdit(item?.id_product)}
-                            className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                          >
-                            <EditIcon />
-                          </span>
-                        </Tooltip>
-                        <Tooltip color="danger" content="Delete">
-                          <span
-                            onClick={() => handleDelete(item?.id_product)}
-                            className="text-lg text-danger cursor-pointer active:opacity-50"
-                          >
-                            <DeleteIcon />
-                          </span>
-                        </Tooltip>
-                      </div>
-                    ) : columnKey === "id_category" ? (
-                      item?.Category?.name || "N/A"
-                    ) : (
-                      getKeyValue(item, columnKey)
-                    )}
-                  </TableCell>
-                )}
+                {(columnKey) => {
+                
+                  if (columnKey === "image") {
+                    const imageUrl = item?.Images?.[0]?.image
+                      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${item.Images[0].image}`
+                      : "https://placehold.co/500x500?text=Not+Found";
+
+                    return (
+                      <TableCell>
+                        <ImageWithFallback
+                          src={imageUrl}
+                          fallback="https://placehold.co/50x50"
+                          alt={item?.product_name || "Product Image"}
+                          width={50}
+                          height={50}
+                          className="max-h-[50px] max-w-[50px] object-cover rounded-md"
+                        />
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "id_category") {
+                    return (
+                      <TableCell>
+                        {item?.Category?.name || "N/A"}
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "price") {
+                    return (
+                      <TableCell className="text-right">
+                        {item?.price.toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,                          
+                        })}
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "action") {
+                    return (
+                      <TableCell>
+                        <div className="relative flex items-center gap-2">
+                          <Tooltip content="Edit">
+                            <span
+                              onClick={() => handleEdit(item?.id_product)}
+                              className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                            >
+                              <EyeIcon />
+                            </span>
+                          </Tooltip>
+                          <Tooltip color="danger" content="Delete">
+                            <span
+                              onClick={() => handleDelete(item?.id_product)}
+                              className="text-lg text-danger cursor-pointer active:opacity-50"
+                            >
+                              <DeleteIcon />
+                            </span>
+                          </Tooltip>
+                        </div>
+                      </TableCell>
+                    );
+                  }
+
+                  return (
+                    <TableCell>
+                      {getKeyValue(item, columnKey)}
+                    </TableCell>
+                  );
+                }}
               </TableRow>
             )}
           </TableBody>

@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import { Select, SelectSection, SelectItem } from "@heroui/select";
 import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
+import {Input} from "@heroui/input";
+import {Textarea, Button} from "@heroui/react";
 import { useParams, useRouter } from "next/navigation";
 import { getLocalTimeZone, today, parseDate } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
 import helper from "@/../helper/helper";
+import { showSuccessToast, showErrorToast } from "@/components/toast/ToastNotification";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -43,6 +46,18 @@ const EditPage = () => {
 
   }, [transaction]);
 
+  const formatDateFromObject = (dateObj) => {
+    if (!dateObj || !dateObj.year || !dateObj.month || !dateObj.day) {
+      return null; // Return null if any part of the date is missing
+    }
+
+    const year = dateObj.year;
+    const month = dateObj.month.toString().padStart(2, '0');
+    const day = dateObj.day.toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+
   useEffect(() => {
     // Handle the API call to mark the transaction as seen
     const markTransactionAsSeen = async () => {
@@ -70,7 +85,8 @@ const EditPage = () => {
     }
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const idSale = transaction?.data?.id_sale;
     
     try {
@@ -82,8 +98,8 @@ const EditPage = () => {
         body: JSON.stringify({
           id_sale: idSale,
           status: `${status}`,
-          date_estimation: estimationDate,
-          date_received: dateReceived,
+          date_estimation: formatDateFromObject(estimationDate),
+          date_received: formatDateFromObject(dateReceived),
           updated_by: 1,
           updated_at: new Date(),
         }),
@@ -94,10 +110,13 @@ const EditPage = () => {
       }
 
       const result = await response.json();
-      alert("Transaction edited successfully!");
-      router.push("/admin/transaction");
+      showSuccessToast('Supplier berhasil di rubah.');
+      setTimeout(() => {
+        router.push("/admin/transaction");
+      }, 1500);
     } catch (error) {
-      alert(error.message);
+      showErrorToast("Terjadi kesalahan.");
+      console.log('error', error.message)
     }
   };
 
@@ -116,67 +135,56 @@ const EditPage = () => {
       <h1 className="text-3xl font-bold">Edit Penjualan</h1>
       <div className="flex flex-row border border-gray-300 px-6 py-4 mt-4 rounded-sm">
         <div className="flex flex-row w-full gap-8">
-          <div className="flex flex-col gap-3 w-1/2 bg-slate-100 p-4">
+          <div className="flex flex-col gap-3 w-1/2 border border-gray-200 p-4">
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="Name">
-                No. Bill
-              </label>
-              <input
+              <Input
+                label="No. Bill"
+                placeholder="No. Bill"
+                variant="faded"
+                labelPlacement="outside"
                 type="text"
-                placeholder="..."
-                defaultValue={transaction?.data?.bill}
-                disabled
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
+                value={transaction?.data?.bill}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="Name">
-                Nama
-              </label>
-              <input
+              <Input
+                label="Nama"
+                placeholder="Nama"
+                variant="faded"
+                labelPlacement="outside"
                 type="text"
-                placeholder="..."
-                defaultValue={transaction?.data?.customer_name}
-                disabled
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
+                value={transaction?.data?.customer_name}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="phone">
-                Nomor Telepon
-              </label>
-              <input
+          <Input
+                label="Nomor Telepon"
+                placeholder="Nomor Telepon"
+                variant="faded"
+                labelPlacement="outside"
                 type="text"
-                placeholder="..."
-                defaultValue={transaction?.data?.customer_phone}
-                disabled
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px]"
+                value={transaction?.data?.customer_phone}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="address">
-                Alamat
-              </label>
-              <textarea
-                type="text"
-                className="border border-gray-300 px-1 max-w-[300px] text-gray-700"
-                placeholder="..."
-                defaultValue={transaction?.data?.customer_address || ""}
-                disabled
+              <Textarea
+                // classNames={{
+                //   base: "col-span-12 md:col-span-6 mb-6 md:mb-0",
+                //   input: "resize-y min-h-[100px]",
+                // }}
+                className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0"
+                label="Alamat"
+                labelPlacement="outside"
+                placeholder="Alamat"
+                variant="faded"
+                // disableAutosize
+                value={transaction?.data?.customer_address || ""}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="drop point">
-                Pengambilan
-              </label>
               <Select
-                isDisabled
-                size={"sm"}
-                label=""
-                aria-label="Status"
-                placeholder="Silahkan pilih ..."
-                className="max-w-[300px] border border-gray-300 !bg-white rounded-lg"
-                defaultSelectedKeys="" // add this line
+                label="Pengambilan"
+                labelPlacement="outside"
                 selectedKeys={[transaction?.data?.pick_up_type.toString()]}
               >
                 <SelectItem key="1" defaultValue="1" textValue="Delivery">
@@ -188,20 +196,17 @@ const EditPage = () => {
               </Select>
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="pickup date">
-                Estimasi tanggal diterima
-              </label>
               <DatePicker
-                variant={"underlined"}
-                aria-label="date"
+                label="Estimasi tanggal diterima"
+                labelPlacement="outside"
+                variant="bordered"
                 value={estimationDate}
                 onChange={setEstimationDate}
                 isLoading={isLoading}
-                className="max-w-[300px] bg-white px-2 border border-gray-300 rounded-sm"
               />
             </div>
           </div>
-          <div className="w-full md:w-1/2 bg-slate-100 p-4">
+          <div className="w-full md:w-1/2 border border-gray-200 p-4">
             <div className="grid grid-cols-10 font-semibold text-center gap-2 mb-4">
               <span className="col-span-4 text-left">Produk</span>
               <span className="col-span-2 text-right">Harga</span>
@@ -243,17 +248,16 @@ const EditPage = () => {
             </div>
             <div className="flex flex-row items-end justify-between mt-10">
               <div className="flex flex-col">
-                <span>Status</span>
                 <Select
-                  size={"sm"}
-                  label=""
-                  aria-label="Status"
-                  placeholder="Silahkan pilih ..."
-                  className="w-full min-w-[200px] border border-gray-300 !bg-white rounded-lg"
+                  label="Status"
+                  labelPlacement="outside"
+                  isRequired
+                  variant="bordered"
+                  className="w-full min-w-[200px]"
                   selectedKeys={[status]}
                   onChange={handleStatus}
                 >
-                  <SelectItem key="menunggu pembayaran" defaultValue="0" textValue="Menun ggu Pembayaran">
+                  <SelectItem key="menunggu pembayaran" defaultValue="0" textValue="Menunggu Pembayaran">
                     Menunggu Pembayaran
                   </SelectItem>
                   <SelectItem key="proses" defaultValue="1" textValue="Proses">
@@ -279,17 +283,13 @@ const EditPage = () => {
                   value={dateReceived}
                   onChange={setDateReceived}
                   isLoading={isLoading}
-                  className="max-w-[300px] bg-white px-2 border border-gray-300 rounded-sm"
+                  className="w-[200px] bg-white px-2 border border-gray-300 rounded-sm"
                 />
               </div>
               <div className="flex items-start mt-10">
-                <button
-                  onClick={handleSubmit}
-                  type="submit"
-                  className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
-                >
+                <Button type="submit" onClick={handleSubmit} color="success" variant="flat" >
                   Simpan
-                </button>
+                </Button>
               </div>
             </div>
           </div>

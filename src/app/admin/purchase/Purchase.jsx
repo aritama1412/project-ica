@@ -8,20 +8,20 @@ import {
   TableCell,
   Pagination,
   Spinner,
-  User,
-  Chip,
   Tooltip,
   getKeyValue,
-  RadioGroup,
-  Radio,
   Button,
+  Link,
+  Input
 } from "@heroui/react";
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import moment from "moment";
 import { EyeIcon } from "@/components/icons/EyeIcon";
 import { EditIcon } from "@/components/icons/EditIcon";
+import { SearchIcon } from "@/components/icons/SearchIcon";
+import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -90,124 +90,129 @@ export default function Purchase({ setActiveMenu }) {
     router.push(`/admin/purchase/edit/${id}`);
   };
 
-  const renderTableCell = (columnKey, item) => {
-    if (columnKey === "action") {
-      return (
-        <div className="flex flex-row gap-3">
-          <Tooltip content="Details">
-            <span
-              onClick={() => handleView(item?.id_purchase)}
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-            >
-              <EyeIcon />
-            </span>
-          </Tooltip>
-          <Tooltip content="Edit">
-            <span
-              onClick={() => handleEdit(item?.id_purchase)}
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-            >
-              <EditIcon />
-            </span>
-          </Tooltip>
-        </div>
-      );
-    }
-
-    if (columnKey === "purchase_date") {
-      return moment(item[columnKey]).format("DD-MM-YYYY HH:mm");
-    }
-
-    if (columnKey === "supplier") {
-      return (
-        item?.PurchaseDetails?.map(
-          (detail) => detail.Product?.Supplier?.supplier_name
-        ) // Extract supplier names
-          .filter((name) => name) // Filter out undefined or null values
-          .join(", ") || ""
-      ); // Join them with commas or return an empty string if no names are found
-    }
-
-    if (columnKey === "supplier") {
-      return (
-        item?.PurchaseDetails?.map(
-          (detail) => detail.Product?.Supplier?.supplier_name
-        ) // Extract supplier names
-          .filter((name) => name) // Filter out undefined or null values
-          .join(", ") || ""
-      ); // Join them with commas or return an empty string if no names are found
-    }
-
-    if (columnKey === "grand_total") {
-      return item[columnKey].toLocaleString("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-      });
-    }
-
-    return item[columnKey];
-  };
-
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
       <h1 className="text-3xl">Transaksi Pembelian</h1>
       <div className="mt-10">
-        <div className="flex items-center justify-between mt-2 mb-4">
-          <Link
+        <div className="flex items-center justify-between mb-4">
+          <Button
+            // showAnchorIcon
+            as={Link}
+            color="default"
             href="/admin/purchase/create"
-            className="border-2 border-gray-500 px-4 py-1 rounded-lg bg-gray-200"
+            variant="shadow"
           >
             Tambah Pembelian
-          </Link>
-          <input
+          </Button>
+          <Input
+            endContent={
+              <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
+            // label="Search..."
+            variant="bordered"
+            // labelPlacement="inside"
+            placeholder="Cari ..."
+            className="max-w-[300px]"
             type="text"
-            placeholder="  Search..."
-            className=" border border-gray-400 rounded-lg"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPage(1); // Reset to first page on new search
+            }}
           />
         </div>
-        <Table
-          aria-label="Example table with client async pagination"
-          bottomContent={
-            pages > 0 ? (
-              <div className="flex w-full justify-center">
-                <Pagination
-                  isCompact
-                  showControls
-                  showShadow
-                  color="primary"
-                  page={page}
-                  total={pages}
-                  onChange={(page) => setPage(page)}
-                />
-              </div>
-            ) : null
-          }
-        >
-          <TableHeader>
-            <TableColumn key="bill">No Bill</TableColumn>
-            <TableColumn key="supplier">Supplier</TableColumn>
-            <TableColumn key="status">Status</TableColumn>
-            <TableColumn key="purchase_date">Tanggal</TableColumn>
-            <TableColumn key="grand_total">Total</TableColumn>
-            <TableColumn key="action">ACTIONS</TableColumn>
-          </TableHeader>
-          <TableBody
-            items={paginatedData}
-            loadingContent={<Spinner />}
-            loadingState={loadingState}
+          <Table
+            isStriped
+            aria-label="Example table with client async pagination"
+            bottomContent={
+              pages > 0 ? (
+                <div className="flex w-full justify-center">
+                  <Pagination
+                    isCompact
+                    showControls
+                    showShadow
+                    color="primary"
+                    page={page}
+                    total={pages}
+                    onChange={(page) => setPage(page)}
+                  />
+                </div>
+              ) : null
+            }
           >
-            {(item) => (
-              <TableRow key={item?.id_purchase}>
-                {(columnKey) => (
-                  <TableCell>{renderTableCell(columnKey, item)}</TableCell>
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            <TableHeader>
+              <TableColumn key="bill">No Bill</TableColumn>
+              <TableColumn key="supplier">Supplier</TableColumn>
+              <TableColumn key="status">Status</TableColumn>
+              <TableColumn key="purchase_date" width={135} >
+                Tanggal
+              </TableColumn>
+              <TableColumn key="grand_total" align="center">Total</TableColumn>
+              <TableColumn key="action" width={25} align="end">
+                <MenuGridIcon size="1rem" />
+              </TableColumn>
+            </TableHeader>
+            <TableBody
+              items={paginatedData}
+              loadingContent={<Spinner />}
+              loadingState={loadingState}
+            >
+              {(item) => (
+                <TableRow key={item?.id_purchase}>
+                  {(columnKey) => {
+                    if (columnKey === "action") {
+                      return (
+                        <TableCell>
+                          <Tooltip content="Edit">
+                            <span
+                              onClick={() => handleEdit(item?.id_purchase)}
+                              className="flex justify-end text-lg text-default-400 cursor-pointer active:opacity-50"
+                            >
+                              <EyeIcon />
+                            </span>
+                          </Tooltip>
+                        </TableCell>
+                      );
+                    }
+
+                    if (columnKey === "purchase_date") {
+                      return (
+                        <TableCell>
+                          {moment(item[columnKey]).format("DD-MM-YYYY HH:mm")}
+                        </TableCell>
+                      );
+                    }
+
+                    if (columnKey === "supplier") {
+                      return (
+                        <TableCell>
+                          {item?.PurchaseDetails?.map(
+                            (detail) => detail.Product?.Supplier?.supplier_name
+                          )
+                            .filter((name) => name)
+                            .join(", ") || ""}
+                        </TableCell>
+                      );
+                    }
+
+                    if (columnKey === "grand_total") {
+                      return (
+                        <TableCell className="text-right">
+                          {item[columnKey].toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                          })}
+                        </TableCell>
+                      );
+                    }
+
+                    return <TableCell>{item[columnKey]}</TableCell>;
+                  }}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
       </div>
     </div>
   );

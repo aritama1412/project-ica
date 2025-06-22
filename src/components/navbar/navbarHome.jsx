@@ -22,7 +22,7 @@ const NavbarHome = () => {
           <div className="relative w-[80px] h-[80px]">
             <Image
               className="object-cover rounded-full"
-              src={logo}
+              src={logo} priority
               width={80}
               height={80}
               loading="eager"

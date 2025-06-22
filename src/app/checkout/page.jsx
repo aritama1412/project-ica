@@ -7,6 +7,9 @@ import { Select, SelectSection, SelectItem } from "@heroui/select";
 import useCart from "@/../stores/cartStore";
 import helper from "@/../helper/helper";
 import { getLocalTimeZone, today } from "@internationalized/date";
+import {Input} from "@heroui/input";
+import {Textarea, Button} from "@heroui/react";
+import { showSuccessToast, showErrorToast } from "@/components/toast/ToastNotification";
 
 const dropData = [
   {
@@ -38,19 +41,19 @@ const Page = () => {
 
   const createTransaction = async () => {
     if (!phone.trim()) {
-      alert("Harap isi nomor telepone.");
+      showErrorToast("Harap isi nomor telepone.");
       return;
     }
     if (!name.trim()) {
-      alert("Harap isi nomor nama.");
+      showErrorToast("Harap isi nomor nama.");
       return;
     }
     if (!address.trim()) {
-      alert("Harap isi alamat.");
+      showErrorToast("Harap isi alamat.");
       return;
     }
     if (!pickupPoint.trim()) {
-      alert("Harap isi pengambilan.");
+      showErrorToast("Harap isi pengambilan.");
       return;
     }
     const today = new Date();
@@ -198,16 +201,17 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 w-1/2 scmobile:w-full bg-slate-100 border-2 border-slate-300 p-4">
+          <div className="flex flex-col gap-3 w-1/2 scmobile:w-full border border-slate-300 p-4">
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="phone">
-                Nomor Telepon <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
+              <Input
+                label="Nomor Telepon"
                 placeholder="08xxxxxxxxxx"
+                variant="bordered"
                 inputMode="numeric"
-                required
+                labelPlacement="outside"
+                type="text"
+                // defaultValue={product?.data?.product_name}
+                isRequired
                 value={phone}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -215,50 +219,48 @@ const Page = () => {
                     setPhone(value);
                   }
                 }}
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="Name">
-                Nama <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
+              <Input
+                label="Nama"
                 placeholder="Nama Anda"
-                required
+                variant="bordered"
+                labelPlacement="outside"
+                type="text"
                 value={name}
+                isRequired
                 onChange={(e) => setName(e.target.value)}
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="address">
-                Alamat Lengkap <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
+              <Textarea
+                classNames={{
+                  base: "col-span-12 md:col-span-6 mb-6 md:mb-0",
+                  input: "resize-y min-h-[100px]",
+                }}
+                // className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4"
+                label="Alamat Lengkap"
+                labelPlacement="outside"
                 placeholder="Jl Melati No.3"
-                required
+                variant="bordered"
+                isClearable
+                isRequired
+                // disableAutosize
+                // defaultValue={product?.data?.description}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="px-2 py-[2px] text-gray-700 border border-gray-300 rounded-sm max-w-[300px] scmobile:max-w-full"
+                onClear={() => setAddress('')}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-bold" htmlFor="drop point">
-                Pengambilan <span className="text-red-500">*</span>
-              </label>
               <Select
-                // color={"danger"}
-                size={"sm"}
-                label=""
-                aria-label="Pickup Point"
+                label="Pengambilan"
                 placeholder="Silahkan pilih ..."
-                required
+                variant="bordered"
+                labelPlacement="outside"
                 value={pickupPoint}
                 onChange={(e) => setPickupPoint(e.target.value)}
-                // onChange={(date) => setPickupDate(date)}
-                className="max-w-[300px] scmobile:max-w-full border border-gray-300 !bg-white rounded-lg"
               >
                 {dropData.map((data, index) => (
                   <SelectItem key={index} value={data.value}>

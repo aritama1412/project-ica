@@ -8,19 +8,19 @@ import {
   TableCell,
   Pagination,
   Spinner,
-  User,
-  Chip,
   Tooltip,
   getKeyValue,
-  RadioGroup,
-  Radio,
   Button,
+  Link,
+  Input
 } from "@heroui/react";
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { EyeIcon } from "@/components/icons/EyeIcon";
 import { EditIcon } from "@/components/icons/EditIcon";
+import { SearchIcon } from "@/components/icons/SearchIcon";
+import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -67,9 +67,9 @@ export default function Supplier({ setActiveMenu }) {
     return filteredData.slice(startIndex, endIndex);
   }, [filteredData, page, rowsPerPage]);
 
-  const handleView = (id) => {
-    router.push(`/admin/supplier/view/${id}`);
-  };
+  // const handleView = (id) => {
+  //   router.push(`/admin/supplier/view/${id}`);
+  // };
   const handleEdit = (id) => {
     router.push(`/admin/supplier/edit/${id}`);
   };
@@ -78,17 +78,26 @@ export default function Supplier({ setActiveMenu }) {
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
       <h1 className="text-3xl">Supplier</h1>
       <div className="mt-10">
-        <div className="flex items-center justify-between mt-2 mb-4">
-          <Link
-            href="/admin/supplier/create"
-            className="border-2 border-gray-500 px-4 py-1 rounded-lg bg-gray-200"
+        <div className="flex items-center justify-between mb-4">
+          <Button
+            // showAnchorIcon
+            as={Link}
+            color="default"
+            href="/admin/product/create"
+            variant="shadow"
           >
             Tambah Supplier
-          </Link>
-          <input
+          </Button>
+          <Input
+            endContent={
+              <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
+            // label="Search..."
+            variant="bordered"
+            // labelPlacement="inside"
+            placeholder="Cari ..."
+            className="max-w-[300px]"
             type="text"
-            placeholder="  Search..."
-            className=" border border-gray-400 rounded-lg"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -96,6 +105,7 @@ export default function Supplier({ setActiveMenu }) {
             }}
           />
         </div>
+
         <Table
           aria-label="Example table with client async pagination"
           bottomContent={
@@ -118,7 +128,9 @@ export default function Supplier({ setActiveMenu }) {
             <TableColumn key="supplier_name">Name</TableColumn>
             <TableColumn key="phone">phone</TableColumn>
             <TableColumn key="status_info">Status</TableColumn>
-            <TableColumn key="action">ACTIONS</TableColumn>
+            <TableColumn key="action" width={25} align="end">
+              <MenuGridIcon size="1rem" />
+            </TableColumn>
           </TableHeader>
           <TableBody
             items={paginatedData}
@@ -131,20 +143,20 @@ export default function Supplier({ setActiveMenu }) {
                   <TableCell>
                     {columnKey === "action" ? (
                       <div className="flex flex-row gap-3">
-                        <Tooltip content="Details">
+                        {/* <Tooltip content="Details">
                           <span
                             onClick={() => handleView(item?.id_supplier)}
                             className="text-lg text-default-400 cursor-pointer active:opacity-50"
                           >
                             <EyeIcon />
                           </span>
-                        </Tooltip>
+                        </Tooltip> */}
                         <Tooltip content="Edit">
                           <span
                             onClick={() => handleEdit(item?.id_supplier)}
                             className="text-lg text-default-400 cursor-pointer active:opacity-50"
                           >
-                            <EditIcon />
+                            <EyeIcon />
                           </span>
                         </Tooltip>
                         {/* <Tooltip color="danger" content="Delete">

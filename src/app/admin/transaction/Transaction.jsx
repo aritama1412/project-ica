@@ -8,20 +8,20 @@ import {
   TableCell,
   Pagination,
   Spinner,
-  User,
-  Chip,
   Tooltip,
   getKeyValue,
-  RadioGroup,
-  Radio,
   Button,
+  Link,
+  Input
 } from "@heroui/react";
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import moment from "moment";
 import { EyeIcon } from "@/components/icons/EyeIcon";
 import { EditIcon } from "@/components/icons/EditIcon";
+import { SearchIcon } from "@/components/icons/SearchIcon";
+import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -85,59 +85,27 @@ export default function Transaction({ setActiveMenu }) {
     router.push(`/admin/transaction/edit/${id}`);
   };
 
-  const renderTableCell = (columnKey, item) => {
-    if (columnKey === "action") {
-      return (
-        <div className="flex flex-row gap-3">
-          <Tooltip content="Details">
-            <span
-              onClick={() => handleView(item?.id_sale)}
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-            >
-              <EyeIcon />
-            </span>
-          </Tooltip>
-          <Tooltip content="Edit">
-            <span
-              onClick={() => handleEdit(item?.id_sale)}
-              className="text-lg text-default-400 cursor-pointer active:opacity-50"
-            >
-              <EditIcon />
-            </span>
-          </Tooltip>
-        </div>
-      );
-    }
-
-    if (columnKey === "date_sale") {
-      return moment(item[columnKey]).format("DD-MM-YYYY HH:mm");
-    }
-
-    if (columnKey === "grand_total") {
-      return item[columnKey].toLocaleString("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-      });
-    }
-
-    return item[columnKey];
-  };
-
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
       <h1 className="text-3xl">Transaksi Penjualan</h1>
       <div className="mt-10">
-        <div className="flex items-center justify-between mt-2 mb-4">
-          <span>&nbsp;</span>
-          <input
+        <div className="flex items-center justify-end mb-4">
+          <Input
+            endContent={
+              <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+            }
+            variant="bordered"
+            placeholder="Cari ..."
+            className="max-w-[300px]"
             type="text"
-            placeholder="Search..."
-            className=" border border-gray-400 rounded-lg"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPage(1); // Reset to first page on new search
+            }}
           />
         </div>
+        
         <Table
           aria-label="Example table with client async pagination"
           bottomContent={
@@ -155,15 +123,18 @@ export default function Transaction({ setActiveMenu }) {
               </div>
             ) : null
           }
+          isStriped
         >
           <TableHeader>
             <TableColumn key="bill">No Bill</TableColumn>
             <TableColumn key="customer_name">Nama</TableColumn>
             <TableColumn key="customer_phone">HP</TableColumn>
             <TableColumn key="status">Status</TableColumn>
-            <TableColumn key="date_sale">Tanggal</TableColumn>
-            <TableColumn key="grand_total">Total</TableColumn>
-            <TableColumn key="action">ACTIONS</TableColumn>
+            <TableColumn key="date_sale" width={135}>Tanggal</TableColumn>
+            <TableColumn key="grand_total" align="center">Total</TableColumn>
+            <TableColumn key="action" width={25} align="end">
+              <MenuGridIcon size="1rem" />
+            </TableColumn>
           </TableHeader>
           <TableBody
             items={paginatedData}
@@ -172,13 +143,50 @@ export default function Transaction({ setActiveMenu }) {
           >
             {(item) => (
               <TableRow key={item?.id_sale}>
-                {(columnKey) => (
-                  <TableCell>{renderTableCell(columnKey, item)}</TableCell>
-                )}
+                {(columnKey) => {
+                  if (columnKey === "action") {
+                    return (
+                      <TableCell>
+                        <Tooltip content="Edit">
+                          <span
+                            onClick={() => handleEdit(item?.id_sale)}
+                            className="flex justify-end text-lg text-default-400 cursor-pointer active:opacity-50"
+                          >
+                            <EyeIcon />
+                          </span>
+                        </Tooltip>
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "date_sale") {
+                    return (
+                      <TableCell>
+                        {moment(item[columnKey]).format("DD-MM-YYYY HH:mm")}
+                      </TableCell>
+                    );
+                  }
+
+                  if (columnKey === "grand_total") {
+                    return (
+                      <TableCell>
+                        {item[columnKey].toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,
+                        })}
+                      </TableCell>
+                    );
+                  }
+
+                  // Default rendering for other columns
+                  return <TableCell>{item[columnKey]}</TableCell>;
+                }}
               </TableRow>
             )}
           </TableBody>
         </Table>
+
       </div>
     </div>
   );

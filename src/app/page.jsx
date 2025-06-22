@@ -31,24 +31,24 @@ export default function Home() {
         </div>
       </div>
       <div className="flex flex-col justify-center items-center h-full sm:min-h-[1200px] w-full bg-white mx-auto">
-        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] ">
+        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] px-2">
           <div className="flex justify-center items-center w-1/2">
             <Image
               src="/images/home/main-1.png"
               alt="logo"
               height={300}
               width={300}
-              className="object-cover rounded-lg max-h-[150px] max-w-[180px] sm:min-h-[300px] sm:min-w-[300px] "
+              className="object-cover rounded-lg max-h-[150px] max-w-[150px] sm:min-h-[300px] sm:min-w-[300px] "
             />
           </div>
           <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
-            <h1 className="text-4xl md:text-6xl font-bold">Terjangkau</h1>
+            <h1 className="text-3xl md:text-6xl font-bold">Terjangkau</h1>
             <p className="text-xs md:text-lg font-bold text-gray-500">Membeli tanaman dengan harga ramah dompet .</p>
           </div>
         </div>
-        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] ">
+        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] px-2">
           <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
-            <h1 className="text-4xl md:text-6xl font-bold">Lengkap</h1>
+            <h1 className="text-3xl md:text-6xl font-bold">Lengkap</h1>
             <p className="text-xs md:text-lg font-bold text-gray-500">Kami menyediakan berbagai kebutuhan berkebun anda seperti pot, pupuk dan sebagainya.</p>
           </div>
           <div className="flex justify-center items-center w-1/2">
@@ -57,22 +57,22 @@ export default function Home() {
               alt="logo"
               height={300}
               width={300}
-              className="object-cover rounded-lg max-h-[150px] max-w-[180px] sm:min-h-[300px] sm:min-w-[300px] "
+              className="object-cover rounded-lg max-h-[150px] max-w-[150px] sm:min-h-[300px] sm:min-w-[300px] "
             />
           </div>
         </div>
-        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] ">
+        <div className="flex flex-row min-h-[200px] sm:h-[400px] w-full max-w-[1280px] px-2">
           <div className="flex justify-center items-center w-1/2">
             <Image
               src="/images/home/main-3.png"
               alt="logo"
               height={300}
               width={300}
-              className="object-cover rounded-lg max-h-[150px] max-w-[180px] sm:min-h-[300px] sm:min-w-[300px] "
+              className="object-cover rounded-lg max-h-[150px] max-w-[150px] sm:min-h-[300px] sm:min-w-[300px] "
             />
           </div>
           <div className="flex flex-col justify-center text-center gap-4 items-center w-1/2">
-            <h1 className="text-4xl md:text-6xl font-bold">Mudah</h1>
+            <h1 className="text-3xl md:text-6xl font-bold">Mudah</h1>
             <p className="text-xs md:text-lg font-bold text-gray-500">Beli bunga keinginanmu tanpa harus melakukan registrasi.</p>
           </div>
         </div>
