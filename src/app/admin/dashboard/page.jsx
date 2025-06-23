@@ -16,6 +16,8 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
+import { NotFoundIcon } from "@/components/icons/NotFoundIcon";
+import { PlantIcon } from "@/components/icons/PlantIcon";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
@@ -24,18 +26,16 @@ const Dashboard = () => {
   const [dataBar, setDataBar] = useState([]);
   const [dataPie, setDataPie] = useState({});
   const [lowStockProducts, setLowStockProducts] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Months are 0-based in JS
+  const [isLoadingPie, setIsLoadingPie] = useState(false);
+  const [selectedYearBarChart, setSelectedYearBarChart] = useState(new Date().getFullYear());
 
-  // URLs
-  const currentYear = new Date().getFullYear();
-  const salesDataUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-sales-per-month?year=${currentYear}`;
-  const productSalesUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-product-sales?year=${currentYear}`;
-  const lowStockUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-low-stock-products`;
-  console.log('lowStockUrl', lowStockUrl)
-  // Fetch functions
+  const salesByYearUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-sales-by-year?year=${selectedYearBarChart}`;
   const fetchSalesData = async () => {
     console.log('fetchSalesData')
     try {
-      const response = await fetch(salesDataUrl);
+      const response = await fetch(salesByYearUrl);
       const data = await response.json();
       setDataBar(data.data);
     } catch (error) {
@@ -43,19 +43,30 @@ const Dashboard = () => {
     }
   };
 
+  const productSalesByDateUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-product-sales-by-date?year=${selectedYear}&month=${selectedMonth}`;
   const fetchProductSalesData = async () => {
-    console.log('fetchProductSalesData');
+    setIsLoadingPie(true); // Start loading
     try {
-      const response = await fetch(productSalesUrl);
-      console.log('first');
+      const response = await fetch(productSalesByDateUrl);
       const data = await response.json();
-      console.log('dataxx: ', data);
       setDataPie(data.data);
     } catch (error) {
       console.error("Error fetching product sales data:", error);
+    } finally {
+      setIsLoadingPie(false); // End loading
     }
   };
 
+  // Fetch data whenever selectedYear or selectedMonth changes
+  useEffect(() => {
+    fetchProductSalesData();
+  }, [selectedYear, selectedMonth]);
+
+  useEffect(() => {
+    fetchSalesData();
+  }, [selectedYearBarChart]);
+
+  const lowStockUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/sales/get-low-stock-products`;
   const fetchLowStockProducts = async () => {
     console.log('fetchLowStockProducts')
     try {
@@ -73,7 +84,6 @@ const Dashboard = () => {
     fetchProductSalesData();
     fetchLowStockProducts();
 
-    // disable eslint
     // eslint-disable-next-line 
   }, []);
 
@@ -82,7 +92,7 @@ const Dashboard = () => {
     labels: dataBar.map((item) => item.month),
     datasets: [
       {
-        label: "Penjualan tahun "  + currentYear,
+        label: "Penjualan tahun "  + selectedYearBarChart,
         data: dataBar.map((item) => item.total_sales),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
@@ -108,7 +118,7 @@ const Dashboard = () => {
     labels: Object.keys(dataPie),
     datasets: [
       {
-        label: "Produk Terjual Tahun " + currentYear,
+        label: `Produk Terjual (${selectedYear}-${String(selectedMonth).padStart(2, "0")})`,
         data: Object.values(dataPie),
         backgroundColor: [
           "rgba(255, 99, 132, 0.6)",
@@ -137,26 +147,15 @@ const Dashboard = () => {
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: {
-        top: 20,
-        bottom: 20,
-        left: 20,
-        right: 20,
-      },
+      padding: 20,
     },
     plugins: {
       legend: {
         position: "top",
-        labels: {
-          boxWidth: 10,
-          font: {
-            size: 10,
-          },
-        },
       },
       title: {
         display: true,
-        text: "Produk Terjual Tahun " + currentYear,
+        text: `Produk Terjual (${selectedYear}-${String(selectedMonth).padStart(2, "0")})`,
       },
     },
   };
@@ -171,23 +170,60 @@ const Dashboard = () => {
           <h1 className="font-bold text-3xl mb-5">Dashboard</h1>
           <div className="flex flex-row justify-start items-center gap-5">
             {/* Pie Chart Section */}
-            <div className="bg-white p-5 border border-gray-300 shadow-lg rounded h-[400px] min-h-[400px] max-h-[400px] overflow-hidden min-w-[300px]">
-              {/* <h2 className="text-xl font-bold">Produk terjual tahun {currentYear}</h2> */}
-              {Object.keys(dataPie).length > 0 ? (
-                <Pie data={pieChartData} options={pieChartOptions} />
-              ) : (
+            <div className="bg-white p-5 border border-gray-300 w-[500px] shadow-lg rounded h-[400px] min-h-[400px] max-h-[400px] overflow-hidden min-w-[300px]">
+              <div className="flex items-center gap-2">
+                <label htmlFor="year" className="font-semibold">Tahun:</label>
+                <select
+                  id="year"
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(Number(e.target.value))}
+                  className="border p-2 rounded"
+                >
+                  {[...Array(5).keys()].map((i) => {
+                    const year = new Date().getFullYear() - i;
+                    return (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    );
+                  })}
+                </select>
+                <label htmlFor="month" className="font-semibold">Bulan:</label>
+                <select
+                  id="month"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                  className="border p-2 rounded"
+                >
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                    <option key={month} value={month}>
+                      {new Date(0, month - 1).toLocaleString("id-ID", { month: "long" })}
+                    </option>
+                  ))}
+                </select>
+
+              </div>
+              {isLoadingPie ? (
                 <div className="animate-pulse flex flex-col items-center justify-center h-full">
                   <div className="bg-gray-200 rounded w-24 h-4 mb-4"></div>
                   <div className="bg-gray-200 rounded w-24 h-4 mb-4"></div>
                   <div className="bg-gray-200 rounded-full w-32 h-32"></div>
                 </div>
+              ) : Object.keys(dataPie).length > 0 ? (
+                <Pie data={pieChartData} options={pieChartOptions} />
+              ) : (
+                <div className="flex flex-col items-center justify-center w-full h-full text-gray-500 gap-5">
+                  <NotFoundIcon />
+                  <p>Data Kosong</p>
+                </div>
               )}
             </div>
 
             {/* Low Stock Products Section */}
-            <div className="bg-white p-5 border border-gray-300 shadow-lg rounded h-[400px] min-h-[400px] max-h-[400px] overflow-y-auto">
+            <div className={`bg-white p-5 border border-gray-300 w-full shadow-lg rounded h-[400px] min-h-[400px] max-h-[400px] ${lowStockProducts.length > 0 ? "overflow-y-scroll" : ""}`}>
               <h2 className="text-xl font-bold mb-3">
-                {lowStockProducts.length} Produk Aktif Dengan Stok Rendah <sup className="text-red-500 text-xs">* (Stok kurang dari 3)</sup>
+                {`${lowStockProducts.length} Produk Aktif Dengan Stok Rendah`}
+                {lowStockProducts.length > 0 && <sup className="text-red-500 text-xs">* (Stok kurang dari 3)</sup>}
               </h2>
               {lowStockProducts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -220,25 +256,35 @@ const Dashboard = () => {
                   })}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="border rounded-lg shadow p-4 flex flex-col items-center animate-pulse"
-                    >
-                      <div className="bg-gray-200 rounded-full w-14 h-14 mb-3"></div>
-                      <div className="bg-gray-200 rounded w-20 h-4 mb-1"></div>
-                      <div className="bg-gray-200 rounded w-16 h-4"></div>
-                    </div>
-                  ))}
+                <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-5">
+                  <PlantIcon />
+                  <p>Tidak ada produk dengan stok hampir habis.</p>
                 </div>
               )}
             </div>
+
           </div>
 
-
+          {/* Bar Chart Section */}
           <div className="bg-white p-5 shadow rounded mt-5">
-            <h2 className="text-xl font-bold mb-3">Data Penjualan</h2>
+            <div className="flex items-center gap-2 mb-5">
+              <label htmlFor="barYear" className="font-semibold">Tahun:</label>
+              <select
+                id="barYear"
+                value={selectedYearBarChart}
+                onChange={(e) => setSelectedYearBarChart(Number(e.target.value))}
+                className="border p-2 rounded"
+              >
+                {[...Array(5).keys()].map((i) => {
+                  const year = new Date().getFullYear() - i;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
             {dataBar.length > 0 ? (
               <Bar data={chartData} options={chartOptions} />
             ) : (
@@ -251,6 +297,7 @@ const Dashboard = () => {
               </div>
             )}
           </div>
+
         </div>
       </div>
     </div>

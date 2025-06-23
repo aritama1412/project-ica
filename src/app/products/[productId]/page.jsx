@@ -7,6 +7,7 @@ import useCart from "@/../stores/cartStore";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import useOpenFilterStore from "@/../stores/openFilterStore";
+import { showErrorToast } from "@/components/toast/ToastNotification";
 
 const Page = (data) => {
   const cart = useCart();
@@ -49,7 +50,7 @@ const Page = (data) => {
 
   const addToCart = () => {
     if (quantity > product?.stock) {
-      alert("Jumlah melebihi stok yang tersedia!");
+      showErrorToast("Jumlah melebihi stok yang tersedia!");
       return;
     }
 

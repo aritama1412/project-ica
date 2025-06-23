@@ -172,6 +172,7 @@ const CreatePage = () => {
       })
       .catch((error) => {
         console.error("Error creating purchase:", error);
+        showErrorToast('Terjadi kesalahan.');
       });
   };
   const [value, setValue] = useState([]);

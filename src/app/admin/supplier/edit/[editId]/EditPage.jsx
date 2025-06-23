@@ -55,7 +55,7 @@ const EditPage = () => {
 
     if(!name || !category || !phone || !address || !status) {
       console.log('name: '+ name + ' category: ' + category + ' phone: ' + phone + ' address: ' + address + ' status: ' + status);
-      showErrorToast('Harap isi semua field.');
+      showErrorToast('Harap isi semua formulir.');
       return;
     }
 
