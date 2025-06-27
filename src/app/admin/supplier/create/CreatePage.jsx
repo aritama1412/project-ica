@@ -3,7 +3,9 @@ import { Select, SelectSection, SelectItem } from "@heroui/select";
 import { DatePicker } from "@heroui/react";
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
-import { showErrorToast, showSuccessToast } from "@/components/toast/ToastNotification";
+import {Input} from "@heroui/input";
+import {Textarea, Button} from "@heroui/react";
+import { showSuccessToast, showErrorToast } from "@/components/toast/ToastNotification";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const CreatePage = () => {
@@ -69,29 +71,44 @@ const CreatePage = () => {
   return (
     <div className="flex flex-col p-4 w-full">
       <h1 className="text-3xl font-bold">Tambahkan Supplier Baru</h1>
-      <div className="flex flex-row border border-gray-300 px-6 py-4 mt-4 rounded-sm">
-        <div className="flex flex-col w-full">
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Nama Supplier <span className="text-red-500">*</span></label>
-              <input
+      <form onSubmit={handleSubmit} className="flex flex-col border border-gray-300 px-6 py-4 mt-4 rounded-sm">
+        <div className="flex flex-row w-full">
+          <div className="w-1/3">
+            <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+              <Input
+                label="Nama Supplier"
+                placeholder="Nama Supplier"
+                variant="bordered"
+                labelPlacement="outside"
                 type="text"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
+                isRequired
                 onChange={(e) => setSupplierName(e.target.value)}
               />
             </div>
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Jenis Produk <span className="text-red-500">*</span></label>
+
+            <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+              <Input
+                label="Nomor Supplier"
+                placeholder="Nomor Supplier"
+                variant="bordered"
+                labelPlacement="outside"
+                type="number"
+                isRequired
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="w-1/3">
+            <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
               <Select
-                size={"sm"}
-                label=""
-                isLoading={isLoading}
-                aria-label="Pickup Point"
-                placeholder="Silahkan pilih ..."
-                className="max-w-[250px] border border-gray-300 !bg-white rounded-lg"
-                onChange={handleSelectionChange}
-              >
+                  label="Jenis Produk"
+                  labelPlacement="outside"
+                  className=""
+                  placeholder="Pilih Jenis Produk"
+                  variant="bordered"
+                  isRequired
+                  onChange={handleSelectionChange}
+                >
                 {categories.map((data, index) => (
                   <SelectItem key={data.id_category} value={data.id_category}>
                     {data.name}
@@ -100,37 +117,34 @@ const CreatePage = () => {
               </Select>
             </div>
           </div>
-          <div className="flex flex-row justify-start items-center gap-4">
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Nomor Supplier <span className="text-red-500">*</span></label>
-              <input
-                type="number"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1 mb-3 min-w-[350px]">
-              <label>Alamat <span className="text-red-500">*</span></label>
-              <textarea
-                type="text"
-                className="border border-gray-300 px-1 max-w-[250px]"
-                placeholder="..."
+          <div className="w-1/3">
+            <div className="flex flex-col gap-1 mb-3 min-w-[350px] px-2">
+              <Textarea
+                classNames={{
+                  base: "col-span-12 md:col-span-6 mb-6 md:mb-0",
+                  input: "resize-y min-h-[100px]",
+                }}
+                // className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4"
+                label="Alamat"
+                isRequired
+                labelPlacement="outside"
+                placeholder="Alamat"
+                variant="bordered"
+                isClearable
+                // disableAutosize
+                // defaultValue={product?.data?.description}
                 onChange={(e) => setAddress(e.target.value)}
+                onClear={() => setDescription('')}
               />
             </div>
-          </div>
-          <div className="flex items-start mt-10">
-            <button
-              onClick={handleSubmit}
-              type="submit"
-              className="bg-sky-300 px-4 py-1 rounded-md border-2 border-sky-800"
-            >
-              Simpan
-            </button>
           </div>
         </div>
-      </div>
+        <div className="flex items-start mt-10 px-2">
+          <Button type="submit" color="success" variant="flat" isLoading={isLoading}>
+            Simpan
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };

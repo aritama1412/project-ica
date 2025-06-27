@@ -18,9 +18,10 @@ import {
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { EyeIcon } from "@/components/icons/EyeIcon";
-import { EditIcon } from "@/components/icons/EditIcon";
+import { DeleteIcon } from "@/components/icons/DeleteIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { MenuGridIcon } from "@/components/icons/MenuGridIcon";
+import { showSuccessToast } from "@/components/toast/ToastNotification";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -28,6 +29,7 @@ export default function Supplier({ setActiveMenu }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = React.useState(1);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const { data, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/get-all-suppliers`,
@@ -67,12 +69,34 @@ export default function Supplier({ setActiveMenu }) {
     return filteredData.slice(startIndex, endIndex);
   }, [filteredData, page, rowsPerPage]);
 
-  // const handleView = (id) => {
-  //   router.push(`/admin/supplier/view/${id}`);
-  // };
   const handleEdit = (id) => {
     router.push(`/admin/supplier/edit/${id}`);
   };
+  
+  const handleDelete = (id) => {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/suppliers/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id_supplier: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => 
+        data.status == 'success' ? setIsDeleted(true) : showErrorToast("Gagal menghapus produk.")
+    );
+  };
+
+  useEffect(() => {
+    if (isDeleted) {
+      showSuccessToast("Supplier berhasil dihapus.");
+      window.location.reload(); // Full reload
+      setTimeout(() => {
+        router.push("/admin/supplier");
+        setIsDeleted(false);
+      }, 1500);
+    }
+  }, [isDeleted, router]);
 
   return (
     <div className="p-4 border border-gray-200 w-[calc(100%-255px)]">
@@ -83,7 +107,7 @@ export default function Supplier({ setActiveMenu }) {
             // showAnchorIcon
             as={Link}
             color="default"
-            href="/admin/product/create"
+            href="/admin/supplier/create"
             variant="shadow"
           >
             Tambah Supplier
@@ -159,14 +183,14 @@ export default function Supplier({ setActiveMenu }) {
                             <EyeIcon />
                           </span>
                         </Tooltip>
-                        {/* <Tooltip color="danger" content="Delete">
+                        <Tooltip color="danger" content="Delete">
                           <span
-                            onClick={() => handleDetail(item?.id_supplier)}
+                            onClick={() => handleDelete(item?.id_supplier)}
                             className="text-lg text-danger cursor-pointer active:opacity-50"
                           >
                             <DeleteIcon />
                           </span>
-                        </Tooltip> */}
+                        </Tooltip>
                       </div>
                     ) : columnKey === "id_category" ? (
                       item?.Category?.name || "N/A"

@@ -64,9 +64,11 @@ const CreatePage = () => {
   useEffect(() => {
     setIsLoading(true);
     console.log('suppliersData', suppliersData)
+    // filter, only show supplier with status='1'
+    const newSuppliers = suppliersData?.data.filter(supplier => supplier.status === '1');
     if (suppliersData) {
       setIsLoading(false);
-      setSuppliers(suppliersData.data);
+      setSuppliers(newSuppliers);
     }
   }, [suppliersData, selectedSupplier]);
 
@@ -152,7 +154,6 @@ const CreatePage = () => {
         quantity: item.quantity,
       })),
     };
-    console.log("purchaseData", purchaseData);
     // Make an API call to save the data
     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/purchases/create`, {
       method: "POST",
