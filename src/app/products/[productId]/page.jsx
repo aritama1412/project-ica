@@ -7,16 +7,14 @@ import useCart from "@/../stores/cartStore";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import useOpenFilterStore from "@/../stores/openFilterStore";
-import { showErrorToast } from "@/components/toast/ToastNotification";
 
 const Page = (data) => {
   const cart = useCart();
   const counter = useCounter();
   const openFilter = useOpenFilterStore();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     openFilter.setFilter(null);
@@ -29,7 +27,6 @@ const Page = (data) => {
       );
       const productJson = await res.json();
       setProduct(productJson.data);
-      setIsLoading(false);
     };
 
     getProducts();
@@ -37,7 +34,7 @@ const Page = (data) => {
 
   const handleQuantity = (type) => {
     if (type === "+") {
-      setQuantity((prev) => Math.min((product?.stock || 1), prev + 1));
+      setQuantity((prev) => Math.min((product.stock || 1), prev + 1));
     } else if (type === "-") {
       setQuantity((prev) => Math.max(1, prev - 1));
     }
@@ -45,12 +42,12 @@ const Page = (data) => {
 
   const handleInputChange = (e) => {
     const val = parseInt(e.target.value) || 1;
-    setQuantity(Math.max(1, Math.min(product?.stock || 1, val)));
+    setQuantity(Math.max(1, Math.min(product.stock || 1, val)));
   };
 
   const addToCart = () => {
-    if (quantity > product?.stock) {
-      showErrorToast("Jumlah melebihi stok yang tersedia!");
+    if (quantity > product.stock) {
+      alert("Jumlah melebihi stok yang tersedia!");
       return;
     }
 
@@ -84,9 +81,7 @@ const Page = (data) => {
     <main className="flex flex-col w-screen max-w-[1280px] mx-auto h-full min-h-screen scmobile:pb-[100px]">
       <Navbar />
       <div className="mt-10 ml-3 gap-9 flex flex-row scmobile:flex-col scmobile:mt-0 scmobile:ml-0 scmobile:gap-2">
-        {isLoading ? (
-          <div className="w-full h-[378px] max-h-[378px] rounded-lg scmobile:rounded-none bg-gray-200 animate-pulse"></div>
-        ) : product.Images && product.Images.length > 0 ? (
+        {product.Images && product.Images.length > 0 ? (
           <Carousel
             arrows
             autoPlaySpeed={3000}
@@ -118,10 +113,6 @@ const Page = (data) => {
                 loading="eager"
                 alt="product"
                 unoptimized={true}
-                onError={(e) => {
-                  e.currentTarget.src = "https://placehold.co/600x600?text=Image+Not+Found";
-                  e.currentTarget.onerror = null; // Prevent infinite loop
-                }}
               />
             ))}
           </Carousel>
@@ -130,36 +121,104 @@ const Page = (data) => {
         )}
 
         <div className="flex flex-col gap-5 w-full scmobile:px-4">
-          {isLoading ? (
-            <>
-              <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
-              <div className="h-8 bg-gray-200 rounded w-1/3 animate-pulse"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/4 animate-pulse"></div>
-              <div className="h-20 bg-gray-200 rounded w-full animate-pulse"></div>
-            </>
-          ) : (
-            <>
-              <h1 className="line-clamp-2 text-2xl font-semibold">
-                {product.product_name}
-              </h1>
-              <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-bold">
-                  {product.price
-                    ? product.price.toLocaleString("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                        minimumFractionDigits: 0,
-                      })
-                    : 0}
-                </h2>
-                <span className="font-semibold">Stok: {product.stock}</span>
+          <h1 className="line-clamp-2 text-2xl font-semibold">
+            {product.product_name}
+          </h1>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-3xl font-bold">
+              {product.price
+                ? product.price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  })
+                : 0}
+            </h2>
+            <span className="font-semibold">Stok: {product.stock}</span>
+          </div>
+          <h3 className="font-semibold border-t border-t-gray-300 pt-4">
+            Informasi
+          </h3>
+          <p>{product.description}</p>
+
+          {/* Desktop Actions */}
+          <div className="flex flex-row gap-3 scmobile:hidden">
+            <input
+              type="number"
+              min={1}
+              max={product.stock || 1}
+              className="rounded-md px-3 text-center border border-gray-500 w-[150px]"
+              placeholder="Jumlah"
+              value={quantity}
+              onChange={handleInputChange}
+            />
+            <button
+              onClick={addToCart}
+              disabled={product.stock === 0}
+              className={`transition duration-300 px-10 py-3 w-[150px] text-gray-200 rounded-xl border-2
+                ${
+                  product.stock === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#16423C] hover:bg-white hover:text-[#16423C] hover:border-[#16423C]"
+                }`}
+            >
+              Beli
+            </button>
+            {addedToCart && (
+              <div className="ml-3 text-green-600 font-semibold animate-pulse">
+                ✔ Produk telah ditambahkan ke keranjang!
               </div>
-              <h3 className="font-semibold border-t border-t-gray-300 pt-4">
-                Informasi
-              </h3>
-              <p>{product.description}</p>
-            </>
-          )}
+            )}
+          </div>
+
+          {/* Mobile Actions */}
+          <div className="hidden scmobile:fixed scmobile:bottom-0 scmobile:left-0 scmobile:block scmobile:px-4 py-2 w-full bg-white shadow-[0px_-10px_40px_10px_rgba(0,_0,_0,_0.1)] border-t border-gray-300">
+            <div className="flex flex-row items-center justify-between">
+              <div className="flex flex-row gap-3">
+                <button
+                  onClick={() => handleQuantity("-")}
+                  className="w-[32px] h-[32px] border border-gray-500 rounded-md"
+                >
+                  <svg viewBox="0 0 10 10" className="shopee-svg-icon">
+                    <polygon points="0 4.5 10 4.5 10 5.5 0 5.5"></polygon>
+                  </svg>
+                </button>
+                <input
+                  type="number"
+                  min={1}
+                  max={product.stock || 1}
+                  value={quantity}
+                  onChange={handleInputChange}
+                  className="rounded-md px-3 text-center border border-gray-500 w-[75px]"
+                />
+                <button
+                  onClick={() => handleQuantity("+")}
+                  className="w-[32px] h-[32px] border border-gray-500 rounded-md"
+                >
+                  <svg viewBox="0 0 10 10" className="shopee-svg-icon">
+                    <polygon points="10 4.5 5.5 4.5 5.5 0 4.5 0 4.5 4.5 0 4.5 0 5.5 4.5 5.5 4.5 10 5.5 10 5.5 5.5 10 5.5"></polygon>
+                  </svg>
+                </button>
+              </div>
+              <button
+                onClick={addToCart}
+                disabled={product.stock === 0}
+                className={`transition duration-300 px-10 py-3 w-[150px] rounded-xl border-2
+                  ${
+                    product.stock === 0
+                      ? "bg-gray-400 cursor-not-allowed text-white"
+                      : "bg-[#16423C] text-gray-200 hover:bg-[#6A9C89] hover:text-gray-800 hover:border-gray-800"
+                  }`}
+              >
+                Beli
+              </button>
+              {addedToCart && (
+                <div className="absolute bottom-20 right-3 px-3 py-3 bg-white text-green-700 font-semibold animate-pulse">
+                  ✔ Produk telah ditambahkan ke keranjang!
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </main>
