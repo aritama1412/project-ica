@@ -69,7 +69,6 @@ const Page = (data) => {
       stock: newStock,
     }));
 
-    // Clamp quantity to new stock
     if (quantity > newStock) {
       setQuantity(newStock > 0 ? newStock : 1);
     }
